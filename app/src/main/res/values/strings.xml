@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">BRICKPONG</string>
+
+    <string name="tap_to_play">TAP TO PLAY</string>
+    <string name="points_record">POINTS RECORD</string>
+    <string name="games_played">GAMES PLAYED</string>
+    <string name="presents_string">\u0040BrickDev\n\u0026 \u0040BrickDesign\n\nPRESENTS</string>
+</resources>
