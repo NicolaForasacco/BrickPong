@@ -17,8 +17,9 @@ public class SplashScreen extends Activity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.splash_screen);
 
-        Typeface type        =   Typeface.createFromAsset( getAssets() , "fonts/Chava-Regular.otf") ;
-        ((TextView)findViewById(R.id.txv_presents)).setTypeface(type);
+        Typeface type           =   Typeface.createFromAsset( getAssets() , "fonts/Chava-Regular.otf") ;
+        TextView presents       =   ((TextView)findViewById(R.id.txv_presents));
+        presents.setTypeface(type);
 
         final int splashTime=1000;
         new CountDownTimer(splashTime, 50) {
