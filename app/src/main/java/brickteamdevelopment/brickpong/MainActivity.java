@@ -35,11 +35,17 @@ import android.widget.TextView;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.games.Games;
+import com.google.example.games.basegameutils.BaseGameUtils;
 
 import java.lang.reflect.Method;
 import java.util.Calendar;
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements
+        GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener {
 
     private SurfaceView gameView;
     private GameView game;
@@ -48,7 +54,14 @@ public class MainActivity extends Activity {
     public SharedPreferencesManager sharedPreferences;
     public static TextView txvPoints;
 
+    private static int RC_SIGN_IN = 9001;
+
+    private boolean mResolvingConnectionFailure = false;
+    private boolean mAutoStartSignInflow = true;
+    private boolean mSignInClicked = false;
+
     private AdView mAdView;
+    private GamesApiHandler gamesApiHandler;
 
     private enum state{
         MENU,
@@ -66,6 +79,10 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         sharedPreferences = new SharedPreferencesManager(getApplicationContext());
+
+        gamesApiHandler = new GamesApiHandler(this,this);
+
+        gamesApiHandler.updateRecord(sharedPreferences.getRecord());
 
         /*mAdView = (AdView) findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder()
@@ -128,11 +145,11 @@ public class MainActivity extends Activity {
 
         type        =   Typeface.createFromAsset( getAssets() , "fonts/Chava-Regular.otf") ;
 
-        final LinearLayout btn_play    =   (LinearLayout)findViewById(R.id.play);
+        final LinearLayout btn_play     =   (LinearLayout)findViewById(R.id.play);
 
-        final LinearLayout rate        =   (LinearLayout)findViewById(R.id.rate);
-        final LinearLayout share       =   (LinearLayout)findViewById(R.id.share);
-
+        final LinearLayout rate         =   (LinearLayout)findViewById(R.id.rate);
+        final LinearLayout share        =   (LinearLayout)findViewById(R.id.share);
+        final LinearLayout trophies     =   (LinearLayout)findViewById(R.id.trophies);
 
         ((TextView)findViewById(R.id.app_name)).setTypeface(type);
         ((TextView)findViewById(R.id.rate_us_txv)).setTypeface(type);
@@ -187,6 +204,28 @@ public class MainActivity extends Activity {
                 return true;
             }
         });
+        trophies.setOnTouchListener(new View.OnTouchListener() {
+            private Rect rect;
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+
+                rect = new Rect(v.getLeft(), v.getTop(), v.getRight(), v.getBottom());
+
+                if(actionChecker(rect,event,v,trophies)){
+                    if( gamesApiHandler.checkConnection() ){
+
+                        startActivityForResult( Games.Leaderboards.getLeaderboardIntent( gamesApiHandler.getApiClient() ,
+                                getResources().getString( R.string.leaderboard_score ) ) , 0 ) ;
+                    }else {
+
+                        gamesApiHandler.connect();
+                    }
+                }
+
+                return true;
+            }
+        });
+
 
     }
 
@@ -322,15 +361,34 @@ public class MainActivity extends Activity {
 
                 final int score = game.game.getPoints();
 
+                gamesApiHandler.updateRecord(score);
 
-                final LinearLayout play_final = (LinearLayout) findViewById(R.id.final_play);
-                final LinearLayout share_final = (LinearLayout) findViewById(R.id.final_share);
+                final LinearLayout play_final       =   (LinearLayout) findViewById(R.id.final_play);
+                final LinearLayout share_final      =   (LinearLayout) findViewById(R.id.final_share);
+                final LinearLayout trophies_final   =   (LinearLayout) findViewById(R.id.final_trophies);
+
                 TextView best_label  =   (TextView)findViewById(R.id.best_label);
                 TextView score_txv   =   ((TextView)findViewById(R.id.score));
                 TextView best_txv    =   ((TextView)findViewById(R.id.best));
 
                 ((TextView)findViewById(R.id.score_label)).setTypeface(type);
                 ((TextView)findViewById(R.id.game_over)).setTypeface(type);
+
+                trophies_final.setOnTouchListener(new View.OnTouchListener() {
+
+                    private Rect rect;
+                    @Override
+                    public boolean onTouch(View v, MotionEvent event) {
+
+                        rect = new Rect(v.getLeft(), v.getTop(), v.getRight(), v.getBottom());
+
+                        if(actionChecker(rect,event,v,trophies_final))
+                            startActivityForResult( Games.Leaderboards.getLeaderboardIntent( gamesApiHandler.getApiClient() ,
+                                    getResources().getString( R.string.leaderboard_score ) ) , 0 ) ;
+
+                        return true;
+                    }
+                });
 
                 share_final.setOnTouchListener(new View.OnTouchListener() {
 
@@ -379,7 +437,6 @@ public class MainActivity extends Activity {
 
                 score_txv.setText(String.valueOf(score));
                 best_txv.setText(String.valueOf(sharedPreferences.getRecord()));
-
 
                 game.pause();
             }
@@ -466,6 +523,8 @@ public class MainActivity extends Activity {
     protected void onResume() {
         super.onResume();
 
+        gamesApiHandler.connect();
+
         switch (currentState){
             case PAUSE:
                 showPauseMenu();
@@ -484,6 +543,13 @@ public class MainActivity extends Activity {
         if (mAdView != null) {
             mAdView.resume();
         }
+    }
+
+
+    @Override
+    protected void onStop() {
+        gamesApiHandler.disconnect();
+        super.onStop();
     }
 
     @Override
@@ -525,4 +591,61 @@ public class MainActivity extends Activity {
         hideSystemUI();
         super.onWindowFocusChanged(hasFocus);
     }
+
+    @Override
+    public void onConnected(Bundle bundle) {
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        gamesApiHandler.connect();
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+
+        if (mResolvingConnectionFailure) {
+            // already resolving
+            return;
+        }
+
+        // if the sign-in button was clicked or if auto sign-in is enabled,
+        // launch the sign-in flow
+        if (mSignInClicked || mAutoStartSignInflow) {
+            mAutoStartSignInflow = false;
+            mSignInClicked = false;
+            mResolvingConnectionFailure = true;
+
+            // Attempt to resolve the connection failure using BaseGameUtils.
+            // The R.string.signin_other_error value should reference a generic
+            // error string in your strings.xml file, such as "There was
+            // an issue with sign-in, please try again later."
+            if (!BaseGameUtils.resolveConnectionFailure(this,
+                    gamesApiHandler.getApiClient(), connectionResult,
+                    RC_SIGN_IN, "")) {
+                mResolvingConnectionFailure = false;
+            }
+        }
+        // Put code here to display the sign-in button
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode,
+                                    Intent intent) {
+        if (requestCode == RC_SIGN_IN) {
+            mSignInClicked = false;
+            mResolvingConnectionFailure = false;
+            if (resultCode == RESULT_OK) {
+                gamesApiHandler.connect();
+            } else {
+                // Bring up an error dialog to alert the user that sign-in
+                // failed. The R.string.signin_failure should reference an error
+                // string in your strings.xml file that tells the user they
+                // could not be signed in, such as "Unable to sign in."
+                BaseGameUtils.showActivityResultError(this,
+                        requestCode, resultCode, R.string.error);
+            }
+        }
+    }
+
 }

@@ -5,4 +5,10 @@
     <string name="points_record">POINTS RECORD</string>
     <string name="games_played">GAMES PLAYED</string>
     <string name="presents_string">\u0040BrickDev\n\u0026 \u0040BrickDesign\n\nPRESENTS</string>
+    <string name="error">Error</string>
+
+    <string name="google_app_id">615761877366</string>
+    <string name="package_name">brickteamdevelopment.brickpong</string>
+    <string name="leaderboard_score">CgkI9rKS8vUREAIQAQ</string>
+
 </resources>
