@@ -27,6 +27,8 @@
 
         <include layout="@layout/game_over"></include>
 
+        <include layout="@layout/tutorial_menu"></include>
+
     </RelativeLayout>
 
     <com.google.android.gms.ads.AdView

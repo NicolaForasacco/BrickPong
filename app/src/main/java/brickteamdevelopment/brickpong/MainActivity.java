@@ -15,10 +15,16 @@ import android.graphics.Typeface;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.SystemClock;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -28,8 +34,10 @@ import android.view.Surface;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -43,7 +51,7 @@ import com.google.example.games.basegameutils.BaseGameUtils;
 import java.lang.reflect.Method;
 import java.util.Calendar;
 
-public class MainActivity extends Activity implements
+public class MainActivity extends FragmentActivity implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
 
@@ -236,9 +244,20 @@ public class MainActivity extends Activity implements
         findViewById(R.id.lyt_menu).setVisibility(View.GONE);
         findViewById(R.id.final_menu).setVisibility(View.GONE);
         findViewById(R.id.lyt_pause).setVisibility(View.GONE);
+        findViewById(R.id.tutorial).setVisibility(View.GONE);
 
         game.showGame(getScreenDimension(),getBannerHeight(),(SurfaceView) findViewById(R.id.gameView));
 
+        if(sharedPreferences.isFirstTime() ){
+
+            new CountDownTimer(500, 500) {
+
+                public void onTick(long millisUntilFinished) {}
+                public void onFinish() {
+                    showTutorial();
+                }
+            }.start();
+        }
 
         final LinearLayout btnPause = (LinearLayout)findViewById(R.id.btn_pause);
         btnPause.setOnTouchListener(new View.OnTouchListener() {
@@ -261,12 +280,94 @@ public class MainActivity extends Activity implements
         txvPoints.setText("0");
     }
 
+    public void showTutorial(){
+
+        game.pause();
+        final LinearLayout tutorialMenu=(LinearLayout)findViewById(R.id.tutorial);
+
+        tutorialMenu.animate().scaleY(0.8f).scaleX(0.8f).alpha(0).withEndAction(new Runnable() {
+            @Override
+            public void run() {
+                tutorialMenu.setVisibility(View.VISIBLE);
+                tutorialMenu.animate().scaleY(1).scaleX(1).alpha(1).setDuration(200).start();
+            }
+        }).start();
+
+
+        //findViewById(R.id.tutorial).setVisibility(View.VISIBLE);
+
+
+        final ViewPager mPager = (ViewPager) findViewById(R.id.pager);
+        final TutorialPagerAdapter mPagerAdapter = new TutorialPagerAdapter(getSupportFragmentManager());
+        mPager.setAdapter(mPagerAdapter);
+
+        findViewById(R.id.close).setOnTouchListener(new View.OnTouchListener() {
+            private Rect rect;
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+
+                rect = new Rect(v.getLeft(), v.getTop(), v.getRight(), v.getBottom());
+
+                if (actionChecker(rect, event, v, findViewById(R.id.close))) {
+                    findViewById(R.id.tutorial).setVisibility(View.GONE);
+                    game.resume();
+                }
+
+                return true;
+            }
+        });
+
+        findViewById(R.id.next).setOnTouchListener(new View.OnTouchListener() {
+            private Rect rect;
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+
+                rect = new Rect(v.getLeft(), v.getTop(), v.getRight(), v.getBottom());
+
+                if (actionChecker(rect, event, v, findViewById(R.id.next))) {
+
+                    if (mPager.getCurrentItem() < mPagerAdapter.getCount()-1) {
+
+                        mPager.setCurrentItem(mPager.getCurrentItem() + 1,true);
+                    } else {
+                        findViewById(R.id.tutorial).setVisibility(View.GONE);
+                        game.resume();
+                    }
+
+                }
+
+                return true;
+            }
+        });
+
+        findViewById(R.id.prev).setOnTouchListener(new View.OnTouchListener() {
+
+            private Rect rect;
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+
+                rect = new Rect(v.getLeft(), v.getTop(), v.getRight(), v.getBottom());
+
+                if (actionChecker(rect, event, v, findViewById(R.id.prev)))
+                    if (mPager.getCurrentItem() != 0)
+                        mPager.setCurrentItem(mPager.getCurrentItem() - 1,true);
+
+                return true;
+            }
+        });
+
+    }
+
     public void showPauseMenu() {
 
         currentState = state.PAUSE;
         game.pause();
 
         (findViewById(R.id.lyt_pause)).setVisibility(View.VISIBLE);
+        findViewById(R.id.tutorial).setVisibility(View.GONE);
 
         TextView best_label  =   (TextView)findViewById(R.id.pause_best_label);
         TextView score_txv   =   ((TextView)findViewById(R.id.pause_score));
@@ -445,7 +546,7 @@ public class MainActivity extends Activity implements
 
 
 
-    public boolean actionChecker(Rect rect, MotionEvent event, View v, LinearLayout layout){
+    public boolean actionChecker(Rect rect, MotionEvent event, View v, View layout){
 
         if ( event.getAction() == MotionEvent.ACTION_DOWN ){
 
@@ -544,7 +645,6 @@ public class MainActivity extends Activity implements
             mAdView.resume();
         }
     }
-
 
     @Override
     protected void onStop() {
@@ -648,4 +748,19 @@ public class MainActivity extends Activity implements
         }
     }
 
+    public class TutorialPagerAdapter extends FragmentStatePagerAdapter {
+        public TutorialPagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return TutorialFragment.create(position);
+        }
+
+        @Override
+        public int getCount() {
+            return 2;
+        }
+    }
 }
