@@ -39,7 +39,7 @@
         android:layout_height="wrap_content"
         ads:adSize="BANNER"
 
-        ads:adUnitId="ca-app-pub-3120536913205473/5975042732">
+        ads:adUnitId="@string/main_banner_id">
     </com.google.android.gms.ads.AdView>
 
 </RelativeLayout>
