@@ -92,13 +92,11 @@ public class MainActivity extends FragmentActivity implements
 
         gamesApiHandler.updateRecord(sharedPreferences.getRecord());
 
-        /*mAdView = (AdView) findViewById(R.id.adView);
+        mAdView = (AdView) findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder()
                 .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-                // Check the LogCat to get your test device ID
-                .addTestDevice("1AEF9DCCBF3EF7A3D58C4AFFF7C3A1A2")
                 .build();
-        mAdView.loadAd(adRequest);*/
+        mAdView.loadAd(adRequest);
 
 
         gameView = (SurfaceView) findViewById(R.id.gameView);
@@ -728,24 +726,6 @@ public class MainActivity extends FragmentActivity implements
             }
         }
         // Put code here to display the sign-in button
-    }
-
-    protected void onActivityResult(int requestCode, int resultCode,
-                                    Intent intent) {
-        if (requestCode == RC_SIGN_IN) {
-            mSignInClicked = false;
-            mResolvingConnectionFailure = false;
-            if (resultCode == RESULT_OK) {
-                gamesApiHandler.connect();
-            } else {
-                // Bring up an error dialog to alert the user that sign-in
-                // failed. The R.string.signin_failure should reference an error
-                // string in your strings.xml file that tells the user they
-                // could not be signed in, such as "Unable to sign in."
-                BaseGameUtils.showActivityResultError(this,
-                        requestCode, resultCode, R.string.error);
-            }
-        }
     }
 
     public class TutorialPagerAdapter extends FragmentStatePagerAdapter {
