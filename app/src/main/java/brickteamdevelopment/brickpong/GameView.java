@@ -35,7 +35,7 @@ class GameView implements Runnable {
     private SoundPlayer paddleBounceSound;
     private SoundPlayer limitBounceSound;
 
-    public GameView(MainActivity mainActivity,SurfaceView view) {
+    public GameView(MainActivity mainActivity, SurfaceView view) {
 
         ourHolder = view.getHolder();
         paint = new Paint();
@@ -50,10 +50,10 @@ class GameView implements Runnable {
 
             long startFrameTime = System.currentTimeMillis();
 
-            if(gameType.compareTo("menu") == 0){
+            if (gameType.compareTo("menu") == 0) {
                 updateMenu();
                 drawMenu();
-            }else {
+            } else {
                 updateGame();
                 drawGame();
             }
@@ -65,27 +65,40 @@ class GameView implements Runnable {
         }
     }
 
-    public void showMenu(Point dim,int bannerHeight){
+    public void showMenu(Point dim, int bannerHeight) {
 
         pause();
 
         Paint paintWhite = new Paint();
         paintWhite.setColor(Color.WHITE);
 
-        paddle  =   new Paddle(dim.x,
-                                dim.y - bannerHeight,
-                                true);
+        paddle = new Paddle(dim.x,
+                dim.y - bannerHeight,
+                true);
 
         fps = (long) paddle.speed;
 
-        game    =   new Game(dim.x,
-                            dim.y - bannerHeight,
-                            "#B71C1C");
+        game = new Game(dim.x,
+                dim.y - bannerHeight,
+                "#B71C1C");
 
         gameType = "menu";
         playing = true;
         gameThread = new Thread(this);
         gameThread.start();
+    }
+
+    public void draw() {
+
+        if(gameType.compareTo("menu")==0) {
+            updateMenu();
+            drawMenu();
+        }
+
+        else {
+            updateGame();
+            drawGame();
+        }
     }
 
     public void showGame(Point dim,int bannerHeight,SurfaceView view){
@@ -115,7 +128,6 @@ class GameView implements Runnable {
                 dim.y - bannerHeight);
 
         gameType = "game";
-
         playing = true;
         gameThread = new Thread(this);
         gameThread.start();
