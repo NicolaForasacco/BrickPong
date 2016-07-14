@@ -38,7 +38,7 @@
             android:progressTint="@color/light_orange"
             android:progressBackgroundTint="@color/dark_orange"
             android:progress="0"
-            android:max="3500"
+            android:max="2000"
             android:layout_height="wrap_content"
             android:id="@+id/progressBar"
             android:layout_gravity="center"/>

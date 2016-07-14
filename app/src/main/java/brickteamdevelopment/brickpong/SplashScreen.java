@@ -21,18 +21,18 @@ public class SplashScreen extends Activity{
         TextView presents       =   ((TextView)findViewById(R.id.txv_presents));
         presents.setTypeface(type);
 
-        final int splashTime=1000;
-        new CountDownTimer(splashTime, 50) {
+        final int splashTime = 1400;
+
+        new CountDownTimer(splashTime, 300) {
 
             public void onTick(long millisUntilFinished) {
-                ((ProgressBar)findViewById(R.id.progressBar)).setProgress((int)(splashTime-millisUntilFinished));
+                ((ProgressBar)findViewById(R.id.progressBar)).setProgress((int)(splashTime - millisUntilFinished));
             }
             public void onFinish() {
 
-                ((ProgressBar)findViewById(R.id.progressBar)).setProgress(splashTime);
+                ((ProgressBar)findViewById(R.id.progressBar)).setProgress(1800);
 
-                Intent intent=new Intent(SplashScreen.this,MainActivity.class);
-                startActivity(intent);
+                startActivity(new Intent(SplashScreen.this,MainActivity.class));
                 finish();
 
             }

@@ -19,7 +19,7 @@ public class NotificationPublisher extends BroadcastReceiver {
 
         Intent shareIntent = new Intent();
         shareIntent.setAction(Intent.ACTION_SEND);
-        shareIntent.putExtra(Intent.EXTRA_TEXT, "\nTry Push-It! https://play.google.com/store/apps/details?id=brickteamdevelopment.pushit");
+        shareIntent.putExtra(Intent.EXTRA_TEXT, "\nTry BrickPong https://play.google.com/store/apps/details?id=" + context.getResources().getString(R.string.package_name));
         shareIntent.setType("text/plain");
 
         NotificationManager notificationManager = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
