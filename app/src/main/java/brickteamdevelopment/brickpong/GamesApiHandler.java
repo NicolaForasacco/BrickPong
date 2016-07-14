@@ -47,6 +47,7 @@ public class GamesApiHandler implements
             return false ;
     }
 
+
     @Override
     public void onConnected(Bundle bundle) {
 

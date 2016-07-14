@@ -15,7 +15,8 @@ public class Paddle {
                             width,
                             height,
                             speed,
-                            movement,
+                            movement = 0 ,
+                            maxSpeed  =   15,
                             x,
                             y;
 
@@ -24,7 +25,6 @@ public class Paddle {
 
     public Paddle(int screenWidth,int screenHeight,boolean isSlow){
 
-        movement        =   0;
         height          =   screenHeight / 50 ;
         width           =   screenWidth / 5 ;
         x               =   height / 2;
@@ -50,11 +50,15 @@ public class Paddle {
             else
                 movement = (speed / fps) * 6;
         }else{
-            if(movement < (speed / fps) * 20)
+            if(movement < (speed / fps) * maxSpeed)
                 movement += speed / fps;
             else
-                movement = (speed / fps)* 20;
+                movement = (speed / fps)* maxSpeed;
         }
+    }
+
+    public void incrementMaxSpeed(){
+        maxSpeed *= 1.1f;
     }
 
     public void decrementMovement(long fps){

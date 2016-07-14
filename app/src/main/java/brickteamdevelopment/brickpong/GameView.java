@@ -127,6 +127,7 @@ class GameView implements Runnable {
         ball    =   new Ball(dim.x,
                 dim.y - bannerHeight);
 
+
         gameType = "game";
         playing = true;
         gameThread = new Thread(this);
@@ -209,6 +210,8 @@ class GameView implements Runnable {
                 //la pallina ha toccato la barra quindi torna in alto
 
                 ball.incrementSpeed();
+                paddle.incrementMaxSpeed();
+
                 ball.bounceOnPaddle(paddle);
 
                 game.incrementPoints();
