@@ -77,7 +77,7 @@
                                     android:id="@+id/score"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="32"
+                                    android:text="65"
                                     android:textSize="40dp"
                                     android:textColor="@android:color/white"/>
 
@@ -105,7 +105,7 @@
                                     android:id="@+id/best"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="32"
+                                    android:text="81"
                                     android:textSize="40dp"
                                     android:textColor="@android:color/white"/>
 

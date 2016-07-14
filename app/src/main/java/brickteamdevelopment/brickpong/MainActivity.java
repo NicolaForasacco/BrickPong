@@ -40,6 +40,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -217,16 +218,10 @@ public class MainActivity extends FragmentActivity implements
 
                 rect = new Rect(v.getLeft(), v.getTop(), v.getRight(), v.getBottom());
 
-                if(actionChecker(rect,event,v,trophies)){
-                    if( gamesApiHandler.checkConnection() ){
+                if(actionChecker(rect,event,v,trophies))
+                    showLeaderboards();
 
-                        startActivityForResult( Games.Leaderboards.getLeaderboardIntent( gamesApiHandler.getApiClient() ,
-                                getResources().getString( R.string.leaderboard_score ) ) , 0 ) ;
-                    }else {
 
-                        gamesApiHandler.connect();
-                    }
-                }
 
                 return true;
             }
@@ -234,6 +229,8 @@ public class MainActivity extends FragmentActivity implements
 
 
     }
+
+
 
     public void showGame(){
 
@@ -453,6 +450,8 @@ public class MainActivity extends FragmentActivity implements
             @Override
             public void run() {
 
+                game.pause();
+
                 currentState = state.GAMEOVER;
 
                 findViewById(R.id.lyt_game).setVisibility(View.INVISIBLE);
@@ -460,7 +459,7 @@ public class MainActivity extends FragmentActivity implements
 
                 final int score = game.game.getPoints();
 
-                gamesApiHandler.updateRecord(score);
+
 
                 final LinearLayout play_final       =   (LinearLayout) findViewById(R.id.final_play);
                 final LinearLayout share_final      =   (LinearLayout) findViewById(R.id.final_share);
@@ -482,8 +481,7 @@ public class MainActivity extends FragmentActivity implements
                         rect = new Rect(v.getLeft(), v.getTop(), v.getRight(), v.getBottom());
 
                         if(actionChecker(rect,event,v,trophies_final))
-                            startActivityForResult( Games.Leaderboards.getLeaderboardIntent( gamesApiHandler.getApiClient() ,
-                                    getResources().getString( R.string.leaderboard_score ) ) , 0 ) ;
+                            showLeaderboards();
 
                         return true;
                     }
@@ -524,6 +522,7 @@ public class MainActivity extends FragmentActivity implements
                 score_txv.setTypeface(type);
                 best_txv.setTypeface(type);
 
+                gamesApiHandler.updateRecord(score);
                 if(sharedPreferences.checkForRecord(score)){
 
                     best_label.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.red));
@@ -537,12 +536,22 @@ public class MainActivity extends FragmentActivity implements
                 score_txv.setText(String.valueOf(score));
                 best_txv.setText(String.valueOf(sharedPreferences.getRecord()));
 
-                game.pause();
+
             }
         });
     }
 
 
+    public void showLeaderboards(){
+
+        if(gamesApiHandler.checkConnection()){
+            startActivityForResult( Games.Leaderboards.getLeaderboardIntent( gamesApiHandler.getApiClient() ,
+                    getResources().getString( R.string.leaderboard_score ) ) , 0 ) ;
+        }else{
+            gamesApiHandler.connect();
+            Toast.makeText(getApplicationContext(),"Google Play Games not connected",Toast.LENGTH_SHORT).show();
+        }
+    }
 
     public boolean actionChecker(Rect rect, MotionEvent event, View v, View layout){
 
