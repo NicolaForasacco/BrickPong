@@ -25,9 +25,9 @@ public class SharedPreferencesManager {
 
     public boolean checkForRecord(int points) {
 
-        if(points >= pref.getInt(KEY_RECORD,0)){
-            editor.putInt(KEY_RECORD,
-                          points);
+        if(points >= pref.getInt(KEY_RECORD, 0)){
+
+            editor.putInt(KEY_RECORD, points);
             editor.commit();
             return true;
         }else 

@@ -135,7 +135,7 @@ public class MainActivity extends FragmentActivity implements
         calendar.set(Calendar.SECOND, 00);
 
         AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 7*60*60*1000 , pendingIntent);
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 24*60*60*1000 , pendingIntent);
     }
 
 
@@ -171,7 +171,7 @@ public class MainActivity extends FragmentActivity implements
                 rect = new Rect(v.getLeft(), v.getTop(), v.getRight(), v.getBottom());
 
                 if(actionChecker(rect,event,v,share))
-                    share("My record in saver is " + String.valueOf((int)sharedPreferences.getRecord()) + "\nCan you beat me?");
+                    share("My record in BrickPong is " + String.valueOf(sharedPreferences.getRecord()) + "\nCan you beat me?");
 
                 return true;
             }
@@ -245,30 +245,33 @@ public class MainActivity extends FragmentActivity implements
 
         if(sharedPreferences.isFirstTime() ){
 
-            new CountDownTimer(500, 500) {
+            new CountDownTimer(300, 300) {
 
                 public void onTick(long millisUntilFinished) {}
                 public void onFinish() {
+
                     showTutorial();
                 }
             }.start();
+        }else{
+
+            final LinearLayout btnPause = (LinearLayout)findViewById(R.id.btn_pause);
+
+            btnPause.setOnTouchListener(new View.OnTouchListener() {
+
+                private Rect rect;
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+
+                    rect = new Rect(v.getLeft(), v.getTop(), v.getRight(), v.getBottom());
+
+                    if(actionChecker(rect,event,v,btnPause))
+                        showPauseMenu();
+
+                    return true;
+                }
+            });
         }
-
-        final LinearLayout btnPause = (LinearLayout)findViewById(R.id.btn_pause);
-        btnPause.setOnTouchListener(new View.OnTouchListener() {
-
-            private Rect rect;
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-
-                rect = new Rect(v.getLeft(), v.getTop(), v.getRight(), v.getBottom());
-
-                if(actionChecker(rect,event,v,btnPause))
-                    showPauseMenu();
-
-                return true;
-            }
-        });
 
         txvPoints   =   (TextView)findViewById(R.id.points);
         txvPoints.setTypeface(type);
@@ -288,10 +291,6 @@ public class MainActivity extends FragmentActivity implements
             }
         }).start();
 
-
-        //findViewById(R.id.tutorial).setVisibility(View.VISIBLE);
-
-
         final ViewPager mPager = (ViewPager) findViewById(R.id.pager);
         final TutorialPagerAdapter mPagerAdapter = new TutorialPagerAdapter(getSupportFragmentManager());
         mPager.setAdapter(mPagerAdapter);
@@ -306,6 +305,24 @@ public class MainActivity extends FragmentActivity implements
 
                 if (actionChecker(rect, event, v, findViewById(R.id.close))) {
                     findViewById(R.id.tutorial).setVisibility(View.GONE);
+
+                    final LinearLayout btnPause = (LinearLayout)findViewById(R.id.btn_pause);
+
+                    btnPause.setOnTouchListener(new View.OnTouchListener() {
+
+                        private Rect rect;
+                        @Override
+                        public boolean onTouch(View v, MotionEvent event) {
+
+                            rect = new Rect(v.getLeft(), v.getTop(), v.getRight(), v.getBottom());
+
+                            if(actionChecker(rect,event,v,btnPause))
+                                showPauseMenu();
+
+                            return true;
+                        }
+                    });
+
                     game.resume();
                 }
 
@@ -329,6 +346,23 @@ public class MainActivity extends FragmentActivity implements
                     } else {
                         findViewById(R.id.tutorial).setVisibility(View.GONE);
                         game.resume();
+
+                        final LinearLayout btnPause = (LinearLayout)findViewById(R.id.btn_pause);
+
+                        btnPause.setOnTouchListener(new View.OnTouchListener() {
+
+                            private Rect rect;
+                            @Override
+                            public boolean onTouch(View v, MotionEvent event) {
+
+                                rect = new Rect(v.getLeft(), v.getTop(), v.getRight(), v.getBottom());
+
+                                if(actionChecker(rect,event,v,btnPause))
+                                    showPauseMenu();
+
+                                return true;
+                            }
+                        });
                     }
 
                 }
@@ -496,7 +530,7 @@ public class MainActivity extends FragmentActivity implements
                         rect = new Rect(v.getLeft(), v.getTop(), v.getRight(), v.getBottom());
 
                         if(actionChecker(rect,event,v,share_final))
-                            share("I scored " + String.valueOf(score) + " in saver!\nCan you beat me?");
+                            share("I scored " + String.valueOf(score) + " in BrickPong!\nCan you beat me?");
 
                         return true;
                     }
@@ -612,7 +646,7 @@ public class MainActivity extends FragmentActivity implements
 
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
-        sendIntent.putExtra(Intent.EXTRA_TEXT, mex+"\nTry Push-It! https://play.google.com/store/apps/details?id=brickteamdevelopment.pushit");
+        sendIntent.putExtra(Intent.EXTRA_TEXT, mex+"\nTry BrickPong https://play.google.com/store/apps/details?id=" + getResources().getString(R.string.package_name));
         sendIntent.setType("text/plain");
         startActivity(Intent.createChooser(sendIntent, "Share using "));
     }

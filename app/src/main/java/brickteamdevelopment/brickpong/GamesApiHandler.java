@@ -47,6 +47,59 @@ public class GamesApiHandler implements
             return false ;
     }
 
+    /*public void checkForAchievements( int points ){
+
+        if( mGoogleApiClient.isConnected() ) {
+            switch ( points ){
+                case 0 :
+                    Games.Achievements.unlock( mGoogleApiClient , context.getResources().getString( R.string.achievement_st_happens ) ) ;
+                    break ;
+                case 1 :
+                    Games.Achievements.unlock( mGoogleApiClient , context.getResources().getString( R.string.achievement_its_a_long_way_to_the_top ) ) ;
+                    break ;
+                case 50 :
+                    Games.Achievements.unlock( mGoogleApiClient , context.getResources().getString( R.string.achievement_come_on_only_fifty ) ) ;
+                    break ;
+                case 100 :
+                    Games.Achievements.unlock( mGoogleApiClient , context.getResources().getString( R.string.achievement_0_01 ) ) ;
+                    break ;
+                case 500 :
+                    Games.Achievements.unlock( mGoogleApiClient , context.getResources().getString( R.string.achievement_youre_doing_it_right ) ) ;
+                    break ;
+                case 1000 :
+                    Games.Achievements.unlock( mGoogleApiClient , context.getResources().getString( R.string.achievement_gringo ) ) ;
+                    break ;
+                case 5000 :
+                    Games.Achievements.unlock( mGoogleApiClient , context.getResources().getString( R.string.achievement_good_boy ) ) ;
+                    break ;
+                case 10000 :
+                    Games.Achievements.unlock( mGoogleApiClient , context.getResources().getString( R.string.achievement_be_stronger_and_stronger ) ) ;
+                    break ;
+                case 25000 :
+                    Games.Achievements.unlock( mGoogleApiClient , context.getResources().getString( R.string.achievement_iron_man ) ) ;
+                    break ;
+                case 50000 :
+                    Games.Achievements.unlock( mGoogleApiClient , context.getResources().getString( R.string.achievement_button_destroyer ) ) ;
+                    break ;
+                case 100000 :
+                    Games.Achievements.unlock( mGoogleApiClient , context.getResources().getString( R.string.achievement_god_of_war ) ) ;
+                    break;
+                case 250000 :
+                    Games.Achievements.unlock( mGoogleApiClient , context.getResources().getString( R.string.achievement_totally_insane) ) ;
+                    break ;
+                case 500000 :
+                    Games.Achievements.unlock( mGoogleApiClient , context.getResources().getString( R.string.achievement_half_way_to_olympus ) ) ;
+                    break ;
+                case 750000 :
+                    Games.Achievements.unlock( mGoogleApiClient , context.getResources().getString( R.string.achievement_from_rags_to_riches ) ) ;
+                    break ;
+                case 1000000 :
+                    Games.Achievements.unlock( mGoogleApiClient , context.getResources().getString( R.string.achievement_most_bored_player ) ) ;
+                    break ;
+
+            }
+        }
+    }*/
 
     @Override
     public void onConnected(Bundle bundle) {
