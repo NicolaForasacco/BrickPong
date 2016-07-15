@@ -1,6 +1,7 @@
 package brickteamdevelopment.brickpong;
 
 import android.app.AlarmManager;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -42,11 +43,11 @@ import java.util.Calendar;
 public class MainActivity extends FragmentActivity implements  GoogleApiClient.ConnectionCallbacks,
                                                                 GoogleApiClient.OnConnectionFailedListener {
 
-    private SurfaceView             gameView;
-    private GameView                game;
-    public static TextView          txvPoints;
+    private SurfaceView             gameView;   //View dove viene disegnato il gioco
+    private GameView                game;       //Oggetto che gestisce il thread del gioco e tutti i relativi oggetti
+    public static TextView          txvPoints;  //Testo che mostra il punteggio durante il gioco
 
-    private Typeface                type;
+    private Typeface                type;       //Oggetto utilizzato per modificare il font del testo
 
     private AdView                  mAdView;
     public SharedPreferencesManager sharedPreferences;
@@ -61,71 +62,118 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
 
     private State                   currentState;
 
+    //region Variabili  di Play Games
     private static int              RC_SIGN_IN = 9001;
-
     private boolean                 mResolvingConnectionFailure = false,
                                     mAutoStartSignInflow        = true,
                                     mSignInClicked              = false;
+    //endregion
+
+    //region Activity lifecycle
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mAdView             =   (AdView) findViewById(R.id.adView);
-        gameView            =   (SurfaceView) findViewById(R.id.gameView);
+        type    =   Typeface.createFromAsset(getAssets(), "fonts/Chava-Regular.otf") ;
 
-        type                =   Typeface.createFromAsset( getAssets() , "fonts/Chava-Regular.otf") ;
         sharedPreferences   =   new SharedPreferencesManager(getApplicationContext());
-        gamesApiHandler     =   new GamesApiHandler(this, this);
-        AdRequest adRequest =   new AdRequest.Builder()
-                                    .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-                                    .build();
 
-        game                =   new GameView(this,gameView);
-
+        gameView    =   (SurfaceView) findViewById(R.id.gameView);
+        game        =   new GameView(this, gameView);
         gameView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
 
                 if (event.getAction() == MotionEvent.ACTION_DOWN)
-
                     game.isScreenTouched = true;
-                else if (event.getAction() == MotionEvent.ACTION_UP)
 
+                else if (event.getAction() == MotionEvent.ACTION_UP)
                     game.isScreenTouched = false;
+
                 return true;
             }
         });
 
+        gamesApiHandler =   new GamesApiHandler(this, this);
         gamesApiHandler.updateRecord(sharedPreferences.getRecord());
-        mAdView.loadAd(adRequest);
 
+        NotificationManager notifManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
+        notifManager.cancelAll();
+
+        showAds();
         showMenu();
         scheduleNotification();
     }
 
-    private void scheduleNotification() {
+    @Override
+    public void onDestroy() {
 
-        Intent notificationIntent = new Intent(this, NotificationPublisher.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        if (mAdView != null)
+            mAdView.destroy();
 
-
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.DAY_OF_YEAR,calendar.get(Calendar.DAY_OF_YEAR) + 01);
-        calendar.set(Calendar.HOUR_OF_DAY, 14);
-        calendar.set(Calendar.MINUTE, 00);
-        calendar.set(Calendar.SECOND, 00);
-
-        AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 24*60*60*1000 , pendingIntent);
+        super.onDestroy();
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        gamesApiHandler.connect();
+
+        switch (currentState){
+            case PAUSE:
+                showPauseMenu();
+                break;
+            case GAMEOVER:
+                showGameOverMenu();
+                break;
+            case GAME:
+                showPauseMenu();
+                break;
+            case MENU:
+                showMenu();
+                break;
+        }
+
+        if (mAdView != null)
+            mAdView.resume();
+    }
+
+    @Override
+    protected void onStop() {
+
+        gamesApiHandler.disconnect();
+        super.onStop();
+    }
+
+    @Override
+    protected void onPause() {
+
+        if (mAdView != null)
+            mAdView.pause();
+
+        game.pause();
+
+        super.onPause();
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+
+        hideSystemUI();
+        super.onWindowFocusChanged(hasFocus);
+    }
+
+    //endregion
 
 
     private void showMenu(){
 
         currentState = State.MENU;
 
+        //Si fa partire un thread che continua a disegnare la barra alla base del menu
         game.showMenu(getScreenDimension(),getBannerHeight());
 
         findViewById(R.id.lyt_menu).setVisibility(View.VISIBLE);
@@ -170,11 +218,8 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
                         v.getRight(),
                         v.getBottom());
 
-                if(actionChecker(rect, event, v, rate)){
-                    Intent i = new Intent(Intent.ACTION_VIEW);
-                    i.setData(Uri.parse("market://details?id=" + getPackageName()));
-                    startActivity(i);
-                }
+                if(actionChecker(rect, event, v, rate))
+                    showGooglePlayGamePage();
 
                 return true;
             }
@@ -227,44 +272,28 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
         findViewById(R.id.lyt_pause).setVisibility(View.GONE);
         findViewById(R.id.tutorial).setVisibility(View.GONE);
 
-        final LinearLayout btnPause =   (LinearLayout)findViewById(R.id.btn_pause);
-        txvPoints          =   (TextView) findViewById(R.id.points);
-
+        txvPoints   =   (TextView) findViewById(R.id.points);
         txvPoints.setTypeface(type);
         txvPoints.setText("0");
 
-        game.showGame(getScreenDimension(), getBannerHeight(), (SurfaceView)findViewById(R.id.gameView));
+        //Si fa partire un thread che si occupa di disegnare tutti gli elementi del gioco
+        game.showGame(getScreenDimension(),
+                    getBannerHeight(),
+                    (SurfaceView)findViewById(R.id.gameView));
+
 
         if(sharedPreferences.isFirstTime()){
 
+            //Nel caso in cui sia la prima volta che l'utente gioca si mostra il tutorial dopo 300 millisecondi che il gioco è iniziato
+            //Finche il tutorial non verrà chiuso non sarà possibile premere il tasto per mettere in pausa il gioco
             new CountDownTimer(300, 300) {
 
                 public void onTick(long millisUntilFinished) {}
-                public void onFinish() {
-
-                    showTutorial();
-                }
+                public void onFinish() { showTutorial(); }
             }.start();
 
         }else
-            btnPause.setOnTouchListener(new View.OnTouchListener() {
-
-                private Rect rect;
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-
-                    rect = new Rect(v.getLeft(),
-                            v.getTop(),
-                            v.getRight(),
-                            v.getBottom());
-
-                    if(actionChecker(rect, event, v, btnPause))
-                        showPauseMenu();
-
-                    return true;
-                }
-            });
-
+            enablePauseMenu();
     }
 
     public void showTutorial(){
@@ -368,6 +397,10 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
         });
     }
 
+    /*
+    *  Metodo che una volta chiamato permetterà all'utente di mettere in pausa il gioco
+    *  ovvero abiliterà il relativo pulsante
+    */
     public void enablePauseMenu(){
 
         final LinearLayout btnPause = (LinearLayout)findViewById(R.id.btn_pause);
@@ -565,10 +598,11 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
                     }
                 });
 
-                gamesApiHandler.updateRecord(score);
-                gamesApiHandler.checkForAchievements(score);
 
-                if(sharedPreferences.checkForRecord(score)){
+                gamesApiHandler.updateRecord(score);          //Si aggiorna il record dell'utente in google play games
+                gamesApiHandler.checkForAchievements(score);  //Si controlla il raggiungimento di eventuali risultati
+
+                if(sharedPreferences.checkForRecord(score)){   //Si aggiorna il record nelle sharedPreferences
 
                     best_label.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.red));
                     best_label.setTextColor(Color.WHITE);
@@ -585,7 +619,44 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
     }
 
 
+    private void showGooglePlayGamePage(){
+        Intent i = new Intent(Intent.ACTION_VIEW);
+        i.setData(Uri.parse("market://details?id=" + getPackageName()));
+        startActivity(i);
+    }
 
+    private void showAds(){
+
+        mAdView             =   (AdView) findViewById(R.id.adView);
+        AdRequest adRequest =   new AdRequest.Builder()
+                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                .build();
+        mAdView.loadAd(adRequest);
+    }
+
+    private void scheduleNotification() {
+
+        //Verrà chiamata la classe NotificationPublisher che si occuperà di mostrare le notifiche
+        Intent notificationIntent   = new Intent(this, NotificationPublisher.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+
+        Calendar calendar = Calendar.getInstance();
+
+        //Le notifiche iniziano ad essere mostrate dopo due giorni dall'ultimo accesso
+        calendar.set(Calendar.DAY_OF_YEAR,calendar.get(Calendar.DAY_OF_YEAR) + 02);
+        calendar.set(Calendar.HOUR_OF_DAY, 13);
+        calendar.set(Calendar.MINUTE, 00);
+        calendar.set(Calendar.SECOND, 00);
+
+        AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+        //Le notifiche vengono mostrate ogni due giorni
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 48*60*60*1000 , pendingIntent);
+    }
+
+    /*
+    *  Metodo che mostra le classifiche su play games
+    */
     public void showLeaderboards(){
 
         if(gamesApiHandler.checkConnection()){
@@ -597,6 +668,9 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
         }
     }
 
+    /*
+     * Metodo che si occupa di gestire le animazioni dei bottoni
+     */
     public boolean actionChecker(Rect rect, MotionEvent event, View v, View layout){
 
         if ( event.getAction() == MotionEvent.ACTION_DOWN ){
@@ -665,66 +739,10 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
 
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
-        sendIntent.putExtra(Intent.EXTRA_TEXT, mex
-                                                + "\nTry BrickPong https://play.google.com/store/apps/details?id="
-                                                + getResources().getString(R.string.package_name));
+        sendIntent.putExtra(Intent.EXTRA_TEXT, mex + "\n" + getString(R.string.try_brick_pong));
 
         sendIntent.setType("text/plain");
         startActivity(Intent.createChooser(sendIntent, "Share using "));
-    }
-
-
-
-    @Override
-    public void onDestroy() {
-
-        if (mAdView != null)
-            mAdView.destroy();
-
-        super.onDestroy();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        gamesApiHandler.connect();
-
-        switch (currentState){
-            case PAUSE:
-                showPauseMenu();
-                break;
-            case GAMEOVER:
-                showGameOverMenu();
-                break;
-            case GAME:
-                showPauseMenu();
-                break;
-            case MENU:
-                showMenu();
-                break;
-        }
-
-        if (mAdView != null)
-            mAdView.resume();
-    }
-
-    @Override
-    protected void onStop() {
-
-        gamesApiHandler.disconnect();
-        super.onStop();
-    }
-
-    @Override
-    protected void onPause() {
-
-        if (mAdView != null)
-            mAdView.pause();
-
-        game.pause();
-
-        super.onPause();
     }
 
     private void hideSystemUI() {
@@ -743,14 +761,9 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
         }
     }
 
-    @Override
-    public void onWindowFocusChanged(boolean hasFocus) {
 
-        hideSystemUI();
-        super.onWindowFocusChanged(hasFocus);
-    }
 
-    //region Play Games methods
+    //region Metodi del servizio Play Games
 
     @Override
     public void onConnected(Bundle bundle) {}
@@ -793,6 +806,7 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
 
     //endregion
 
+    //Adapter utilizzato per il tutorial
     public class TutorialPagerAdapter extends FragmentStatePagerAdapter {
 
         public TutorialPagerAdapter(FragmentManager fm) {

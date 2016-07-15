@@ -1,11 +1,17 @@
 <resources>
     <string name="app_name">BRICKPONG</string>
 
-    <string name="tap_to_play">TAP TO PLAY</string>
-    <string name="points_record">POINTS RECORD</string>
-    <string name="games_played">GAMES PLAYED</string>
     <string name="presents_string">\u0040BrickDev\n\u0026 \u0040BrickDesign\n\nPRESENTS</string>
     <string name="error">Error</string>
+
+    <string name="play">PLAY</string>
+    <string name="share">SHARE</string>
+    <string name="pause">PAUSE</string>
+    <string name="game_over">GAME OVER</string>
+    <string name="notification_content">Play BrickPong or share it!</string>
+    <string name="try_brick_pong">Try BrickPong https://play.google.com/store/apps/details?id=brickteamdevelopment.brickpong</string>
+    <string name="share_using">"Share using "</string>
+
 
     <string name="google_app_id">615761877366</string>
     <string name="package_name">brickteamdevelopment.brickpong</string>

@@ -19,7 +19,7 @@ public class NotificationPublisher extends BroadcastReceiver {
 
         Intent shareIntent = new Intent();
         shareIntent.setAction(Intent.ACTION_SEND);
-        shareIntent.putExtra(Intent.EXTRA_TEXT, "\nTry BrickPong https://play.google.com/store/apps/details?id=" + context.getResources().getString(R.string.package_name));
+        shareIntent.putExtra(Intent.EXTRA_TEXT, "\n" + context.getString(R.string.try_brick_pong));
         shareIntent.setType("text/plain");
 
         NotificationManager notificationManager =   (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -31,20 +31,20 @@ public class NotificationPublisher extends BroadcastReceiver {
 
         PendingIntent pendingIntentShare        =   PendingIntent.getActivity(context,
                                                                             0,
-                                                                            Intent.createChooser(shareIntent, "Share using "),
+                                                                            Intent.createChooser(shareIntent, context.getString(R.string.share_using)),
                                                                             PendingIntent.FLAG_UPDATE_CURRENT);
 
         NotificationCompat.Action actionPlay    =   new NotificationCompat.Action.Builder(R.drawable.playwhite,
-                                                                                        "PLAY",
+                                                                                        context.getString(R.string.play),
                                                                                         pendingIntentPlay).build();
 
         NotificationCompat.Action actionShare   =   new NotificationCompat.Action.Builder(R.drawable.share_white,
-                                                                                        "SHARE",
+                                                                                        context.getString(R.string.share),
                                                                                         pendingIntentShare).build();
 
         NotificationCompat.Builder builder      =   new NotificationCompat.Builder(context)
-                                                            .setContentTitle("BrickPong")
-                                                            .setContentText("Play BrickPong or share it with your friends!")
+                                                            .setContentTitle(context.getString(R.string.app_name))
+                                                            .setContentText(context.getString(R.string.notification_content))
                                                             .addAction(actionPlay)
                                                             .addAction(actionShare)
                                                             .setContentIntent(pendingIntentPlay)
@@ -52,9 +52,9 @@ public class NotificationPublisher extends BroadcastReceiver {
                                                             .setSmallIcon(R.drawable.icon_brick_pong_white)
                                                             .setAutoCancel(true)
                                                             .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.brickpong_icon))
-                                                            .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
-                                                            .setVibrate(new long[] { 500, 500})
                                                             .setLights(Color.RED, 3000, 3000);
+
+        builder.getNotification().flags |= Notification.FLAG_AUTO_CANCEL;
 
         notificationManager.notify(1, builder.build());
     }

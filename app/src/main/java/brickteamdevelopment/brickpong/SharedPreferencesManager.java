@@ -12,7 +12,6 @@ public class SharedPreferencesManager {
 
     private static final String PREF_NAME               =   "Pong";
     private static final String KEY_RECORD              =   "record";
-    private static final String KEY_IS_FIRST_TIME       =   "isFirstTime";
 
 
     public SharedPreferencesManager(Context context) {
