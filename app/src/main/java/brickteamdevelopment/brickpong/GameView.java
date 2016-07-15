@@ -59,6 +59,9 @@ class GameView implements Runnable {
         }
     }
 
+    /*
+     * Vengono inizializzato il paddle del menu e viene fatto partire il thread per mostrarlo
+     */
     public void showMenu(Point dim, int bannerHeight) {
 
         pause();
@@ -82,6 +85,9 @@ class GameView implements Runnable {
         gameThread.start();
     }
 
+    /*
+     * Vengono inizializzati i vari oggetti del gioco e viene fatto partire il thread che li disegnerà
+     */
     public void showGame(Point dim,int bannerHeight,SurfaceView view){
 
         pause();
@@ -117,7 +123,9 @@ class GameView implements Runnable {
         paddleBounceSound.setMediaPlayer(MediaPlayer.create(mainActivity.getApplicationContext(),R.raw.jump83));
     }
 
-
+    /*
+     * Vengono aggiornati coordinate e velocità del paddle
+     */
     public void updateMenu(){
 
         paddle.incrementX();
@@ -143,6 +151,9 @@ class GameView implements Runnable {
         }
     }
 
+    /*
+     * Vengono aggiornati coordinate e velocità di paddle e palla
+     */
     public void updateGame(){
 
         paddle.incrementX();
