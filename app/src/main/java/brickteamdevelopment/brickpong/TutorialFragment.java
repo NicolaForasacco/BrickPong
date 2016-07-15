@@ -17,16 +17,16 @@ public class TutorialFragment extends Fragment {
     private int mPageNumber;
 
     public static TutorialFragment create(int pageNumber){
-        TutorialFragment fragment = new TutorialFragment();
-        Bundle args = new Bundle();
+
+        TutorialFragment fragment   =   new TutorialFragment();
+        Bundle args                 =   new Bundle();
+
         args.putInt(ARG_PAGE, pageNumber);
         fragment.setArguments(args);
         return fragment;
     }
 
-    public TutorialFragment(){
-
-    }
+    public TutorialFragment(){}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -38,7 +38,7 @@ public class TutorialFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ViewGroup rootview = (ViewGroup)inflater.inflate(R.layout.tutorial_layout,container,false);
 
-        ((TextView)rootview.findViewById(R.id.tutorial_title)).setTypeface(Typeface.createFromAsset( getActivity().getAssets() , "fonts/Chava-Regular.otf"));
+        ((TextView)rootview.findViewById(R.id.tutorial_title)).setTypeface(Typeface.createFromAsset(getActivity().getAssets() , "fonts/Chava-Regular.otf"));
 
         if(mPageNumber==0){
 

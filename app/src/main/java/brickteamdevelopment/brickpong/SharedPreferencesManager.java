@@ -8,7 +8,7 @@ public class SharedPreferencesManager {
     SharedPreferences           pref;
     SharedPreferences.Editor    editor;
     Context                     _context;
-    int                         PRIVATE_MODE    = 0;
+    int                         PRIVATE_MODE            =   0;
 
     private static final String PREF_NAME               =   "Pong";
     private static final String KEY_RECORD              =   "record";

@@ -24,13 +24,13 @@ public class Ball {
 
     public Ball(int screenWidth,int screenHeight){
 
-        screen = new Point(screenWidth,screenHeight);
+        screen          = new Point(screenWidth, screenHeight);
 
         height          =   screenWidth / 20;
         width           =   screenWidth / 20;
 
-        x               =   new Random().nextInt((int)(screenWidth*0.6)) + screenWidth*0.2f;
-        y               =   new Random().nextInt((int)(screenHeight*0.3));
+        x               =   new Random().nextInt((int)(screenWidth * 0.6)) + screenWidth * 0.2f;
+        y               =   new Random().nextInt((int)(screenHeight * 0.3));
 
         speedX          =   screenWidth / 2.5f;
         speedY          =   speedX;
