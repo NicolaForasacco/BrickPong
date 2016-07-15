@@ -5,9 +5,8 @@ import android.provider.MediaStore;
 
 public class SoundPlayer extends Thread {
 
-    Thread mpThread;
-
-    MediaPlayer mp;
+    Thread          mpThread;
+    MediaPlayer     mp;
 
     public SoundPlayer(){}
 
@@ -23,6 +22,7 @@ public class SoundPlayer extends Thread {
 
     @Override
     public void run() {
+
         mp.start();
         super.run();
     }

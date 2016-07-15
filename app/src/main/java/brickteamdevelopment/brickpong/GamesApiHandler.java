@@ -11,10 +11,9 @@ public class GamesApiHandler implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener{
 
-    private final Context context ;
-    private GoogleApiClient mGoogleApiClient ;
-
-    private final GoogleApiClient.OnConnectionFailedListener connectionFailedListener ;
+    private final Context                                       context;
+    private GoogleApiClient                                     mGoogleApiClient;
+    private final GoogleApiClient.OnConnectionFailedListener    connectionFailedListener;
 
     public GamesApiHandler(Context applicationContext , GoogleApiClient.OnConnectionFailedListener listener ){
 
@@ -47,10 +46,10 @@ public class GamesApiHandler implements
             return false ;
     }
 
-    /*public void checkForAchievements( int points ){
+    public void checkForAchievements( int points ){
 
         if( mGoogleApiClient.isConnected() ) {
-            switch ( points ){
+            /*switch ( points ){
                 case 0 :
                     Games.Achievements.unlock( mGoogleApiClient , context.getResources().getString( R.string.achievement_st_happens ) ) ;
                     break ;
@@ -97,9 +96,9 @@ public class GamesApiHandler implements
                     Games.Achievements.unlock( mGoogleApiClient , context.getResources().getString( R.string.achievement_most_bored_player ) ) ;
                     break ;
 
-            }
+            }*/
         }
-    }*/
+    }
 
     @Override
     public void onConnected(Bundle bundle) {

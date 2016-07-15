@@ -22,30 +22,40 @@ public class NotificationPublisher extends BroadcastReceiver {
         shareIntent.putExtra(Intent.EXTRA_TEXT, "\nTry BrickPong https://play.google.com/store/apps/details?id=" + context.getResources().getString(R.string.package_name));
         shareIntent.setType("text/plain");
 
-        NotificationManager notificationManager = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationManager notificationManager =   (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        PendingIntent pendingIntentPlay = PendingIntent.getActivity(context,0,new Intent(context,MainActivity.class),PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntentPlay         =   PendingIntent.getActivity(context,
+                                                                            0,
+                                                                            new Intent(context, MainActivity.class),
+                                                                            PendingIntent.FLAG_UPDATE_CURRENT);
 
-        PendingIntent pendingIntentShare = PendingIntent.getActivity(context,0,Intent.createChooser(shareIntent, "Share using "),PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntentShare        =   PendingIntent.getActivity(context,
+                                                                            0,
+                                                                            Intent.createChooser(shareIntent, "Share using "),
+                                                                            PendingIntent.FLAG_UPDATE_CURRENT);
 
-        NotificationCompat.Action actionPlay = new NotificationCompat.Action.Builder(R.drawable.playwhite, "PLAY", pendingIntentPlay).build();
+        NotificationCompat.Action actionPlay    =   new NotificationCompat.Action.Builder(R.drawable.playwhite,
+                                                                                        "PLAY",
+                                                                                        pendingIntentPlay).build();
 
-        NotificationCompat.Action actionShare = new NotificationCompat.Action.Builder(R.drawable.share_white, "SHARE", pendingIntentShare).build();
+        NotificationCompat.Action actionShare   =   new NotificationCompat.Action.Builder(R.drawable.share_white,
+                                                                                        "SHARE",
+                                                                                        pendingIntentShare).build();
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
-                .setContentTitle("BrickPong")
-                .setContentText("Play BrickPong or share it with your friends!")
-                .addAction(actionPlay)
-                .addAction(actionShare)
-                .setContentIntent(pendingIntentPlay)
-                .setColor(Color.rgb(183, 28, 28))
-                .setSmallIcon(R.drawable.icon_brick_pong_white)
-                .setAutoCancel(true)
-                .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.brickpong_icon))
-                .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
-                .setVibrate(new long[] { 500, 500})
-                .setLights(Color.RED, 3000, 3000);
+        NotificationCompat.Builder builder      =   new NotificationCompat.Builder(context)
+                                                            .setContentTitle("BrickPong")
+                                                            .setContentText("Play BrickPong or share it with your friends!")
+                                                            .addAction(actionPlay)
+                                                            .addAction(actionShare)
+                                                            .setContentIntent(pendingIntentPlay)
+                                                            .setColor(Color.rgb(183, 28, 28))
+                                                            .setSmallIcon(R.drawable.icon_brick_pong_white)
+                                                            .setAutoCancel(true)
+                                                            .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.brickpong_icon))
+                                                            .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
+                                                            .setVibrate(new long[] { 500, 500})
+                                                            .setLights(Color.RED, 3000, 3000);
 
-        notificationManager.notify(1,builder.build());
+        notificationManager.notify(1, builder.build());
     }
 }

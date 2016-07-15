@@ -11,36 +11,30 @@ import android.view.SurfaceView;
 
 class GameView implements Runnable {
 
-    Thread gameThread = null;
+    private Thread          gameThread = null;
+    private SurfaceHolder   ourHolder;
+    private Canvas          canvas;
+    private Paint           paint;
+    private Paddle          paddle;
+    public Game             game;
+    private Ball            ball;
 
-    SurfaceHolder ourHolder;
+    public boolean          playing,
+                            isScreenTouched;
 
-    volatile boolean playing;
+    private long            fps = 1;
+    private long            timeThisFrame;
 
-    Canvas canvas;
-    Paint paint;
-
-    long fps = 1;
-
-    private long timeThisFrame;
-
-    private MainActivity mainActivity;
-
-    private Paddle paddle;
-    public Game game;
-    private Ball ball;
-    public boolean isScreenTouched;
-    private String gameType;
-
-    private SoundPlayer paddleBounceSound;
-    private SoundPlayer limitBounceSound;
+    private MainActivity    mainActivity;
+    private String          gameType;
+    private SoundPlayer     paddleBounceSound,
+                            limitBounceSound;
 
     public GameView(MainActivity mainActivity, SurfaceView view) {
 
-        ourHolder = view.getHolder();
-        paint = new Paint();
-
-        this.mainActivity = mainActivity;
+        ourHolder           =   view.getHolder();
+        paint               =   new Paint();
+        this.mainActivity   =   mainActivity;
     }
 
     @Override
@@ -59,9 +53,9 @@ class GameView implements Runnable {
             }
 
             timeThisFrame = System.currentTimeMillis() - startFrameTime;
-            if (timeThisFrame > 0) {
+
+            if (timeThisFrame > 0)
                 fps = 1000 / timeThisFrame;
-            }
         }
     }
 
@@ -72,67 +66,57 @@ class GameView implements Runnable {
         Paint paintWhite = new Paint();
         paintWhite.setColor(Color.WHITE);
 
-        paddle = new Paddle(dim.x,
-                dim.y - bannerHeight,
-                true);
+        paddle      =   new Paddle(dim.x,
+                                dim.y - bannerHeight,
+                                true);
 
-        fps = (long) paddle.speed;
+        game        =   new Game(dim.x,
+                                dim.y - bannerHeight,
+                                "#B71C1C");
 
-        game = new Game(dim.x,
-                dim.y - bannerHeight,
-                "#B71C1C");
+        fps         =   (long) paddle.speed;
+        gameType    =   "menu";
+        playing     =   true;
+        gameThread  =   new Thread(this);
 
-        gameType = "menu";
-        playing = true;
-        gameThread = new Thread(this);
         gameThread.start();
-    }
-
-    public void draw() {
-
-        if(gameType.compareTo("menu")==0) {
-            updateMenu();
-            drawMenu();
-        }
-
-        else {
-            updateGame();
-            drawGame();
-        }
     }
 
     public void showGame(Point dim,int bannerHeight,SurfaceView view){
 
         pause();
 
-        limitBounceSound = new SoundPlayer();
-        limitBounceSound.setMediaPlayer(MediaPlayer.create(mainActivity.getApplicationContext(),R.raw.blip_select26));
-
-        paddleBounceSound = new SoundPlayer();
-        paddleBounceSound.setMediaPlayer(MediaPlayer.create(mainActivity.getApplicationContext(),R.raw.jump83));
-
         Paint paintWhite = new Paint();
         paintWhite.setColor(Color.WHITE);
 
-        paddle  =   new Paddle(dim.x,
-                dim.y - bannerHeight,
-                false);
+        paddle      =   new Paddle(dim.x,
+                                dim.y - bannerHeight,
+                                false);
 
-        fps = (long) paddle.speed;
+        game        =   new Game(dim.x,
+                                dim.y - bannerHeight,
+                                "#B71C1C");
 
-        game    =   new Game(dim.x,
-                dim.y - bannerHeight,
-                "#B71C1C");
+        ball        =   new Ball(dim.x,
+                                dim.y - bannerHeight);
 
-        ball    =   new Ball(dim.x,
-                dim.y - bannerHeight);
+        fps         =   (long) paddle.speed;
+        gameType    =   "game";
+        playing     =   true;
+        gameThread  =   new Thread(this);
 
-
-        gameType = "game";
-        playing = true;
-        gameThread = new Thread(this);
         gameThread.start();
     }
+
+    private void soundPlayerInit(){
+
+        limitBounceSound    =   new SoundPlayer();
+        paddleBounceSound   =   new SoundPlayer();
+
+        limitBounceSound.setMediaPlayer(MediaPlayer.create(mainActivity.getApplicationContext(),R.raw.blip_select26));
+        paddleBounceSound.setMediaPlayer(MediaPlayer.create(mainActivity.getApplicationContext(),R.raw.jump83));
+    }
+
 
     public void updateMenu(){
 
@@ -159,8 +143,8 @@ class GameView implements Runnable {
         }
     }
 
-
     public void updateGame(){
+
         paddle.incrementX();
         if (paddle.getX() >= game.getScreenWidth())
             paddle.setX(0);
@@ -204,8 +188,10 @@ class GameView implements Runnable {
         if (ball.getPaddleEndY() >= (game.getScreenHeight() - paddle.getHeight())) {
 
             //se la pallina tocca il limite inferiore
-            if ((ball.getPaddleEndX() >= paddle.getX() && ball.getX() <= paddle.getPaddleEndX()) ||
-                    (ball.getX() >= 0 && ball.getX() <= paddle.getPaddleEndX() - game.getScreenWidth())) {
+            if ((ball.getPaddleEndX() >= paddle.getX()
+                    && ball.getX() <= paddle.getPaddleEndX())
+                    || (ball.getX() >= 0
+                    && ball.getX() <= paddle.getPaddleEndX() - game.getScreenWidth())) {
 
                 //la pallina ha toccato la barra quindi torna in alto
 
@@ -219,6 +205,7 @@ class GameView implements Runnable {
                     @Override
                     public void run() {
                         MainActivity.txvPoints.setText(String.valueOf(game.getPoints()));
+
                     }
                 });
             } else {
@@ -230,6 +217,7 @@ class GameView implements Runnable {
     }
 
     public void drawGame(){
+
         if (ourHolder.getSurface().isValid()) {
 
             canvas = ourHolder.lockCanvas();
@@ -247,7 +235,9 @@ class GameView implements Runnable {
         }
     }
 
+
     public void pause() {
+
         playing = false;
 
         if(gameThread != null){
@@ -270,9 +260,8 @@ class GameView implements Runnable {
         if(playing == false)
             playing = true;
 
-        if(!gameThread.isAlive()){
+        if(!gameThread.isAlive())
             gameThread.start();
-        }
     }
 }
 

@@ -12,6 +12,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public class SplashScreen extends Activity{
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -19,22 +20,19 @@ public class SplashScreen extends Activity{
 
         Typeface type           =   Typeface.createFromAsset( getAssets() , "fonts/Chava-Regular.otf") ;
         TextView presents       =   ((TextView)findViewById(R.id.txv_presents));
-        presents.setTypeface(type);
+        final int splashTime    =   1400;
 
-        final int splashTime = 1400;
+        presents.setTypeface(type);
 
         new CountDownTimer(splashTime, 300) {
 
-            public void onTick(long millisUntilFinished) {
-                ((ProgressBar)findViewById(R.id.progressBar)).setProgress((int)(splashTime - millisUntilFinished));
-            }
+            public void onTick(long millisUntilFinished) { ((ProgressBar)findViewById(R.id.progressBar)).setProgress((int)(splashTime - millisUntilFinished)); }
             public void onFinish() {
 
                 ((ProgressBar)findViewById(R.id.progressBar)).setProgress(1800);
 
                 startActivity(new Intent(SplashScreen.this,MainActivity.class));
                 finish();
-
             }
         }.start();
     }
@@ -57,13 +55,12 @@ public class SplashScreen extends Activity{
                     | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                     | View.SYSTEM_UI_FLAG_FULLSCREEN
                     | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
-
-
         }
     }
 
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
+
         hideSystemUI();
         super.onWindowFocusChanged(hasFocus);
     }
