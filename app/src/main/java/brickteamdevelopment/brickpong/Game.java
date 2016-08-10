@@ -13,19 +13,26 @@ public class Game {
                             screenWidth,
                             screenHeight;
 
-    public Game(int width, int height, String color){
-        this.points         =   0;
-        this.screenHeight   =   height;
-        this.screenWidth    =   width;
-        this.paint          =   new Paint();
+    private GamesApiHandler gamesApiHandler;
+
+    public Game(int width, int height, String color, GamesApiHandler gamesApiHandler){
+        this.points             =   0;
+        this.screenHeight       =   height;
+        this.screenWidth        =   width;
+        this.paint              =   new Paint();
         this.paint.setColor(Color.parseColor(color));
+        this.gamesApiHandler    =   gamesApiHandler;
     }
 
     public int getScreenWidth() { return screenWidth; }
     public int getScreenHeight() { return screenHeight; }
 
     public int getPoints() { return points; }
-    public void incrementPoints(){ points++; }
+    public void incrementPoints(){
+
+        points++;
+        gamesApiHandler.checkForAchievements(points);
+    }
 
     public void draw(Canvas canvas){
 
