@@ -97,7 +97,6 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
         });
 
         gamesApiHandler =   new GamesApiHandler(this, this);
-        gamesApiHandler.updateRecord(sharedPreferences.getRecord());
 
         NotificationManager notifManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
         notifManager.cancelAll();
@@ -137,8 +136,8 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
                 break;
         }
 
-        if (mAdView != null)
-            mAdView.resume();
+       if (mAdView != null)
+           mAdView.resume();
     }
 
     @Override
@@ -279,7 +278,7 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
         //Si fa partire un thread che si occupa di disegnare tutti gli elementi del gioco
         game.showGame(getScreenDimension(),
                     getBannerHeight(),
-                    (SurfaceView)findViewById(R.id.gameView));
+                    (SurfaceView)findViewById(R.id.gameView),gamesApiHandler);
 
 
         if(sharedPreferences.isFirstTime()){
@@ -599,6 +598,7 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
                 });
 
 
+                gamesApiHandler.updateRecord(sharedPreferences.getRecord());
                 gamesApiHandler.updateRecord(score);          //Si aggiorna il record dell'utente in google play games
                 gamesApiHandler.checkForAchievements(score);  //Si controlla il raggiungimento di eventuali risultati
 
@@ -630,7 +630,7 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
         mAdView             =   (AdView) findViewById(R.id.adView);
         AdRequest adRequest =   new AdRequest.Builder()
                 .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-                .build();
+               .build();
         mAdView.loadAd(adRequest);
     }
 

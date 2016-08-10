@@ -30,7 +30,7 @@ public class Ball {
         width           =   screenWidth / 20;
 
         x               =   new Random().nextInt((int)(screenWidth * 0.6)) + screenWidth * 0.2f;
-        y               =   new Random().nextInt((int)(screenHeight * 0.3));
+        y               =   new Random().nextInt((int)(screenHeight / 2)) + (int)(screenHeight / 4);
 
         speedX          =   screenWidth / 2.5f;
         speedY          =   speedX;
@@ -42,11 +42,12 @@ public class Ball {
         paintBlack.setColor(Color.BLACK);
         paintWhite.setColor(Color.WHITE);
 
-        if(new Random().nextBoolean())
-            changeMovementX();
+        if(y >= screenHeight / 2){
+            changeMovementY();
+        }
 
         if(new Random().nextBoolean())
-            changeMovementY();
+            changeMovementX();
     }
 
     public float  getX(){ return x; }
@@ -91,8 +92,13 @@ public class Ball {
 
         float v2x = speedX + paddle.speed * 0.8f;
 
-        if(speedY >= 0)
-            speedY *= -1;
+        if(paddle.paddleType == 1) {
+            if (speedY >= 0)
+                speedY *= -1;
+        }else {
+            if (speedY <= 0)
+                speedY *= -1;
+        }
 
         if(v2x == 0)
             v2x = (new Random().nextInt(2) == 0)? 1: -1;
