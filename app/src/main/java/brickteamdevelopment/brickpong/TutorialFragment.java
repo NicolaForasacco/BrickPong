@@ -40,15 +40,22 @@ public class TutorialFragment extends Fragment {
 
         ((TextView)rootview.findViewById(R.id.tutorial_title)).setTypeface(Typeface.createFromAsset(getActivity().getAssets() , "fonts/Chava-Regular.otf"));
 
-        if(mPageNumber==0){
+        switch (mPageNumber){
+            case 0:
 
-            ((TextView)rootview.findViewById(R.id.tutorial_title)).setText("Tap to move the paddle");
-            ((ImageView)rootview.findViewById(R.id.imageTutorial)).setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.tutorial));
-        }else {
-
-            ((TextView)rootview.findViewById(R.id.tutorial_title)).setText("Stop the ball");
-            ((ImageView)rootview.findViewById(R.id.imageTutorial)).setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.tutorial2));
+                ((TextView)rootview.findViewById(R.id.tutorial_title)).setText("Tap to move the paddle");
+                ((ImageView)rootview.findViewById(R.id.imageTutorial)).setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.tutorial));
+                break;
+            case 1:
+                ((TextView)rootview.findViewById(R.id.tutorial_title)).setText("Stop the ball with the bottom paddle");
+                ((ImageView)rootview.findViewById(R.id.imageTutorial)).setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.tutorial2));
+                break;
+            case 2:
+                ((TextView)rootview.findViewById(R.id.tutorial_title)).setText("Stop the ball with the top paddle");
+                ((ImageView)rootview.findViewById(R.id.imageTutorial)).setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.tutorial3));
+                break;
         }
+
 
         return rootview;
     }
