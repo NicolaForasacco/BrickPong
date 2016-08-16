@@ -98,12 +98,8 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
 
         gamesApiHandler =   new GamesApiHandler(this, this);
 
-        NotificationManager notifManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
-        notifManager.cancelAll();
-
         showAds();
         showMenu();
-        scheduleNotification();
     }
 
     @Override
@@ -634,25 +630,7 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
         mAdView.loadAd(adRequest);
     }
 
-    private void scheduleNotification() {
 
-        //Verrà chiamata la classe NotificationPublisher che si occuperà di mostrare le notifiche
-        Intent notificationIntent   = new Intent(this, NotificationPublisher.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-
-        Calendar calendar = Calendar.getInstance();
-
-        //Le notifiche iniziano ad essere mostrate dopo due giorni dall'ultimo accesso
-        calendar.set(Calendar.DAY_OF_YEAR,calendar.get(Calendar.DAY_OF_YEAR) + 02);
-        calendar.set(Calendar.HOUR_OF_DAY, 13);
-        calendar.set(Calendar.MINUTE, 00);
-        calendar.set(Calendar.SECOND, 00);
-
-        AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
-        //Le notifiche vengono mostrate ogni due giorni
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 48*60*60*1000 , pendingIntent);
-    }
 
     /*
     *  Metodo che mostra le classifiche su play games
@@ -820,7 +798,7 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
 
         @Override
         public int getCount() {
-            return 2;
+            return 3;
         }
     }
 }

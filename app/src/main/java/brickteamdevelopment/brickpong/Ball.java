@@ -88,17 +88,26 @@ public class Ball {
         speedY = speedY * 1.1f;
     }
 
-    public void bounceOnPaddle(Paddle paddle){
+    public void bounceOnPaddle(PaddleTop paddle){
 
         float v2x = speedX + paddle.speed * 0.8f;
 
-        if(paddle.paddleType == 1) {
-            if (speedY >= 0)
-                speedY *= -1;
-        }else {
-            if (speedY <= 0)
-                speedY *= -1;
-        }
+        if (speedY <= 0)
+            speedY *= -1;
+
+        if(v2x == 0)
+            v2x = (new Random().nextInt(2) == 0)? 1: -1;
+
+        speedX = v2x;
+    }
+
+    public void bounceOnPaddle(PaddleBottom paddle){
+
+        float v2x = speedX + paddle.speed * 0.8f;
+
+        if (speedY >= 0)
+            speedY *= -1;
+
 
         if(v2x == 0)
             v2x = (new Random().nextInt(2) == 0)? 1: -1;

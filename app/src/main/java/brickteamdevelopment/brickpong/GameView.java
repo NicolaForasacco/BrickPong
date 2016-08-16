@@ -15,7 +15,6 @@ class GameView implements Runnable {
     private SurfaceHolder   ourHolder;
     private Canvas          canvas;
     private Paint           paint;
-    private Paddle paddle2;
     public Game             game;
     private Ball            ball;
 
@@ -29,7 +28,9 @@ class GameView implements Runnable {
     private String          gameType;
     private SoundPlayer     paddleBounceSound,
                             limitBounceSound;
-    private Paddle paddle1;
+
+    private PaddleTop       paddleTop;
+    private PaddleBottom    paddleBottom;
 
     public GameView(MainActivity mainActivity, SurfaceView view) {
 
@@ -46,9 +47,11 @@ class GameView implements Runnable {
             long startFrameTime = System.currentTimeMillis();
 
             if (gameType.compareTo("menu") == 0) {
+
                 updateMenu();
                 drawMenu();
             } else {
+
                 updateGame();
                 drawGame();
             }
@@ -70,9 +73,8 @@ class GameView implements Runnable {
         Paint paintWhite = new Paint();
         paintWhite.setColor(Color.WHITE);
 
-        paddle2 =   new Paddle(dim.x,
+        paddleBottom =   new PaddleBottom(dim.x,
                                 dim.y - bannerHeight,
-                                true,
                                 true);
 
         game        =   new Game(dim.x,
@@ -80,7 +82,7 @@ class GameView implements Runnable {
                                 "#B71C1C",
                                 null);
 
-        fps         =   (long) paddle2.speed;
+        fps         =   (long) paddleBottom.speed;
         gameType    =   "menu";
         playing     =   true;
         gameThread  =   new Thread(this);
@@ -98,15 +100,13 @@ class GameView implements Runnable {
         Paint paintWhite = new Paint();
         paintWhite.setColor(Color.WHITE);
 
-        paddle1 =   new Paddle(dim.x,
+        paddleTop =   new PaddleTop(dim.x,
                 dim.y - bannerHeight,
-                false,
                 false);
 
-        paddle2 =   new Paddle(dim.x,
+        paddleBottom =   new PaddleBottom(dim.x,
                                 dim.y - bannerHeight,
-                                false,
-                                true);
+                                false);
 
         game        =   new Game(dim.x,
                                 dim.y - bannerHeight,
@@ -116,7 +116,7 @@ class GameView implements Runnable {
         ball        =   new Ball(dim.x,
                                 dim.y - bannerHeight);
 
-        fps         =   (long) paddle2.speed;
+        fps         =   (long) paddleBottom.speed;
         gameType    =   "game";
         playing     =   true;
         gameThread  =   new Thread(this);
@@ -138,11 +138,11 @@ class GameView implements Runnable {
      */
     public void updateMenu(){
 
-        paddle2.incrementX();
-        if (paddle2.getX() >= game.getScreenWidth())
-            paddle2.setX(0);
+        paddleBottom.incrementX();
+        if (paddleBottom.getX() >= game.getScreenWidth())
+            paddleBottom.setX(0);
 
-        paddle2.incrementMovement(fps);
+        paddleBottom.incrementMovement(fps);
     }
 
     public void drawMenu() {
@@ -154,7 +154,7 @@ class GameView implements Runnable {
 
                 game.draw(canvas);
 
-                paddle2.draw(canvas, game.getScreenWidth());
+                paddleBottom.draw(canvas, game.getScreenWidth());
 
                 ourHolder.unlockCanvasAndPost(canvas);
             }
@@ -166,23 +166,23 @@ class GameView implements Runnable {
      */
     public void updateGame(){
 
-        paddle1.incrementX();
-        if (paddle1.getX() <= 0)
-            paddle1.setX(game.getScreenWidth());
+        paddleTop.incrementX();
+        if (paddleTop.getX() <= 0)
+            paddleTop.setX(game.getScreenWidth());
 
         if (isScreenTouched)
-            paddle1.incrementMovement(fps);
+            paddleTop.incrementMovement(fps);
         else
-            paddle1.decrementMovement(fps);
+            paddleTop.decrementMovement(fps);
 
-        paddle2.incrementX();
-        if (paddle2.getX() >= game.getScreenWidth())
-            paddle2.setX(0);
+        paddleBottom.incrementX();
+        if (paddleBottom.getX() >= game.getScreenWidth())
+            paddleBottom.setX(0);
 
         if (isScreenTouched)
-            paddle2.incrementMovement(fps);
+            paddleBottom.incrementMovement(fps);
         else
-            paddle2.decrementMovement(fps);
+            paddleBottom.decrementMovement(fps);
 
         ball.incrementCoordinates(fps);
 
@@ -201,20 +201,20 @@ class GameView implements Runnable {
 
         }
 
-        if (ball.getY() <= (paddle1.getHeight())) {
+        if (ball.getY() <= (paddleTop.getHeight())) {
 
             //se la pallina tocca il limite superiore
-            if ((ball.getPaddleEndX() >= paddle1.getX()
-                    && ball.getX() <= paddle1.getPaddleEndX())
+            if ((ball.getPaddleEndX() >= paddleTop.getX()
+                    && ball.getX() <= paddleTop.getPaddleEndX())
                     || (ball.getX() >= 0
-                    && ball.getX() <= paddle1.getPaddleEndX() - game.getScreenWidth())) {
+                    && ball.getX() <= paddleTop.getPaddleEndX() - game.getScreenWidth())) {
 
                 //la pallina ha toccato la barra quindi torna in basso
 
                 ball.incrementSpeed();
-                paddle1.incrementMaxSpeed();
+                paddleTop.incrementMaxSpeed();
 
-                ball.bounceOnPaddle(paddle1);
+                ball.bounceOnPaddle(paddleTop);
 
                 game.incrementPoints();
                 MainActivity.txvPoints.post(new Runnable() {
@@ -231,20 +231,20 @@ class GameView implements Runnable {
             }
         }
 
-        if (ball.getPaddleEndY() >= (game.getScreenHeight() - paddle2.getHeight())) {
+        if (ball.getPaddleEndY() >= (game.getScreenHeight() - paddleBottom.getHeight())) {
 
             //se la pallina tocca il limite inferiore
-            if ((ball.getPaddleEndX() >= paddle2.getX()
-                    && ball.getX() <= paddle2.getPaddleEndX())
+            if ((ball.getPaddleEndX() >= paddleBottom.getX()
+                    && ball.getX() <= paddleBottom.getPaddleEndX())
                     || (ball.getX() >= 0
-                    && ball.getX() <= paddle2.getPaddleEndX() - game.getScreenWidth())) {
+                    && ball.getX() <= paddleBottom.getPaddleEndX() - game.getScreenWidth())) {
 
                 //la pallina ha toccato la barra quindi torna in alto
 
                 ball.incrementSpeed();
-                paddle2.incrementMaxSpeed();
+                paddleBottom.incrementMaxSpeed();
 
-                ball.bounceOnPaddle(paddle2);
+                ball.bounceOnPaddle(paddleBottom);
 
                 game.incrementPoints();
                 MainActivity.txvPoints.post(new Runnable() {
@@ -272,9 +272,9 @@ class GameView implements Runnable {
 
                 game.draw(canvas);
 
-                paddle1.draw(canvas, game.getScreenWidth());
+                paddleTop.draw(canvas, game.getScreenWidth());
 
-                paddle2.draw(canvas, game.getScreenWidth());
+                paddleBottom.draw(canvas, game.getScreenWidth());
 
                 ball.draw(canvas);
 
