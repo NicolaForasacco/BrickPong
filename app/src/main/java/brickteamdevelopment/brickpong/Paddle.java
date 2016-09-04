@@ -23,7 +23,7 @@ public class Paddle {
     public Paddle(int screenWidth,int screenHeight){
 
         height          =   screenHeight / 50 ;
-        width           =   screenWidth / 5f ;
+        width           =   screenWidth / 4f ;
 
         x               =   0;
 

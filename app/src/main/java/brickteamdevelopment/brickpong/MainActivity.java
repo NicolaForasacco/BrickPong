@@ -434,15 +434,30 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
         final LinearLayout retry    = (LinearLayout) findViewById(R.id.retry);
         final LinearLayout backhome = (LinearLayout) findViewById(R.id.back_home);
 
-        TextView best_label         =   (TextView)findViewById(R.id.pause_best_label);
-        TextView score_txv          =   ((TextView)findViewById(R.id.pause_score));
-        TextView best_txv           =   ((TextView)findViewById(R.id.pause_best));
-
         ((TextView)findViewById(R.id.pause)).setTypeface(type);
-        ((TextView)findViewById(R.id.pause_score_label)).setTypeface(type);
-        best_label.setTypeface(type);
-        score_txv.setTypeface(type);
-        best_txv.setTypeface(type);
+
+        final LinearLayout btnPause = (LinearLayout)findViewById(R.id.btn_pause);
+
+        btnPause.setOnTouchListener(new View.OnTouchListener() {
+
+            private Rect rect;
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+
+                rect = new Rect(v.getLeft(),
+                        v.getTop(),
+                        v.getRight(),
+                        v.getBottom());
+
+                if(actionChecker(rect, event, v, btnPause)){
+                    (findViewById(R.id.lyt_pause)).setVisibility(View.INVISIBLE);
+                    game.resume();
+                    enablePauseMenu();
+                }
+
+                return true;
+            }
+        });
 
         resume.setOnTouchListener(new View.OnTouchListener() {
             private Rect rect;
@@ -499,19 +514,6 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
                 return true;
             }
         });
-
-        if(sharedPreferences.checkForRecord(game.game.getPoints())){
-
-            best_label.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.red));
-            best_label.setTextColor(Color.WHITE);
-        }else {
-
-            best_label.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.light_orange));
-            best_label.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.red));
-        }
-
-        score_txv.setText(String.valueOf(game.game.getPoints()));
-        best_txv.setText(String.valueOf(sharedPreferences.getRecord()));
     }
 
     public void showGameOverMenu(){
@@ -524,9 +526,11 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
 
                 currentState = State.GAMEOVER;
 
-                game.showGame(getScreenDimension(),getBannerHeight(),null);
+
 
                 final int score = game.game.getPoints();
+
+                game.showGame(getScreenDimension(),getBannerHeight(),null);
 
                 findViewById(R.id.lyt_game).setVisibility(View.INVISIBLE);
                 findViewById(R.id.final_menu).setVisibility(View.VISIBLE);
@@ -604,7 +608,7 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
                 gamesApiHandler.updateRecord(score);          //Si aggiorna il record dell'utente in google play games
                 gamesApiHandler.checkForAchievements(score);  //Si controlla il raggiungimento di eventuali risultati
 
-                if(sharedPreferences.checkForRecord(score)){   //Si aggiorna il record nelle sharedPreferences
+                if(!sharedPreferences.checkForRecord(score)){   //Si aggiorna il record nelle sharedPreferences
 
                     best_label.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.red));
                     best_label.setTextColor(Color.WHITE);

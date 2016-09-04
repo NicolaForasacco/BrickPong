@@ -15,13 +15,12 @@ public class PaddleTop extends Paddle {
         x           =   screenWidth - width;
         y           =   0;
 
-        speed       *= -1;
-        maxSpeed    *= -1;
+
     }
 
     public void incrementMovementSlow(long fps){
 
-        if(movement > (speed / fps) * 6)
+        if(movement < (speed / fps) * 6)
             movement += speed / fps;
         else
             movement = (speed / fps) * 6;
@@ -29,15 +28,15 @@ public class PaddleTop extends Paddle {
 
     public void incrementMovement(long fps){
 
-        if (movement > (speed / fps) * maxSpeed * -1)
+        if (movement < (speed / fps) * maxSpeed)
             movement += speed / fps;
         else
-            movement = (speed / fps) * maxSpeed * -1;
+            movement = (speed / fps) * maxSpeed;
     }
 
     public void decrementMovement(long fps){
 
-        if (movement < 0)
+        if (movement > 0)
             movement -= speed / fps;
         else
             movement = 0;
