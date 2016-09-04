@@ -8,33 +8,31 @@ public class PaddleTop extends Paddle {
 
     public PaddleTop(){}
 
-    public PaddleTop(int screenWidth,int screenHeight,boolean isSlow){
+    public PaddleTop(int screenWidth,int screenHeight){
 
-        super(screenWidth,screenHeight,isSlow);
+        super(screenWidth,screenHeight);
 
-        x           = screenWidth - width;
-
+        x           =   screenWidth - width;
         y           =   0;
 
         speed       *= -1;
         maxSpeed    *= -1;
     }
 
+    public void incrementMovementSlow(long fps){
+
+        if(movement > (speed / fps) * 6)
+            movement += speed / fps;
+        else
+            movement = (speed / fps) * 6;
+    }
+
     public void incrementMovement(long fps){
 
-        if(isSlow){
-
-            if(movement < (speed / fps) * 6)
-                movement += speed / fps;
-            else
-                movement = (speed / fps) * 6;
-        }else{
-
-            if (movement > (speed / fps) * maxSpeed * -1)
-                movement += speed / fps;
-            else
-                movement = (speed / fps) * maxSpeed * -1;
-        }
+        if (movement > (speed / fps) * maxSpeed * -1)
+            movement += speed / fps;
+        else
+            movement = (speed / fps) * maxSpeed * -1;
     }
 
     public void decrementMovement(long fps){
@@ -59,7 +57,7 @@ public class PaddleTop extends Paddle {
                 height - border,
                 paintWhite);
 
-        if (getPaddleEndX() >= screenWidth) {
+        if (getPaddleEndX() > screenWidth) {
 
             //se la barra "supera" il limite destro si disegna il restante sul limite sinistro
             canvas.drawRect(0,

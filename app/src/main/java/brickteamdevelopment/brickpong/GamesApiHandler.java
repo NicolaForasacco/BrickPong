@@ -30,17 +30,17 @@ public class GamesApiHandler implements
     }
 
     public void connect(){
-        if( mGoogleApiClient != null )
+        if(mGoogleApiClient != null)
             mGoogleApiClient.connect() ;
     }
 
     public void disconnect(){
-        if( mGoogleApiClient != null )
+        if(mGoogleApiClient != null)
             mGoogleApiClient.disconnect(); ;
     }
 
     public Boolean checkConnection(){
-        if( mGoogleApiClient.isConnected() )
+        if(mGoogleApiClient.isConnected())
             return true ;
         else
             return false ;
@@ -48,7 +48,7 @@ public class GamesApiHandler implements
 
     public void checkForAchievements( int points ){
 
-        if( mGoogleApiClient.isConnected() ) {
+        if(mGoogleApiClient.isConnected()) {
             switch(points) {
                 case 20:
                     Games.Achievements.unlock(mGoogleApiClient, context.getResources().getString(R.string.achievement_first_try));
@@ -80,14 +80,14 @@ public class GamesApiHandler implements
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-        connectionFailedListener.onConnectionFailed( connectionResult ) ;
+        connectionFailedListener.onConnectionFailed(connectionResult) ;
     }
 
 
     public void updateRecord(int points){
-        if ( mGoogleApiClient.isConnected() ) {
+        if (mGoogleApiClient.isConnected())
             Games.Leaderboards.submitScore( mGoogleApiClient , context.getResources().getString( R.string.leaderboard_score ), points ) ;
-        }
+
     }
 
     public GoogleApiClient getApiClient(){

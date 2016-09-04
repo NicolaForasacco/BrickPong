@@ -43,7 +43,7 @@ import java.util.Calendar;
 public class MainActivity extends FragmentActivity implements  GoogleApiClient.ConnectionCallbacks,
                                                                 GoogleApiClient.OnConnectionFailedListener {
 
-    private SurfaceView             gameView;   //View dove viene disegnato il gioco
+    public static SurfaceView             gameView;   //View dove viene disegnato il gioco
     private GameView                game;       //Oggetto che gestisce il thread del gioco e tutti i relativi oggetti
     public static TextView          txvPoints;  //Testo che mostra il punteggio durante il gioco
 
@@ -81,7 +81,9 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
         sharedPreferences   =   new SharedPreferencesManager(getApplicationContext());
 
         gameView    =   (SurfaceView) findViewById(R.id.gameView);
+
         game        =   new GameView(this, gameView);
+
         gameView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -169,7 +171,8 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
         currentState = State.MENU;
 
         //Si fa partire un thread che continua a disegnare la barra alla base del menu
-        game.showMenu(getScreenDimension(),getBannerHeight());
+
+        game.showGame(getScreenDimension(),getBannerHeight(),null);
 
         findViewById(R.id.lyt_menu).setVisibility(View.VISIBLE);
         findViewById(R.id.lyt_game).setVisibility(View.GONE);
@@ -274,7 +277,7 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
         //Si fa partire un thread che si occupa di disegnare tutti gli elementi del gioco
         game.showGame(getScreenDimension(),
                     getBannerHeight(),
-                    (SurfaceView)findViewById(R.id.gameView),gamesApiHandler);
+                    gamesApiHandler);
 
 
         if(sharedPreferences.isFirstTime()){
@@ -520,6 +523,9 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
                 game.pause();
 
                 currentState = State.GAMEOVER;
+
+                game.showGame(getScreenDimension(),getBannerHeight(),null);
+
                 final int score = game.game.getPoints();
 
                 findViewById(R.id.lyt_game).setVisibility(View.INVISIBLE);
@@ -630,8 +636,6 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
         mAdView.loadAd(adRequest);
     }
 
-
-
     /*
     *  Metodo che mostra le classifiche su play games
     */
@@ -738,7 +742,6 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
                     | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
         }
     }
-
 
 
     //region Metodi del servizio Play Games

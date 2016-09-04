@@ -18,7 +18,7 @@ public class SplashScreen extends Activity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.splash_screen);
 
-        Typeface type           =   Typeface.createFromAsset( getAssets() , "fonts/Chava-Regular.otf") ;
+        Typeface type           =   Typeface.createFromAsset(getAssets() , "fonts/Chava-Regular.otf") ;
         TextView presents       =   ((TextView)findViewById(R.id.txv_presents));
         final int splashTime    =   1400;
 
@@ -31,7 +31,7 @@ public class SplashScreen extends Activity{
 
                 ((ProgressBar)findViewById(R.id.progressBar)).setProgress(1800);
 
-                startActivity(new Intent(SplashScreen.this,MainActivity.class));
+                startActivity(new Intent(SplashScreen.this, MainActivity.class));
                 finish();
             }
         }.start();
@@ -60,7 +60,6 @@ public class SplashScreen extends Activity{
 
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
-
         hideSystemUI();
         super.onWindowFocusChanged(hasFocus);
     }

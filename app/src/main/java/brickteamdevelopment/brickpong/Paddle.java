@@ -6,9 +6,6 @@ import android.graphics.Paint;
 
 public class Paddle {
 
-    protected boolean       isSlow = false;
-
-
     public float            border,
                             width,
                             height,
@@ -23,16 +20,15 @@ public class Paddle {
 
     public Paddle(){}
 
-    public Paddle(int screenWidth,int screenHeight,boolean isSlow){
+    public Paddle(int screenWidth,int screenHeight){
 
         height          =   screenHeight / 50 ;
-        width           =   screenWidth / 5 ;
+        width           =   screenWidth / 5f ;
 
         x               =   0;
 
         speed           =   screenWidth / 14 ;
 
-        this.isSlow     =   isSlow;
         paintBlack      =   new Paint();
         paintWhite      =   new Paint();
         border          =   width / 25;
@@ -47,12 +43,18 @@ public class Paddle {
 
     public void incrementX(){
 
-        x = x + movement;
+        x += movement;
+    }
+
+    public void incrementY(){
+        y += movement;
     }
 
     public float getHeight(){ return height; }
 
     public void setX(int x){ this.x = x; }
+
+    public void setY(int y){ this.y = y;}
 
     public float getX(){ return x; }
 
