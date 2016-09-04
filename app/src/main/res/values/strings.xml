@@ -15,7 +15,7 @@
 
     <string name="google_app_id">615761877366</string>
     <string name="package_name">brickteamdevelopment.brickpong</string>
-    <string name="leaderboard_score">CgkI9rKS8vUREAIQAQ</string>
+    <string name="leaderboard_score">CgkI9rKS8vUREAIQCQ</string>
 
     <string name="achievement_first_try">CgkI9rKS8vUREAIQAg</string>
     <string name="achievement_40">CgkI9rKS8vUREAIQAw</string>
@@ -25,5 +25,8 @@
     <string name="achievement_120">CgkI9rKS8vUREAIQBw</string>
 
     <string name="main_banner_id">ca-app-pub-4001297408363108/5270109072</string>
+    <string name="tutorial_title_1">Tap to move the paddle</string>
+    <string name="tutorial_title_2">Stop the ball with the bottom paddle</string>
+    <string name="tutorial_title_3">Stop the ball with the top paddle</string>
 
 </resources>

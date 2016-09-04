@@ -11,7 +11,7 @@ public class SharedPreferencesManager {
     int                         PRIVATE_MODE            =   0;
 
     private static final String PREF_NAME               =   "Pong";
-    private static final String KEY_RECORD              =   "record";
+    private static final String KEY_RECORD              =   "best_score";
 
 
     public SharedPreferencesManager(Context context) {

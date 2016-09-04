@@ -4,7 +4,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
-import android.media.MediaPlayer;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -14,7 +13,6 @@ class GameView implements Runnable {
     private Thread          gameThread = null;
     private SurfaceHolder   ourHolder;
     private Canvas          canvas;
-    private Paint           paint;
     public Game             game;
     private Ball            ball;
 
@@ -25,18 +23,20 @@ class GameView implements Runnable {
     private long            timeThisFrame;
 
     private MainActivity    mainActivity;
-    private String          gameType;
-    private SoundPlayer     paddleBounceSound,
-                            limitBounceSound;
+    public String          gameType;
 
     private PaddleTop       paddleTop;
     private PaddleBottom    paddleBottom;
+    private PaddleLeft      paddleLeft;
+    private PaddleRight     paddleRight;
+    private Ball[] backgroundBalls;
+
 
     public GameView(MainActivity mainActivity, SurfaceView view) {
 
         ourHolder           =   view.getHolder();
-        paint               =   new Paint();
         this.mainActivity   =   mainActivity;
+
     }
 
     @Override
@@ -46,6 +46,7 @@ class GameView implements Runnable {
 
             long startFrameTime = System.currentTimeMillis();
 
+            updateBackground();
             if (gameType.compareTo("menu") == 0) {
 
                 updateMenu();
@@ -63,86 +64,93 @@ class GameView implements Runnable {
         }
     }
 
-    /*
-     * Vengono inizializzato il paddle2 del menu e viene fatto partire il thread per mostrarlo
-     */
-    public void showMenu(Point dim, int bannerHeight) {
+    public void showGame(Point dim,int bannerHeight,GamesApiHandler gamesApiHandler) {
+
+        if(gamesApiHandler != null)
+            gameType = "game";
+        else
+            gameType = "menu";
 
         pause();
 
         Paint paintWhite = new Paint();
         paintWhite.setColor(Color.WHITE);
 
-        paddleBottom =   new PaddleBottom(dim.x,
-                                dim.y - bannerHeight,
-                                true);
+        paddleLeft      =   new PaddleLeft(dim.x,
+                                        dim.y-bannerHeight);
 
-        game        =   new Game(dim.x,
-                                dim.y - bannerHeight,
-                                "#B71C1C",
-                                null);
+        paddleRight     =   new PaddleRight(dim.x,
+                                        dim.y - bannerHeight);
 
-        fps         =   (long) paddleBottom.speed;
-        gameType    =   "menu";
-        playing     =   true;
-        gameThread  =   new Thread(this);
+        paddleTop       =   new PaddleTop(dim.x,
+                                        dim.y - bannerHeight);
 
-        gameThread.start();
-    }
+        paddleBottom    =   new PaddleBottom(dim.x,
+                                            dim.y - bannerHeight);
 
-    /*
-     * Vengono inizializzati i vari oggetti del gioco e viene fatto partire il thread che li disegnerà
-     */
-    public void showGame(Point dim,int bannerHeight,SurfaceView view,GamesApiHandler gamesApiHandler){
+        game            =   new Game(dim.x,
+                                    dim.y - bannerHeight,
+                                    "#B71C1C",
+                                    gamesApiHandler);
 
-        pause();
+        ball            =   new Ball(dim.x,
+                                    dim.y - bannerHeight,
+                                    false);
 
-        Paint paintWhite = new Paint();
-        paintWhite.setColor(Color.WHITE);
+        backgroundBalls = new Ball[14];
 
-        paddleTop =   new PaddleTop(dim.x,
-                dim.y - bannerHeight,
-                false);
+        for(int i = 0; i < backgroundBalls.length; i++){
 
-        paddleBottom =   new PaddleBottom(dim.x,
-                                dim.y - bannerHeight,
-                                false);
+            backgroundBalls[i] = new Ball(dim.x,
+                    dim.y - bannerHeight,
+                    true);
+        }
 
-        game        =   new Game(dim.x,
-                                dim.y - bannerHeight,
-                                "#B71C1C"
-                                ,gamesApiHandler);
 
-        ball        =   new Ball(dim.x,
-                                dim.y - bannerHeight);
-
-        fps         =   (long) paddleBottom.speed;
-        gameType    =   "game";
-        playing     =   true;
-        gameThread  =   new Thread(this);
+        fps             =   (long)paddleBottom.speed;
+        playing         =   true;
+        gameThread      =   new Thread(this);
 
         gameThread.start();
     }
 
-    private void soundPlayerInit(){
+    /*private void soundPlayerInit(){
 
         limitBounceSound    =   new SoundPlayer();
         paddleBounceSound   =   new SoundPlayer();
 
         limitBounceSound.setMediaPlayer(MediaPlayer.create(mainActivity.getApplicationContext(),R.raw.blip_select26));
         paddleBounceSound.setMediaPlayer(MediaPlayer.create(mainActivity.getApplicationContext(),R.raw.jump83));
-    }
+    }*/
 
     /*
      * Vengono aggiornati coordinate e velocità del paddle2
      */
     public void updateMenu(){
 
+        paddleLeft.incrementY();
+        if(paddleLeft.getY() <= 0)
+            paddleLeft.setY(game.getScreenHeight());
+
+        paddleLeft.incrementMovementSlow(fps);
+
+        paddleRight.incrementY();
+        if(paddleRight.getY() >= game.getScreenHeight())
+            paddleRight.setY(0);
+
+        paddleRight.incrementMovementSlow(fps);
+
+        paddleTop.incrementX();
+        if (paddleTop.getX() <= 0)
+            paddleTop.setX(game.getScreenWidth());
+
+        paddleTop.incrementMovementSlow(fps);
+
         paddleBottom.incrementX();
         if (paddleBottom.getX() >= game.getScreenWidth())
             paddleBottom.setX(0);
 
-        paddleBottom.incrementMovement(fps);
+        paddleBottom.incrementMovementSlow(fps);
     }
 
     public void drawMenu() {
@@ -154,7 +162,11 @@ class GameView implements Runnable {
 
                 game.draw(canvas);
 
+                drawBackground();
+                paddleTop.draw(canvas, game.getScreenWidth());
                 paddleBottom.draw(canvas, game.getScreenWidth());
+                paddleLeft.draw(canvas,game.getScreenHeight());
+                paddleRight.draw(canvas,game.getScreenHeight());
 
                 ourHolder.unlockCanvasAndPost(canvas);
             }
@@ -162,49 +174,136 @@ class GameView implements Runnable {
     }
 
     /*
-     * Vengono aggiornati coordinate e velocità di paddle2 e palla
+     * Vengono aggiornati coordinate e velocità di paddle e palla
      */
+
+    public void updateBackground(){
+
+        for(int i = 0; i < backgroundBalls.length; i++){
+
+            backgroundBalls[i].incrementCoordinates(fps);
+
+            if (backgroundBalls[i].getBallEndX() >= game.getScreenWidth() || backgroundBalls[i].getX() <= 0)
+                backgroundBalls[i].changeMovementX();
+
+            if(backgroundBalls[i].getY() <=0|| backgroundBalls[i].getBallEndY()>= game.getScreenHeight())
+                backgroundBalls[i].changeMovementY();
+        }
+    }
+
+    public void drawBackground(){
+
+        for(int i = 0; i < backgroundBalls.length; i++){
+
+            backgroundBalls[i].draw(canvas);
+        }
+    }
+
+
     public void updateGame(){
+
+        paddleLeft.incrementY();
+        if(paddleLeft.getY() <= 0)
+            paddleLeft.setY(game.getScreenHeight());
+
+        paddleRight.incrementY();
+        if(paddleRight.getY() >= game.getScreenHeight())
+            paddleRight.setY(0);
 
         paddleTop.incrementX();
         if (paddleTop.getX() <= 0)
             paddleTop.setX(game.getScreenWidth());
 
-        if (isScreenTouched)
-            paddleTop.incrementMovement(fps);
-        else
-            paddleTop.decrementMovement(fps);
-
         paddleBottom.incrementX();
         if (paddleBottom.getX() >= game.getScreenWidth())
             paddleBottom.setX(0);
 
-        if (isScreenTouched)
+
+        if (isScreenTouched){
+            paddleRight.incrementMovement(fps);
+            paddleLeft.incrementMovement(fps);
             paddleBottom.incrementMovement(fps);
-        else
+            paddleTop.incrementMovement(fps);
+        }
+        else{
+            paddleRight.decrementMovement(fps);
             paddleBottom.decrementMovement(fps);
+            paddleTop.decrementMovement(fps);
+            paddleLeft.decrementMovement(fps);
+        }
 
         ball.incrementCoordinates(fps);
 
-        if ((ball.getPaddleEndX() >= game.getScreenWidth()) || (ball.getX() <= 0)) {
+        if(ball.getX() <= paddleLeft.getPaddleEndX()){
+            //limite sinistro
 
-            //se la pallina tocca il limite destro o sinistro
-            ball.changeMovementX();
+            if ((ball.getBallEndY() >= paddleLeft.getY()
+                    && ball.getY() <= paddleLeft.getPaddleEndY())
+                    || (ball.getY() >= 0
+                    && ball.getY() <= paddleLeft.getPaddleEndY() - game.getScreenHeight())) {
 
-            game.incrementPoints();
-            MainActivity.txvPoints.post(new Runnable() {
-                @Override
-                public void run() {
-                    MainActivity.txvPoints.setText(String.valueOf(game.getPoints()));
-                }
-            });
+                //la pallina ha toccato la barra quindi torna in basso
 
+                ball.incrementSpeed();
+                paddleLeft.incrementMaxSpeed();
+
+                ball.bounceOnPaddle(paddleLeft);
+
+                game.incrementPoints();
+                MainActivity.txvPoints.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        MainActivity.txvPoints.setText(String.valueOf(game.getPoints()));
+
+                    }
+                });
+                //quakeLeft();
+
+            } else {
+
+                //la pallina non ha toccato la barra, il giocatore ha perso
+                mainActivity.showGameOverMenu();
+            }
+
+
+        }
+
+        if(ball.getBallEndX() >= paddleRight.getX()){
+            //limite destro
+
+            if ((ball.getBallEndY() >= paddleRight.getY()
+                    && ball.getY() <= paddleRight.getPaddleEndY())
+                    || (ball.getY() >= 0
+                    && ball.getY() <= paddleRight.getPaddleEndY() - game.getScreenHeight())) {
+
+                //la pallina ha toccato la barra quindi torna in basso
+
+                ball.incrementSpeed();
+                paddleLeft.incrementMaxSpeed();
+
+                ball.bounceOnPaddle(paddleRight);
+
+                game.incrementPoints();
+                MainActivity.txvPoints.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        MainActivity.txvPoints.setText(String.valueOf(game.getPoints()));
+
+                    }
+                });
+                //quakeRight();
+
+            } else {
+
+                //la pallina non ha toccato la barra, il giocatore ha perso
+                mainActivity.showGameOverMenu();
+            }
         }
 
         if (ball.getY() <= (paddleTop.getHeight())) {
 
             //se la pallina tocca il limite superiore
-            if ((ball.getPaddleEndX() >= paddleTop.getX()
+            if ((ball.getBallEndX() >= paddleTop.getX()
                     && ball.getX() <= paddleTop.getPaddleEndX())
                     || (ball.getX() >= 0
                     && ball.getX() <= paddleTop.getPaddleEndX() - game.getScreenWidth())) {
@@ -224,6 +323,8 @@ class GameView implements Runnable {
 
                     }
                 });
+                //quakeTop();
+
             } else {
 
                 //la pallina non ha toccato la barra, il giocatore ha perso
@@ -231,10 +332,10 @@ class GameView implements Runnable {
             }
         }
 
-        if (ball.getPaddleEndY() >= (game.getScreenHeight() - paddleBottom.getHeight())) {
+        if (ball.getBallEndY() >= paddleBottom.getY()) {
 
             //se la pallina tocca il limite inferiore
-            if ((ball.getPaddleEndX() >= paddleBottom.getX()
+            if ((ball.getBallEndX() >= paddleBottom.getX()
                     && ball.getX() <= paddleBottom.getPaddleEndX())
                     || (ball.getX() >= 0
                     && ball.getX() <= paddleBottom.getPaddleEndX() - game.getScreenWidth())) {
@@ -254,12 +355,108 @@ class GameView implements Runnable {
 
                     }
                 });
+                //quakeBottom();
+
             } else {
 
                 //la pallina non ha toccato la barra, il giocatore ha perso
                 mainActivity.showGameOverMenu();
             }
         }
+    }
+
+    public void quakeRight(){
+
+        MainActivity.gameView.post(new Runnable() {
+            @Override
+            public void run() {
+
+
+                MainActivity.gameView.animate().translationX(10).setDuration(100).withEndAction(new Runnable() {
+                    @Override
+                    public void run() {
+                        MainActivity.gameView.animate().translationX(-5).setDuration(100).withEndAction(new Runnable() {
+                            @Override
+                            public void run() {
+                                MainActivity.gameView.animate().translationX(0).setDuration(50).start();
+                            }
+                        }).start();
+                    }
+                }).start();
+
+
+            }
+        });
+    }
+
+    public void quakeLeft(){
+
+        MainActivity.gameView.post(new Runnable() {
+            @Override
+            public void run() {
+
+
+                MainActivity.gameView.animate().translationX(-10).setDuration(100).withEndAction(new Runnable() {
+                    @Override
+                    public void run() {
+                        MainActivity.gameView.animate().translationX(+5).setDuration(100).withEndAction(new Runnable() {
+                            @Override
+                            public void run() {
+                                MainActivity.gameView.animate().translationX(0).setDuration(50).start();
+                            }
+                        }).start();
+                    }
+                }).start();
+
+
+            }
+        });
+    }
+
+    public void quakeTop(){
+
+        MainActivity.gameView.post(new Runnable() {
+            @Override
+            public void run() {
+
+
+                MainActivity.gameView.animate().translationY(-10).setDuration(100).withEndAction(new Runnable() {
+                    @Override
+                    public void run() {
+                        MainActivity.gameView.animate().translationY(+5).setDuration(100).withEndAction(new Runnable() {
+                            @Override
+                            public void run() {
+                                MainActivity.gameView.animate().translationY(0).setDuration(50).start();
+                            }
+                        }).start();
+                    }
+                }).start();
+
+
+            }
+        });
+    }
+
+    public void quakeBottom(){
+        MainActivity.gameView.post(new Runnable() {
+            @Override
+            public void run() {
+
+                MainActivity.gameView.animate().translationY(10).setDuration(100).withEndAction(new Runnable() {
+                    @Override
+                    public void run() {
+                        MainActivity.gameView.animate().translationY(-5).setDuration(100).withEndAction(new Runnable() {
+                            @Override
+                            public void run() {
+                                MainActivity.gameView.animate().translationY(0).setDuration(50).start();
+                            }
+                        }).start();
+                    }
+                }).start();
+
+
+            }
+        });
     }
 
     public void drawGame(){
@@ -272,9 +469,11 @@ class GameView implements Runnable {
 
                 game.draw(canvas);
 
+                drawBackground();
                 paddleTop.draw(canvas, game.getScreenWidth());
-
                 paddleBottom.draw(canvas, game.getScreenWidth());
+                paddleLeft.draw(canvas, game.getScreenHeight());
+                paddleRight.draw(canvas, game.getScreenHeight());
 
                 ball.draw(canvas);
 

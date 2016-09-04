@@ -43,20 +43,20 @@ public class TutorialFragment extends Fragment {
         switch (mPageNumber){
             case 0:
 
-                ((TextView)rootview.findViewById(R.id.tutorial_title)).setText("Tap to move the paddle");
+                ((TextView)rootview.findViewById(R.id.tutorial_title)).setText(R.string.tutorial_title_1);
                 ((ImageView)rootview.findViewById(R.id.imageTutorial)).setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.tutorial));
                 break;
             case 1:
-                ((TextView)rootview.findViewById(R.id.tutorial_title)).setText("Stop the ball with the bottom paddle");
+
+                ((TextView)rootview.findViewById(R.id.tutorial_title)).setText(R.string.tutorial_title_2);
                 ((ImageView)rootview.findViewById(R.id.imageTutorial)).setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.tutorial2));
                 break;
             case 2:
-                ((TextView)rootview.findViewById(R.id.tutorial_title)).setText("Stop the ball with the top paddle");
+
+                ((TextView)rootview.findViewById(R.id.tutorial_title)).setText(R.string.tutorial_title_3);
                 ((ImageView)rootview.findViewById(R.id.imageTutorial)).setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.tutorial3));
                 break;
         }
-
-
         return rootview;
     }
 
