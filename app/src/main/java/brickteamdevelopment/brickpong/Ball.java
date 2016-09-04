@@ -41,9 +41,9 @@ public class Ball {
             speedY          =   speedX;
 
             if(new Random().nextBoolean())
-                paintBlack.setColor(Color.rgb(200,0,0));
+                paintBlack.setColor(Color.rgb(195,0,0));
             else
-                paintBlack.setColor(Color.rgb(230,0,0));
+                paintBlack.setColor(Color.rgb(215,0,0));
 
             paintWhite.setColor(paintBlack.getColor());
 

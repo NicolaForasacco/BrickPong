@@ -132,23 +132,23 @@ class GameView implements Runnable {
         if(paddleLeft.getY() <= 0)
             paddleLeft.setY(game.getScreenHeight());
 
-        paddleLeft.incrementMovementSlow(fps);
-
         paddleRight.incrementY();
         if(paddleRight.getY() >= game.getScreenHeight())
             paddleRight.setY(0);
 
-        paddleRight.incrementMovementSlow(fps);
-
         paddleTop.incrementX();
-        if (paddleTop.getX() <= 0)
-            paddleTop.setX(game.getScreenWidth());
-
-        paddleTop.incrementMovementSlow(fps);
+        if (paddleTop.getX() >= game.getScreenWidth())
+            paddleTop.setX(0);
 
         paddleBottom.incrementX();
-        if (paddleBottom.getX() >= game.getScreenWidth())
-            paddleBottom.setX(0);
+        if (paddleBottom.getX() <= 0)
+            paddleBottom.setX(game.getScreenWidth());
+
+        paddleLeft.incrementMovementSlow(fps);
+
+        paddleRight.incrementMovementSlow(fps);
+
+        paddleTop.incrementMovementSlow(fps);
 
         paddleBottom.incrementMovementSlow(fps);
     }
@@ -211,12 +211,12 @@ class GameView implements Runnable {
             paddleRight.setY(0);
 
         paddleTop.incrementX();
-        if (paddleTop.getX() <= 0)
-            paddleTop.setX(game.getScreenWidth());
+        if (paddleTop.getX() >= game.getScreenWidth())
+            paddleTop.setX(0);
 
         paddleBottom.incrementX();
-        if (paddleBottom.getX() >= game.getScreenWidth())
-            paddleBottom.setX(0);
+        if (paddleBottom.getX() <= 0)
+            paddleBottom.setX(game.getScreenWidth());
 
 
         if (isScreenTouched){

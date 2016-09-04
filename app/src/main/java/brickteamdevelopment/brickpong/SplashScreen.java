@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public class SplashScreen extends Activity{
@@ -20,21 +19,26 @@ public class SplashScreen extends Activity{
 
         Typeface type           =   Typeface.createFromAsset(getAssets() , "fonts/Chava-Regular.otf") ;
         TextView presents       =   ((TextView)findViewById(R.id.txv_presents));
-        final int splashTime    =   1400;
+        final int splashTime    =   1000;
 
         presents.setTypeface(type);
 
-        new CountDownTimer(splashTime, 300) {
+        findViewById(R.id.imgLogo).animate().alpha(1).setDuration(1000).start();
+        findViewById(R.id.txv_presents).animate().alpha(1).setDuration(1000).withEndAction(new Runnable() {
+            @Override
+            public void run() {
+                new CountDownTimer(splashTime, 300) {
 
-            public void onTick(long millisUntilFinished) { ((ProgressBar)findViewById(R.id.progressBar)).setProgress((int)(splashTime - millisUntilFinished)); }
-            public void onFinish() {
+                    public void onTick(long millisUntilFinished) { }
+                    public void onFinish() {
+                        startActivity(new Intent(SplashScreen.this, MainActivity.class));
+                        finish();
 
-                ((ProgressBar)findViewById(R.id.progressBar)).setProgress(1800);
-
-                startActivity(new Intent(SplashScreen.this, MainActivity.class));
-                finish();
+                    }
+                }.start();
             }
-        }.start();
+        }).start();
+
     }
 
     // This snippet hides the system bars.
