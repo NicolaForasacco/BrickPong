@@ -52,6 +52,7 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
     private AdView                  mAdView;
     public SharedPreferencesManager sharedPreferences;
     private GamesApiHandler         gamesApiHandler;
+    public int score;
 
     private enum State {
         MENU,
@@ -180,12 +181,10 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
         findViewById(R.id.lyt_pause).setVisibility(View.GONE);
 
         final LinearLayout btn_play     =   (LinearLayout)findViewById(R.id.play);
-        final LinearLayout rate         =   (LinearLayout)findViewById(R.id.rate);
         final LinearLayout share        =   (LinearLayout)findViewById(R.id.share);
         final LinearLayout trophies     =   (LinearLayout)findViewById(R.id.trophies);
 
         ((TextView)findViewById(R.id.app_name)).setTypeface(type);
-        ((TextView)findViewById(R.id.rate_us_txv)).setTypeface(type);
 
         share.setOnTouchListener(new View.OnTouchListener() {
 
@@ -200,24 +199,6 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
 
                 if(actionChecker(rect, event, v, share))
                     share("My record in BrickPong is " + String.valueOf(sharedPreferences.getRecord()) + "\nCan you beat me?");
-
-                return true;
-            }
-        });
-
-        rate.setOnTouchListener(new View.OnTouchListener() {
-
-            private Rect rect;
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-
-                rect = new Rect(v.getLeft(),
-                        v.getTop(),
-                        v.getRight(),
-                        v.getBottom());
-
-                if(actionChecker(rect, event, v, rate))
-                    showGooglePlayGamePage();
 
                 return true;
             }
@@ -526,7 +507,7 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
 
                 currentState = State.GAMEOVER;
 
-                final int score = game.game.getPoints();
+                score = (game.game.getPoints() >= 0) ? game.game.getPoints() : score;
 
 
 

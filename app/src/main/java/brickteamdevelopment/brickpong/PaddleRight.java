@@ -10,16 +10,17 @@ public class PaddleRight extends Paddle{
 
         super(screenWidth,screenHeight);
 
-        width           =   screenHeight / 3f ;
+        width           =   screenHeight / 2.5f ;
 
         x = screenWidth - height;
         y = screenHeight - width;
 
-        speed           =   screenHeight / 12 ;
+        speed           =   screenHeight / 13 ;
+
+
 
 
     }
-
     public void incrementMovementSlow(long fps){
 
         if(movement < (speed / fps) * 6)

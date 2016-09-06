@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">BRICKPONG</string>
 
-    <string name="presents_string">\u0040BrickDev\n\u0026 \u0040BrickDesign\n\nPRESENTS</string>
+    <string name="presents_string">created by\n\nF.N.\n\u0040B86</string>
     <string name="error">Error</string>
 
     <string name="play">PLAY</string>

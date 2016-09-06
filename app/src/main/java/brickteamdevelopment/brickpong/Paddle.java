@@ -23,22 +23,22 @@ public class Paddle {
     public Paddle(int screenWidth,int screenHeight){
 
         height          =   screenHeight / 50 ;
-        width           =   screenWidth / 3f ;
+        width           =   screenWidth / 2.5f ;
 
         x               =   0;
 
-        speed           =   screenWidth / 12 ;
+        speed           =   screenWidth / 13 ;
 
         paintBlack      =   new Paint();
         paintWhite      =   new Paint();
-        border          =   width / 30;
+        border          =   width / 35;
 
         paintBlack.setColor(Color.BLACK);
         paintWhite.setColor(Color.WHITE);
     }
 
     public void incrementMaxSpeed(){
-        maxSpeed *= 1.1f;
+        maxSpeed *= 1.05f;
     }
 
     public void incrementX(){
