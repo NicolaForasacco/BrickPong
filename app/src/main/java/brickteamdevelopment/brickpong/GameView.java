@@ -29,7 +29,7 @@ class GameView implements Runnable {
     private PaddleBottom    paddleBottom;
     private PaddleLeft      paddleLeft;
     private PaddleRight     paddleRight;
-    private Ball[] backgroundBalls;
+    private Ball[]          backgroundBalls;
 
 
     public GameView(MainActivity mainActivity, SurfaceView view) {

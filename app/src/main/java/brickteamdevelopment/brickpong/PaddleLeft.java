@@ -10,8 +10,8 @@ public class PaddleLeft extends Paddle{
 
         super(screenWidth,screenHeight);
 
-        width           =   screenHeight / 4f ;
-        speed           =   screenHeight / 14 ;
+        width           =   screenHeight / 3f ;
+        speed           =   screenHeight / 12 ;
         y = 0;
 
         speed       *= -1;

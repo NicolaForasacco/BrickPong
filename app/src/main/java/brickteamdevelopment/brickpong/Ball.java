@@ -53,7 +53,7 @@ public class Ball {
             width = screenWidth / 20;
             x               =   new Random().nextInt(screenWidth /2) + screenWidth /4;
             y               =   new Random().nextInt(screenHeight / 2) + (screenHeight / 4);
-            speedX          =   screenWidth / 3.5f;
+            speedX          =   screenWidth / 4.5f;
             speedY          =   speedX;
 
             paintBlack.setColor(Color.BLACK);
@@ -116,7 +116,7 @@ public class Ball {
     }
 
     public void bounceOnPaddle(PaddleLeft paddle){
-        float v2y = speedY + paddle.speed * 0.8f;
+        float v2y = speedY + paddle.speed * 0.4f;
 
         if (speedX <= 0)
             speedX *= -1;
@@ -129,7 +129,7 @@ public class Ball {
 
     public void bounceOnPaddle(PaddleRight paddle){
 
-        float v2y = speedY + paddle.speed * 0.8f;
+        float v2y = speedY + paddle.speed * 0.4f;
 
         if (speedX >= 0)
             speedX *= -1;
@@ -142,7 +142,7 @@ public class Ball {
 
     public void bounceOnPaddle(PaddleTop paddle){
 
-        float v2x = speedX + paddle.speed * 0.8f;
+        float v2x = speedX + paddle.speed * 0.4f;
 
         if (speedY <= 0)
             speedY *= -1;
@@ -155,7 +155,7 @@ public class Ball {
 
     public void bounceOnPaddle(PaddleBottom paddle){
 
-        float v2x = speedX + paddle.speed * 0.8f;
+        float v2x = speedX + paddle.speed * 0.4f;
 
         if (speedY >= 0)
             speedY *= -1;

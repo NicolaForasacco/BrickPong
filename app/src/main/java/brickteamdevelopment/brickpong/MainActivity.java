@@ -526,14 +526,10 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
 
                 currentState = State.GAMEOVER;
 
-
-
                 final int score = game.game.getPoints();
 
-                game.showGame(getScreenDimension(),getBannerHeight(),null);
 
-                findViewById(R.id.lyt_game).setVisibility(View.INVISIBLE);
-                findViewById(R.id.final_menu).setVisibility(View.VISIBLE);
+
 
                 final LinearLayout play_final       =   (LinearLayout) findViewById(R.id.final_play);
                 final LinearLayout share_final      =   (LinearLayout) findViewById(R.id.final_share);
@@ -610,7 +606,7 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
 
                 if(!sharedPreferences.checkForRecord(score)){   //Si aggiorna il record nelle sharedPreferences
 
-                    best_label.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.red));
+                    best_label.setBackgroundColor(Color.TRANSPARENT);
                     best_label.setTextColor(Color.WHITE);
                 }else {
 
@@ -620,6 +616,24 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
 
                 score_txv.setText(String.valueOf(score));
                 best_txv.setText(String.valueOf(sharedPreferences.getRecord()));
+
+                findViewById(R.id.final_menu).animate().alpha(0).setDuration(500).withEndAction(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        findViewById(R.id.lyt_game).setVisibility(View.INVISIBLE);
+                        game.showGame(getScreenDimension(),getBannerHeight(),null);
+                        findViewById(R.id.final_menu).setVisibility(View.VISIBLE);
+                        findViewById(R.id.final_menu).animate().alpha(1).setDuration(500).withEndAction(new Runnable() {
+                            @Override
+                            public void run() {
+
+
+                            }
+                        }).start();
+                    }
+                }).start();
+
             }
         });
     }
@@ -805,7 +819,7 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
 
         @Override
         public int getCount() {
-            return 3;
+            return 2;
         }
     }
 }

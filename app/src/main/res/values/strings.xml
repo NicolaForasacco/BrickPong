@@ -25,8 +25,7 @@
     <string name="achievement_120">CgkI9rKS8vUREAIQBw</string>
 
     <string name="main_banner_id">ca-app-pub-4001297408363108/5270109072</string>
-    <string name="tutorial_title_1">Tap to move the paddle</string>
-    <string name="tutorial_title_2">Stop the ball with the bottom paddle</string>
-    <string name="tutorial_title_3">Stop the ball with the top paddle</string>
+    <string name="tutorial_title_1">Tap to move all the paddles</string>
+    <string name="tutorial_title_2">Stop the ball with all the paddles</string>
 
 </resources>

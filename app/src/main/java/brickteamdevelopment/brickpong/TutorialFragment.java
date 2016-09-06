@@ -51,11 +51,6 @@ public class TutorialFragment extends Fragment {
                 ((TextView)rootview.findViewById(R.id.tutorial_title)).setText(R.string.tutorial_title_2);
                 ((ImageView)rootview.findViewById(R.id.imageTutorial)).setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.tutorial2));
                 break;
-            case 2:
-
-                ((TextView)rootview.findViewById(R.id.tutorial_title)).setText(R.string.tutorial_title_3);
-                ((ImageView)rootview.findViewById(R.id.imageTutorial)).setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.tutorial3));
-                break;
         }
         return rootview;
     }
