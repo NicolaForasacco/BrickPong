@@ -111,60 +111,60 @@ public class Ball {
     }
 
     public void incrementSpeed(){
-        speedX = speedX * 1.1f;
-        speedY = speedY * 1.1f;
+        speedX *= 1.05f;
+        speedY *= 1.05f;
     }
 
     public void bounceOnPaddle(PaddleLeft paddle){
-        float v2y = speedY + paddle.speed * 0.4f;
+      //  float v2y = speedY + paddle.speed * 0.4f;
 
         if (speedX <= 0)
             speedX *= -1;
 
-        if(v2y == 0)
-            v2y = (new Random().nextInt(2) == 0)? 1: -1;
+       // if(v2y == 0)
+      //      v2y = (new Random().nextInt(2) == 0)? 1: -1;
 
-        speedY = v2y;
+      //  speedY = v2y;
     }
 
     public void bounceOnPaddle(PaddleRight paddle){
 
-        float v2y = speedY + paddle.speed * 0.4f;
+        //float v2y = speedY + paddle.speed * 0.4f;
 
         if (speedX >= 0)
             speedX *= -1;
 
-        if(v2y == 0)
-            v2y = (new Random().nextInt(2) == 0)? 1: -1;
+        //if(v2y == 0)
+        //    v2y = (new Random().nextInt(2) == 0)? 1: -1;
 
-        speedY = v2y;
+       // speedY = v2y;
     }
 
     public void bounceOnPaddle(PaddleTop paddle){
 
-        float v2x = speedX + paddle.speed * 0.4f;
+       // float v2x = speedX + paddle.speed * 0.4f;
 
         if (speedY <= 0)
             speedY *= -1;
 
-        if(v2x == 0)
-            v2x = (new Random().nextInt(2) == 0)? 1: -1;
+       // if(v2x == 0)
+       //     v2x = (new Random().nextInt(2) == 0)? 1: -1;
 
-        speedX = v2x;
+       // speedX = v2x;
     }
 
     public void bounceOnPaddle(PaddleBottom paddle){
 
-        float v2x = speedX + paddle.speed * 0.4f;
+       // float v2x = speedX + paddle.speed * 0.4f;
 
         if (speedY >= 0)
             speedY *= -1;
 
 
-        if(v2x == 0)
-            v2x = (new Random().nextInt(2) == 0)? 1: -1;
+      //  if(v2x == 0)
+       //     v2x = (new Random().nextInt(2) == 0)? 1: -1;
 
-        speedX = v2x;
+      //  speedX = v2x;
     }
 
     public void draw(Canvas canvas){

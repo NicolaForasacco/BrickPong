@@ -210,6 +210,9 @@ class GameView implements Runnable {
         if(paddleRight.getY() >= game.getScreenHeight())
             paddleRight.setY(0);
 
+
+
+
         paddleTop.incrementX();
         if (paddleTop.getX() >= game.getScreenWidth())
             paddleTop.setX(0);
@@ -245,10 +248,14 @@ class GameView implements Runnable {
                 //la pallina ha toccato la barra quindi torna in basso
 
                 ball.incrementSpeed();
+
                 paddleLeft.incrementMaxSpeed();
+                paddleRight.incrementMaxSpeed();
+                paddleTop.incrementMaxSpeed();
+                paddleBottom.incrementMaxSpeed();
+
 
                 ball.bounceOnPaddle(paddleLeft);
-
                 game.incrementPoints();
                 MainActivity.txvPoints.post(new Runnable() {
                     @Override
@@ -279,7 +286,11 @@ class GameView implements Runnable {
                 //la pallina ha toccato la barra quindi torna in basso
 
                 ball.incrementSpeed();
+
                 paddleLeft.incrementMaxSpeed();
+                paddleRight.incrementMaxSpeed();
+                paddleTop.incrementMaxSpeed();
+                paddleBottom.incrementMaxSpeed();
 
                 ball.bounceOnPaddle(paddleRight);
 
@@ -311,7 +322,11 @@ class GameView implements Runnable {
                 //la pallina ha toccato la barra quindi torna in basso
 
                 ball.incrementSpeed();
+
+                paddleLeft.incrementMaxSpeed();
+                paddleRight.incrementMaxSpeed();
                 paddleTop.incrementMaxSpeed();
+                paddleBottom.incrementMaxSpeed();
 
                 ball.bounceOnPaddle(paddleTop);
 
@@ -343,7 +358,12 @@ class GameView implements Runnable {
                 //la pallina ha toccato la barra quindi torna in alto
 
                 ball.incrementSpeed();
+
+                paddleLeft.incrementMaxSpeed();
+                paddleRight.incrementMaxSpeed();
+                paddleTop.incrementMaxSpeed();
                 paddleBottom.incrementMaxSpeed();
+
 
                 ball.bounceOnPaddle(paddleBottom);
 

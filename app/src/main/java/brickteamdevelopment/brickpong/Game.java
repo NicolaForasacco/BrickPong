@@ -9,14 +9,14 @@ public class Game {
 
     private final Paint     paint;
 
-    private int             points,
+    private int             points=-1,
                             screenWidth,
                             screenHeight;
 
     private GamesApiHandler gamesApiHandler;
 
     public Game(int width, int height, String color, GamesApiHandler gamesApiHandler){
-        this.points             =   0;
+        this.points             =   -1;
         this.screenHeight       =   height;
         this.screenWidth        =   width;
         this.paint              =   new Paint();
@@ -29,6 +29,9 @@ public class Game {
 
     public int getPoints() { return points; }
     public void incrementPoints(){
+
+        if(points<0)
+            points = 0;
 
         points++;
         gamesApiHandler.checkForAchievements(points);
