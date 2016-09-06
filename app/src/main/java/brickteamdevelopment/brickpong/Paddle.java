@@ -23,15 +23,15 @@ public class Paddle {
     public Paddle(int screenWidth,int screenHeight){
 
         height          =   screenHeight / 50 ;
-        width           =   screenWidth / 4f ;
+        width           =   screenWidth / 3f ;
 
         x               =   0;
 
-        speed           =   screenWidth / 14 ;
+        speed           =   screenWidth / 12 ;
 
         paintBlack      =   new Paint();
         paintWhite      =   new Paint();
-        border          =   width / 25;
+        border          =   width / 30;
 
         paintBlack.setColor(Color.BLACK);
         paintWhite.setColor(Color.WHITE);
