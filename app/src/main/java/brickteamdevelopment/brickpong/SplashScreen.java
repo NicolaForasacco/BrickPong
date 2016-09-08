@@ -33,17 +33,14 @@ public class SplashScreen extends Activity{
                     public void onFinish() {
                         startActivity(new Intent(SplashScreen.this, MainActivity.class));
                         finish();
-
                     }
                 }.start();
             }
         }).start();
-
     }
 
     // This snippet hides the system bars.
     private void hideSystemUI() {
-
 
         if(Build.VERSION.SDK_INT > 11 && Build.VERSION.SDK_INT < 19) { // lower api
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);

@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">BRICKPONG</string>
 
-    <string name="presents_string">created by\n\nF.N.\n\u0040B86</string>
+    <string name="presents_string">created by\n\u0040BRICK86\n\nF.N.</string>
     <string name="error">Error</string>
 
     <string name="play">PLAY</string>

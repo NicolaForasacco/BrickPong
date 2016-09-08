@@ -83,7 +83,6 @@ public class GamesApiHandler implements
         connectionFailedListener.onConnectionFailed(connectionResult) ;
     }
 
-
     public void updateRecord(int points){
         if (mGoogleApiClient.isConnected())
             Games.Leaderboards.submitScore( mGoogleApiClient , context.getResources().getString( R.string.leaderboard_score ), points ) ;

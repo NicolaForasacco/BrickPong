@@ -4,8 +4,6 @@ import android.graphics.Canvas;
 
 public class PaddleLeft extends Paddle{
 
-    public PaddleLeft(){}
-
     public PaddleLeft(int screenWidth,int screenHeight){
 
         super(screenWidth,screenHeight);
@@ -17,10 +15,6 @@ public class PaddleLeft extends Paddle{
         speed       *= -1;
         maxSpeed    *= -1;
     }
-
-
-
-
 
     public void incrementMovementSlow(long fps){
 

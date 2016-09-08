@@ -123,9 +123,6 @@ class GameView implements Runnable {
         paddleBounceSound.setMediaPlayer(MediaPlayer.create(mainActivity.getApplicationContext(),R.raw.jump83));
     }*/
 
-    /*
-     * Vengono aggiornati coordinate e velocità del paddle2
-     */
     public void updateMenu(){
 
         paddleLeft.incrementY();
@@ -173,32 +170,6 @@ class GameView implements Runnable {
         }
     }
 
-    /*
-     * Vengono aggiornati coordinate e velocità di paddle e palla
-     */
-
-    public void updateBackground(){
-
-        for(int i = 0; i < backgroundBalls.length; i++){
-
-            backgroundBalls[i].incrementCoordinates(fps);
-
-            if (backgroundBalls[i].getBallEndX() >= game.getScreenWidth() || backgroundBalls[i].getX() <= 0)
-                backgroundBalls[i].changeMovementX();
-
-            if(backgroundBalls[i].getY() <=0|| backgroundBalls[i].getBallEndY()>= game.getScreenHeight())
-                backgroundBalls[i].changeMovementY();
-        }
-    }
-
-    public void drawBackground(){
-
-        for(int i = 0; i < backgroundBalls.length; i++){
-
-            backgroundBalls[i].draw(canvas);
-        }
-    }
-
 
     public void updateGame(){
 
@@ -209,9 +180,6 @@ class GameView implements Runnable {
         paddleRight.incrementY();
         if(paddleRight.getY() >= game.getScreenHeight())
             paddleRight.setY(0);
-
-
-
 
         paddleTop.incrementX();
         if (paddleTop.getX() >= game.getScreenWidth())
@@ -264,7 +232,8 @@ class GameView implements Runnable {
 
                     }
                 });
-                //quakeLeft();
+
+                quakeLeft();
 
             } else {
 
@@ -302,7 +271,8 @@ class GameView implements Runnable {
 
                     }
                 });
-                //quakeRight();
+
+                quakeRight();
 
             } else {
 
@@ -338,7 +308,8 @@ class GameView implements Runnable {
 
                     }
                 });
-                //quakeTop();
+
+                quakeTop();
 
             } else {
 
@@ -375,7 +346,8 @@ class GameView implements Runnable {
 
                     }
                 });
-                //quakeBottom();
+
+                quakeBottom();
 
             } else {
 
@@ -383,100 +355,6 @@ class GameView implements Runnable {
                 mainActivity.showGameOverMenu();
             }
         }
-    }
-
-    public void quakeRight(){
-
-        MainActivity.gameView.post(new Runnable() {
-            @Override
-            public void run() {
-
-
-                MainActivity.gameView.animate().translationX(10).setDuration(100).withEndAction(new Runnable() {
-                    @Override
-                    public void run() {
-                        MainActivity.gameView.animate().translationX(-5).setDuration(100).withEndAction(new Runnable() {
-                            @Override
-                            public void run() {
-                                MainActivity.gameView.animate().translationX(0).setDuration(50).start();
-                            }
-                        }).start();
-                    }
-                }).start();
-
-
-            }
-        });
-    }
-
-    public void quakeLeft(){
-
-        MainActivity.gameView.post(new Runnable() {
-            @Override
-            public void run() {
-
-
-                MainActivity.gameView.animate().translationX(-10).setDuration(100).withEndAction(new Runnable() {
-                    @Override
-                    public void run() {
-                        MainActivity.gameView.animate().translationX(+5).setDuration(100).withEndAction(new Runnable() {
-                            @Override
-                            public void run() {
-                                MainActivity.gameView.animate().translationX(0).setDuration(50).start();
-                            }
-                        }).start();
-                    }
-                }).start();
-
-
-            }
-        });
-    }
-
-    public void quakeTop(){
-
-        MainActivity.gameView.post(new Runnable() {
-            @Override
-            public void run() {
-
-
-                MainActivity.gameView.animate().translationY(-10).setDuration(100).withEndAction(new Runnable() {
-                    @Override
-                    public void run() {
-                        MainActivity.gameView.animate().translationY(+5).setDuration(100).withEndAction(new Runnable() {
-                            @Override
-                            public void run() {
-                                MainActivity.gameView.animate().translationY(0).setDuration(50).start();
-                            }
-                        }).start();
-                    }
-                }).start();
-
-
-            }
-        });
-    }
-
-    public void quakeBottom(){
-        MainActivity.gameView.post(new Runnable() {
-            @Override
-            public void run() {
-
-                MainActivity.gameView.animate().translationY(10).setDuration(100).withEndAction(new Runnable() {
-                    @Override
-                    public void run() {
-                        MainActivity.gameView.animate().translationY(-5).setDuration(100).withEndAction(new Runnable() {
-                            @Override
-                            public void run() {
-                                MainActivity.gameView.animate().translationY(0).setDuration(50).start();
-                            }
-                        }).start();
-                    }
-                }).start();
-
-
-            }
-        });
     }
 
     public void drawGame(){
@@ -500,6 +378,124 @@ class GameView implements Runnable {
                 ourHolder.unlockCanvasAndPost(canvas);
             }
         }
+    }
+
+
+    public void updateBackground(){
+
+        for(int i = 0; i < backgroundBalls.length; i++){
+
+            backgroundBalls[i].incrementCoordinates(fps);
+
+            if (backgroundBalls[i].getBallEndX() >= game.getScreenWidth() || backgroundBalls[i].getX() <= 0)
+                backgroundBalls[i].changeMovementX();
+
+            if(backgroundBalls[i].getY() <=0|| backgroundBalls[i].getBallEndY()>= game.getScreenHeight())
+                backgroundBalls[i].changeMovementY();
+        }
+    }
+
+    public void drawBackground(){
+
+        for(int i = 0; i < backgroundBalls.length; i++){
+
+            backgroundBalls[i].draw(canvas);
+        }
+    }
+
+
+    public void quakeRight(){
+
+        MainActivity.gameView.post(new Runnable() {
+            @Override
+            public void run() {
+
+
+                MainActivity.gameView.animate().translationX(8).setDuration(80).withEndAction(new Runnable() {
+                    @Override
+                    public void run() {
+                        MainActivity.gameView.animate().translationX(-4).setDuration(80).withEndAction(new Runnable() {
+                            @Override
+                            public void run() {
+                                MainActivity.gameView.animate().translationX(0).setDuration(40).start();
+                            }
+                        }).start();
+                    }
+                }).start();
+
+
+            }
+        });
+    }
+
+    public void quakeLeft(){
+
+        MainActivity.gameView.post(new Runnable() {
+            @Override
+            public void run() {
+
+
+                MainActivity.gameView.animate().translationX(-8).setDuration(80).withEndAction(new Runnable() {
+                    @Override
+                    public void run() {
+                        MainActivity.gameView.animate().translationX(+4).setDuration(80).withEndAction(new Runnable() {
+                            @Override
+                            public void run() {
+                                MainActivity.gameView.animate().translationX(0).setDuration(40).start();
+                            }
+                        }).start();
+                    }
+                }).start();
+
+
+            }
+        });
+    }
+
+    public void quakeTop(){
+
+        MainActivity.gameView.post(new Runnable() {
+            @Override
+            public void run() {
+
+
+                MainActivity.gameView.animate().translationY(-8).setDuration(80).withEndAction(new Runnable() {
+                    @Override
+                    public void run() {
+                        MainActivity.gameView.animate().translationY(+4).setDuration(80).withEndAction(new Runnable() {
+                            @Override
+                            public void run() {
+                                MainActivity.gameView.animate().translationY(0).setDuration(40).start();
+                            }
+                        }).start();
+                    }
+                }).start();
+
+
+            }
+        });
+    }
+
+    public void quakeBottom(){
+        MainActivity.gameView.post(new Runnable() {
+            @Override
+            public void run() {
+
+                MainActivity.gameView.animate().translationY(8).setDuration(80).withEndAction(new Runnable() {
+                    @Override
+                    public void run() {
+                        MainActivity.gameView.animate().translationY(-4).setDuration(80).withEndAction(new Runnable() {
+                            @Override
+                            public void run() {
+                                MainActivity.gameView.animate().translationY(0).setDuration(40).start();
+                            }
+                        }).start();
+                    }
+                }).start();
+
+
+            }
+        });
     }
 
 
