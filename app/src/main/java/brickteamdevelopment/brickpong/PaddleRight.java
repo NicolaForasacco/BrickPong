@@ -4,8 +4,6 @@ import android.graphics.Canvas;
 
 public class PaddleRight extends Paddle{
 
-    public PaddleRight(){}
-
     public PaddleRight(int screenWidth,int screenHeight){
 
         super(screenWidth,screenHeight);
@@ -16,11 +14,8 @@ public class PaddleRight extends Paddle{
         y = screenHeight - width;
 
         speed           =   screenHeight / 13 ;
-
-
-
-
     }
+
     public void incrementMovementSlow(long fps){
 
         if(movement < (speed / fps) * 6)

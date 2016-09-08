@@ -3,22 +3,19 @@ package brickteamdevelopment.brickpong;
 import android.graphics.Color;
 import android.graphics.Paint;
 
-
 public class Paddle {
 
     public float            border,
                             width,
                             height,
                             speed,
-                            movement = 0 ,
-                            maxSpeed  =   15,
+                            movement = 0,
+                            maxSpeed = 15,
                             x,
                             y;
 
-    protected Paint         paintBlack,
-                            paintWhite;
-
-    public Paddle(){}
+    protected Paint         paintBlack = new Paint(),
+                            paintWhite = new Paint();
 
     public Paddle(int screenWidth,int screenHeight){
 
@@ -29,26 +26,17 @@ public class Paddle {
 
         speed           =   screenWidth / 13 ;
 
-        paintBlack      =   new Paint();
-        paintWhite      =   new Paint();
         border          =   width / 35;
 
         paintBlack.setColor(Color.BLACK);
         paintWhite.setColor(Color.WHITE);
     }
 
-    public void incrementMaxSpeed(){
-        maxSpeed *= 1.05f;
-    }
+    public void incrementMaxSpeed(){ maxSpeed *= 1.05f; }
 
-    public void incrementX(){
+    public void incrementX(){ x += movement; }
 
-        x += movement;
-    }
-
-    public void incrementY(){
-        y += movement;
-    }
+    public void incrementY(){ y += movement; }
 
     public float getHeight(){ return height; }
 

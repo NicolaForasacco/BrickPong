@@ -6,16 +6,12 @@ import android.graphics.Paint;
 
 public class PaddleTop extends Paddle {
 
-    public PaddleTop(){}
-
     public PaddleTop(int screenWidth,int screenHeight){
 
         super(screenWidth,screenHeight);
 
         x           =   screenWidth - width;
         y           =   0;
-
-
     }
 
     public void incrementMovementSlow(long fps){

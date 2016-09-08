@@ -162,6 +162,14 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
 
         hideSystemUI();
         super.onWindowFocusChanged(hasFocus);
+
+        switch (currentState){
+            case PAUSE:{
+                game.drawGame();
+                break;
+            }
+        }
+
     }
 
     //endregion
@@ -402,6 +410,7 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
             }
         });
     }
+
 
     public void showPauseMenu() {
 

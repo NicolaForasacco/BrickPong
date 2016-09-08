@@ -9,7 +9,7 @@ public class Game {
 
     private final Paint     paint;
 
-    private int             points=-1,
+    private int             points = -1,
                             screenWidth,
                             screenHeight;
 

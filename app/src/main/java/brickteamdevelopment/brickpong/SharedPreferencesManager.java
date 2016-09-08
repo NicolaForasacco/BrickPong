@@ -28,10 +28,10 @@ public class SharedPreferencesManager {
 
             editor.putInt(KEY_RECORD, points);
             editor.commit();
+
             return true;
         }else 
             return false;
-        
     }
 
     public int getRecord(){ return pref.getInt(KEY_RECORD, 0); }

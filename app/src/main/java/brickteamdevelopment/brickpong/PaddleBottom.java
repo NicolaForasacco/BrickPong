@@ -4,8 +4,6 @@ import android.graphics.Canvas;
 
 public class PaddleBottom extends Paddle{
 
-    public PaddleBottom(){}
-
     public PaddleBottom(int screenWidth,int screenHeight){
 
         super(screenWidth,screenHeight);
@@ -15,8 +13,6 @@ public class PaddleBottom extends Paddle{
         speed       *= -1;
         maxSpeed    *= -1;
     }
-
-
 
     public void incrementMovementSlow(long fps){
 
@@ -70,7 +66,6 @@ public class PaddleBottom extends Paddle{
                     getPaddleEndX() - screenWidth - border,
                     getPaddleEndY() - border,
                     paintWhite);
-
         }
     }
 }

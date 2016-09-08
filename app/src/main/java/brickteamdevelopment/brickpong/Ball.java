@@ -4,16 +4,16 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
-import android.widget.Toast;
 
 import java.util.Random;
+import java.util.regex.Matcher;
 
 public class Ball {
 
     private Point   screen;
 
-    private Paint   paintWhite,
-                    paintBlack;
+    private Paint   paintWhite = new Paint(),
+                    paintBlack = new Paint();
 
     private float   border,
                     width,
@@ -21,14 +21,12 @@ public class Ball {
                     speedX,
                     speedY,
                     x,
-                    y;
+                    y,
+                    paddleCoefficient = 0.4f;
 
     public Ball(int screenWidth,int screenHeight,boolean isBackgroundBall){
 
         screen          = new Point(screenWidth, screenHeight);
-
-        paintBlack      =   new Paint();
-        paintWhite      =   new Paint();
 
         if(isBackgroundBall){
 
@@ -46,26 +44,26 @@ public class Ball {
                 paintBlack.setColor(Color.rgb(215,0,0));
 
             paintWhite.setColor(paintBlack.getColor());
-
         }else {
 
-            height = screenWidth / 20;
-            width = screenWidth / 20;
+            height          =   screenWidth / 20;
+            width           =   height;
             x               =   new Random().nextInt(screenWidth /2) + screenWidth /4;
             y               =   new Random().nextInt(screenHeight / 2) + (screenHeight / 4);
-            speedX          =   screenWidth / 4.5f;
-            speedY          =   speedX;
+
+            float b = new Random().nextInt(4)+3+new Random().nextFloat();
+
+            speedX          =   screenWidth / b;
+            speedY          =   screenWidth / 7-b;
 
             paintBlack.setColor(Color.BLACK);
             paintWhite.setColor(Color.WHITE);
 
-            if(y >= screenHeight / 2){
+            if(y >= screenHeight / 2)
                 changeMovementY();
-            }
 
-            if(x >= screenWidth / 2){
+            if(x >= screenWidth / 2)
                 changeMovementX();
-            }
         }
 
         border          =   width / 8;
@@ -74,7 +72,7 @@ public class Ball {
             changeMovementX();
 
         if(new Random().nextBoolean())
-          changeMovementY();
+            changeMovementY();
     }
 
     public float  getX(){ return x; }
@@ -111,60 +109,62 @@ public class Ball {
     }
 
     public void incrementSpeed(){
-        speedX *= 1.05f;
-        speedY *= 1.05f;
+
+        //speedX *= 1.05f;
+        //speedY *= 1.05f;
     }
 
     public void bounceOnPaddle(PaddleLeft paddle){
-      //  float v2y = speedY + paddle.speed * 0.4f;
+
+        float v2y = speedY + paddle.speed * paddleCoefficient;
 
         if (speedX <= 0)
             speedX *= -1;
 
-       // if(v2y == 0)
-      //      v2y = (new Random().nextInt(2) == 0)? 1: -1;
+        if(v2y == 0)
+            v2y = (new Random().nextInt(2) == 0)? 1: -1;
 
-      //  speedY = v2y;
+        speedY = v2y;
     }
 
     public void bounceOnPaddle(PaddleRight paddle){
 
-        //float v2y = speedY + paddle.speed * 0.4f;
+        float v2y = speedY + paddle.speed * paddleCoefficient;
 
         if (speedX >= 0)
             speedX *= -1;
 
-        //if(v2y == 0)
-        //    v2y = (new Random().nextInt(2) == 0)? 1: -1;
+        if(v2y == 0)
+            v2y = (new Random().nextInt(2) == 0)? 1: -1;
 
-       // speedY = v2y;
+        speedY = v2y;
     }
 
     public void bounceOnPaddle(PaddleTop paddle){
 
-       // float v2x = speedX + paddle.speed * 0.4f;
+        float v2x = speedX + paddle.speed * paddleCoefficient;
 
         if (speedY <= 0)
             speedY *= -1;
 
-       // if(v2x == 0)
-       //     v2x = (new Random().nextInt(2) == 0)? 1: -1;
+        if(v2x == 0)
+            v2x = (new Random().nextInt(2) == 0)? 1: -1;
 
-       // speedX = v2x;
+        speedX = v2x;
     }
 
     public void bounceOnPaddle(PaddleBottom paddle){
 
-       // float v2x = speedX + paddle.speed * 0.4f;
+        float v2x = speedX + paddle.speed * paddleCoefficient;
 
         if (speedY >= 0)
             speedY *= -1;
 
 
-      //  if(v2x == 0)
-       //     v2x = (new Random().nextInt(2) == 0)? 1: -1;
+        if(v2x == 0)
+            v2x = (new Random().nextInt(2) == 0)? 1: -1;
 
-      //  speedX = v2x;
+        speedX = v2x;
     }
 
     public void draw(Canvas canvas){
