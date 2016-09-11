@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:visibility="invisible"
+    android:visibility="visible"
     android:gravity="center"
     android:background="@null"
     android:weightSum="14"
@@ -27,19 +27,34 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="4"
+        android:layout_weight="5"
         android:orientation="horizontal"
         android:gravity="center"
-        android:weightSum="8">
+        android:weightSum="10">
 
         <LinearLayout
-            android:layout_weight="7"
+            android:id="@+id/share"
+            android:clickable="true"
+            android:layout_margin="1dp"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:layout_height="wrap_content"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/share"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_weight="5"
             android:id="@+id/play"
             android:clickable="true"
-            android:layout_margin="20dp"
+            android:layout_margin="1dp"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:padding="1dp"
             android:gravity="center"
             android:orientation="horizontal">
 
@@ -50,52 +65,14 @@
 
         </LinearLayout>
 
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="2"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:weightSum="5">
-
-        <LinearLayout
-            android:id="@+id/share"
-            android:clickable="true"
-            android:layout_margin="10dp"
-            android:layout_width="0dp"
-            android:layout_weight="2"
-            android:layout_height="wrap_content"
-            android:padding="1dp">
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:src="@drawable/share"/>
-
-        </LinearLayout>
-
-
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="2"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:weightSum="5">
-
         <LinearLayout
             android:id="@+id/trophies"
             android:clickable="true"
-            android:layout_margin="10dp"
+            android:layout_margin="1dp"
             android:layout_width="0dp"
             android:layout_weight="2"
             android:layout_height="wrap_content"
-            android:padding="1dp">
+            android:gravity="center">
 
             <ImageView
                 android:layout_width="match_parent"
@@ -105,7 +82,5 @@
         </LinearLayout>
 
     </LinearLayout>
-
-
 
 </LinearLayout>

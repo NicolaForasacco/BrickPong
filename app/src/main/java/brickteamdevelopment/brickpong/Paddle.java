@@ -32,7 +32,9 @@ public class Paddle {
         paintWhite.setColor(Color.WHITE);
     }
 
-    public void incrementMaxSpeed(){ maxSpeed *= 1.05f; }
+    public void incrementMaxSpeed(){
+        maxSpeed *= 1.02f;
+    }
 
     public void incrementX(){ x += movement; }
 

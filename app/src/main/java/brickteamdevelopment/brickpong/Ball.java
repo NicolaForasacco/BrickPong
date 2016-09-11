@@ -6,8 +6,6 @@ import android.graphics.Paint;
 import android.graphics.Point;
 
 import java.util.Random;
-import java.util.regex.Matcher;
-
 public class Ball {
 
     private Point   screen;
@@ -22,7 +20,7 @@ public class Ball {
                     speedY,
                     x,
                     y,
-                    paddleCoefficient = 0.4f;
+                    paddleCoefficient = 1f;
 
     public Ball(int screenWidth,int screenHeight,boolean isBackgroundBall){
 
@@ -44,6 +42,7 @@ public class Ball {
                 paintBlack.setColor(Color.rgb(215,0,0));
 
             paintWhite.setColor(paintBlack.getColor());
+
         }else {
 
             height          =   screenWidth / 20;
@@ -51,10 +50,10 @@ public class Ball {
             x               =   new Random().nextInt(screenWidth /2) + screenWidth /4;
             y               =   new Random().nextInt(screenHeight / 2) + (screenHeight / 4);
 
-            float b = new Random().nextInt(4)+3+new Random().nextFloat();
+            float b = new Random().nextInt(3)+3+new Random().nextFloat();
 
             speedX          =   screenWidth / b;
-            speedY          =   screenWidth / 7-b;
+            speedY          =   screenWidth / 6-b;
 
             paintBlack.setColor(Color.BLACK);
             paintWhite.setColor(Color.WHITE);
@@ -102,6 +101,10 @@ public class Ball {
             y = 1;
     }
 
+    public float getASpeed(long fps){
+        return (Math.abs(speedX / fps) + Math.abs(speedY / fps))/2;
+    }
+
     public void incrementCoordinates(long fps){
 
         x += speedX / fps;
@@ -110,8 +113,8 @@ public class Ball {
 
     public void incrementSpeed(){
 
-        //speedX *= 1.05f;
-        //speedY *= 1.05f;
+        speedX *= 1.02f;
+        speedY *= 1.02f;
     }
 
     public void bounceOnPaddle(PaddleLeft paddle){
@@ -134,7 +137,7 @@ public class Ball {
         if (speedX >= 0)
             speedX *= -1;
 
-        if(v2y == 0)
+       if(v2y == 0)
             v2y = (new Random().nextInt(2) == 0)? 1: -1;
 
         speedY = v2y;
