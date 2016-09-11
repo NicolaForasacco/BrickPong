@@ -30,6 +30,7 @@ class GameView implements Runnable {
     private PaddleLeft      paddleLeft;
     private PaddleRight     paddleRight;
     private Ball[]          backgroundBalls;
+    private float totPoint=0;
 
 
     public GameView(MainActivity mainActivity, SurfaceView view) {
@@ -64,7 +65,7 @@ class GameView implements Runnable {
         }
     }
 
-    public void showGame(Point dim,int bannerHeight,GamesApiHandler gamesApiHandler) {
+    public void showGame(Point dim, int bannerHeight, GamesApiHandler gamesApiHandler) {
 
         if(gamesApiHandler != null)
             gameType = "game";
@@ -73,20 +74,18 @@ class GameView implements Runnable {
 
         pause();
 
+        totPoint = 0;
+
         Paint paintWhite = new Paint();
         paintWhite.setColor(Color.WHITE);
 
-        paddleLeft      =   new PaddleLeft(dim.x,
-                                        dim.y-bannerHeight);
+        paddleLeft      =   new PaddleLeft(dim.x, dim.y-bannerHeight);
 
-        paddleRight     =   new PaddleRight(dim.x,
-                                        dim.y - bannerHeight);
+        paddleRight     =   new PaddleRight(dim.x, dim.y - bannerHeight);
 
-        paddleTop       =   new PaddleTop(dim.x,
-                                        dim.y - bannerHeight);
+        paddleTop       =   new PaddleTop(dim.x, dim.y - bannerHeight);
 
-        paddleBottom    =   new PaddleBottom(dim.x,
-                                            dim.y - bannerHeight);
+        paddleBottom    =   new PaddleBottom(dim.x, dim.y - bannerHeight);
 
         game            =   new Game(dim.x,
                                     dim.y - bannerHeight,
@@ -105,7 +104,6 @@ class GameView implements Runnable {
                     dim.y - bannerHeight,
                     true);
         }
-
 
         fps             =   (long)paddleBottom.speed;
         playing         =   true;
@@ -162,8 +160,8 @@ class GameView implements Runnable {
                 drawBackground();
                 paddleTop.draw(canvas, game.getScreenWidth());
                 paddleBottom.draw(canvas, game.getScreenWidth());
-                paddleLeft.draw(canvas,game.getScreenHeight());
-                paddleRight.draw(canvas,game.getScreenHeight());
+                paddleLeft.draw(canvas, game.getScreenHeight());
+                paddleRight.draw(canvas, game.getScreenHeight());
 
                 ourHolder.unlockCanvasAndPost(canvas);
             }
@@ -205,156 +203,121 @@ class GameView implements Runnable {
 
         ball.incrementCoordinates(fps);
 
-        if(ball.getX() <= paddleLeft.getPaddleEndX()){
-            //limite sinistro
+
+
+        totPoint += ball.getASpeed(fps);
+
+        MainActivity.txvPoints.post(new Runnable() {
+            @Override
+            public void run() {
+
+                MainActivity.txvPoints.setText(String.valueOf((int)totPoint/10));
+            }
+        });
+
+
+        if(ball.getX() <= paddleLeft.getPaddleEndX()) {
 
             if ((ball.getBallEndY() >= paddleLeft.getY()
                     && ball.getY() <= paddleLeft.getPaddleEndY())
                     || (ball.getY() >= 0
                     && ball.getY() <= paddleLeft.getPaddleEndY() - game.getScreenHeight())) {
 
-                //la pallina ha toccato la barra quindi torna in basso
+                //la pallina ha toccato la barra sinistra
 
                 ball.incrementSpeed();
-
-                paddleLeft.incrementMaxSpeed();
-                paddleRight.incrementMaxSpeed();
-                paddleTop.incrementMaxSpeed();
-                paddleBottom.incrementMaxSpeed();
-
-
+                incrementPaddlesSpeed();
                 ball.bounceOnPaddle(paddleLeft);
                 game.incrementPoints();
-                MainActivity.txvPoints.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        MainActivity.txvPoints.setText(String.valueOf(game.getPoints()));
-
-                    }
-                });
 
                 quakeLeft();
+                printPoints();
 
-            } else {
-
-                //la pallina non ha toccato la barra, il giocatore ha perso
+            } else
                 mainActivity.showGameOverMenu();
-            }
-
-
         }
 
-        if(ball.getBallEndX() >= paddleRight.getX()){
-            //limite destro
+        if(ball.getBallEndX() >= paddleRight.getX()) {
 
             if ((ball.getBallEndY() >= paddleRight.getY()
                     && ball.getY() <= paddleRight.getPaddleEndY())
                     || (ball.getY() >= 0
                     && ball.getY() <= paddleRight.getPaddleEndY() - game.getScreenHeight())) {
 
-                //la pallina ha toccato la barra quindi torna in basso
+                //la pallina ha toccato la barra destra
 
                 ball.incrementSpeed();
-
-                paddleLeft.incrementMaxSpeed();
-                paddleRight.incrementMaxSpeed();
-                paddleTop.incrementMaxSpeed();
-                paddleBottom.incrementMaxSpeed();
-
+                incrementPaddlesSpeed();
                 ball.bounceOnPaddle(paddleRight);
-
                 game.incrementPoints();
-                MainActivity.txvPoints.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        MainActivity.txvPoints.setText(String.valueOf(game.getPoints()));
-
-                    }
-                });
 
                 quakeRight();
+                printPoints();
 
-            } else {
-
-                //la pallina non ha toccato la barra, il giocatore ha perso
+            } else
                 mainActivity.showGameOverMenu();
-            }
         }
 
-        if (ball.getY() <= (paddleTop.getHeight())) {
+        if(ball.getY() <= paddleTop.getHeight()) {
 
-            //se la pallina tocca il limite superiore
             if ((ball.getBallEndX() >= paddleTop.getX()
                     && ball.getX() <= paddleTop.getPaddleEndX())
                     || (ball.getX() >= 0
                     && ball.getX() <= paddleTop.getPaddleEndX() - game.getScreenWidth())) {
 
-                //la pallina ha toccato la barra quindi torna in basso
+                //la pallina ha toccato la barra superiore
 
                 ball.incrementSpeed();
-
-                paddleLeft.incrementMaxSpeed();
-                paddleRight.incrementMaxSpeed();
-                paddleTop.incrementMaxSpeed();
-                paddleBottom.incrementMaxSpeed();
-
+                incrementPaddlesSpeed();
                 ball.bounceOnPaddle(paddleTop);
-
                 game.incrementPoints();
-                MainActivity.txvPoints.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        MainActivity.txvPoints.setText(String.valueOf(game.getPoints()));
-
-                    }
-                });
 
                 quakeTop();
+                printPoints();
 
-            } else {
-
-                //la pallina non ha toccato la barra, il giocatore ha perso
+            } else
                 mainActivity.showGameOverMenu();
-            }
         }
 
-        if (ball.getBallEndY() >= paddleBottom.getY()) {
+        if(ball.getBallEndY() >= paddleBottom.getY()) {
 
-            //se la pallina tocca il limite inferiore
             if ((ball.getBallEndX() >= paddleBottom.getX()
                     && ball.getX() <= paddleBottom.getPaddleEndX())
                     || (ball.getX() >= 0
                     && ball.getX() <= paddleBottom.getPaddleEndX() - game.getScreenWidth())) {
 
-                //la pallina ha toccato la barra quindi torna in alto
+                //la pallina ha toccato la barra inferiore
 
                 ball.incrementSpeed();
-
-                paddleLeft.incrementMaxSpeed();
-                paddleRight.incrementMaxSpeed();
-                paddleTop.incrementMaxSpeed();
-                paddleBottom.incrementMaxSpeed();
-
-
+                incrementPaddlesSpeed();
                 ball.bounceOnPaddle(paddleBottom);
-
                 game.incrementPoints();
-                MainActivity.txvPoints.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        MainActivity.txvPoints.setText(String.valueOf(game.getPoints()));
-
-                    }
-                });
 
                 quakeBottom();
+                printPoints();
 
-            } else {
-
-                //la pallina non ha toccato la barra, il giocatore ha perso
+            } else
                 mainActivity.showGameOverMenu();
-            }
         }
+    }
+
+    private void printPoints(){
+
+        /*MainActivity.txvPoints.post(new Runnable() {
+            @Override
+            public void run() {
+
+                MainActivity.txvPoints.setText(String.valueOf(game.getPoints()));
+            }
+        });*/
+    }
+
+    private void incrementPaddlesSpeed(){
+
+        paddleLeft.incrementMaxSpeed();
+        paddleRight.incrementMaxSpeed();
+        paddleTop.incrementMaxSpeed();
+        paddleBottom.incrementMaxSpeed();
     }
 
     public void drawGame(){
@@ -390,17 +353,15 @@ class GameView implements Runnable {
             if (backgroundBalls[i].getBallEndX() >= game.getScreenWidth() || backgroundBalls[i].getX() <= 0)
                 backgroundBalls[i].changeMovementX();
 
-            if(backgroundBalls[i].getY() <=0|| backgroundBalls[i].getBallEndY()>= game.getScreenHeight())
+            if(backgroundBalls[i].getY() <=0 || backgroundBalls[i].getBallEndY()>= game.getScreenHeight())
                 backgroundBalls[i].changeMovementY();
         }
     }
 
     public void drawBackground(){
 
-        for(int i = 0; i < backgroundBalls.length; i++){
-
+        for(int i = 0; i < backgroundBalls.length; i++)
             backgroundBalls[i].draw(canvas);
-        }
     }
 
 
@@ -410,20 +371,31 @@ class GameView implements Runnable {
             @Override
             public void run() {
 
-
-                MainActivity.gameView.animate().translationX(8).setDuration(80).withEndAction(new Runnable() {
-                    @Override
-                    public void run() {
-                        MainActivity.gameView.animate().translationX(-4).setDuration(80).withEndAction(new Runnable() {
+                MainActivity.gameView
+                        .animate()
+                        .translationX(8)
+                        .setDuration(80)
+                        .withEndAction(new Runnable() {
                             @Override
                             public void run() {
-                                MainActivity.gameView.animate().translationX(0).setDuration(40).start();
+
+                                MainActivity.gameView
+                                        .animate()
+                                        .translationX(-4)
+                                        .setDuration(80)
+                                        .withEndAction(new Runnable() {
+                                            @Override
+                                            public void run() {
+
+                                                MainActivity.gameView
+                                                        .animate()
+                                                        .translationX(0)
+                                                        .setDuration(40)
+                                                        .start();
+                                            }
+                                        }).start();
                             }
                         }).start();
-                    }
-                }).start();
-
-
             }
         });
     }
@@ -434,20 +406,31 @@ class GameView implements Runnable {
             @Override
             public void run() {
 
-
-                MainActivity.gameView.animate().translationX(-8).setDuration(80).withEndAction(new Runnable() {
-                    @Override
-                    public void run() {
-                        MainActivity.gameView.animate().translationX(+4).setDuration(80).withEndAction(new Runnable() {
+                MainActivity.gameView
+                        .animate()
+                        .translationX(-8)
+                        .setDuration(80)
+                        .withEndAction(new Runnable() {
                             @Override
                             public void run() {
-                                MainActivity.gameView.animate().translationX(0).setDuration(40).start();
+
+                                MainActivity.gameView
+                                        .animate()
+                                        .translationX(+4)
+                                        .setDuration(80)
+                                        .withEndAction(new Runnable() {
+                                            @Override
+                                            public void run() {
+
+                                                MainActivity.gameView
+                                                        .animate()
+                                                        .translationX(0)
+                                                        .setDuration(40)
+                                                        .start();
+                                            }
+                                        }).start();
                             }
                         }).start();
-                    }
-                }).start();
-
-
             }
         });
     }
@@ -458,42 +441,66 @@ class GameView implements Runnable {
             @Override
             public void run() {
 
-
-                MainActivity.gameView.animate().translationY(-8).setDuration(80).withEndAction(new Runnable() {
-                    @Override
-                    public void run() {
-                        MainActivity.gameView.animate().translationY(+4).setDuration(80).withEndAction(new Runnable() {
+                MainActivity.gameView
+                        .animate()
+                        .translationY(-8)
+                        .setDuration(80)
+                        .withEndAction(new Runnable() {
                             @Override
                             public void run() {
-                                MainActivity.gameView.animate().translationY(0).setDuration(40).start();
+
+                                MainActivity.gameView
+                                        .animate()
+                                        .translationY(+4)
+                                        .setDuration(80)
+                                        .withEndAction(new Runnable() {
+                                            @Override
+                                            public void run() {
+
+                                                MainActivity.gameView
+                                                        .animate()
+                                                        .translationY(0)
+                                                        .setDuration(40)
+                                                        .start();
+                                            }
+                                        }).start();
                             }
                         }).start();
-                    }
-                }).start();
-
-
             }
         });
     }
 
     public void quakeBottom(){
+
         MainActivity.gameView.post(new Runnable() {
             @Override
             public void run() {
 
-                MainActivity.gameView.animate().translationY(8).setDuration(80).withEndAction(new Runnable() {
-                    @Override
-                    public void run() {
-                        MainActivity.gameView.animate().translationY(-4).setDuration(80).withEndAction(new Runnable() {
+                MainActivity.gameView
+                        .animate()
+                        .translationY(8)
+                        .setDuration(80)
+                        .withEndAction(new Runnable() {
                             @Override
                             public void run() {
-                                MainActivity.gameView.animate().translationY(0).setDuration(40).start();
+
+                                MainActivity.gameView
+                                        .animate()
+                                        .translationY(-4)
+                                        .setDuration(80)
+                                        .withEndAction(new Runnable() {
+                                            @Override
+                                            public void run() {
+
+                                                MainActivity.gameView
+                                                        .animate()
+                                                        .translationY(0)
+                                                        .setDuration(40)
+                                                        .start();
+                                            }
+                                        }).start();
                             }
                         }).start();
-                    }
-                }).start();
-
-
             }
         });
     }
