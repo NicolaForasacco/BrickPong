@@ -30,7 +30,6 @@ class GameView implements Runnable {
     private PaddleLeft      paddleLeft;
     private PaddleRight     paddleRight;
     private Ball[]          backgroundBalls;
-    private float totPoint=0;
 
 
     public GameView(MainActivity mainActivity, SurfaceView view) {
@@ -74,8 +73,6 @@ class GameView implements Runnable {
 
         pause();
 
-        totPoint = 0;
-
         Paint paintWhite = new Paint();
         paintWhite.setColor(Color.WHITE);
 
@@ -89,7 +86,7 @@ class GameView implements Runnable {
 
         game            =   new Game(dim.x,
                                     dim.y - bannerHeight,
-                                    "#B71C1C",
+                                    "#000000",
                                     gamesApiHandler);
 
         ball            =   new Ball(dim.x,
@@ -205,13 +202,13 @@ class GameView implements Runnable {
 
 
 
-        totPoint += ball.getASpeed(fps);
+        game.points += ball.getASpeed(fps);
 
         MainActivity.txvPoints.post(new Runnable() {
             @Override
             public void run() {
 
-                MainActivity.txvPoints.setText(String.valueOf((int)totPoint/10));
+                MainActivity.txvPoints.setText(String.valueOf((int)game.points));
             }
         });
 

@@ -36,10 +36,16 @@ public class Ball {
             speedX          =   screenWidth / 5.5f;
             speedY          =   speedX;
 
-            if(new Random().nextBoolean())
+
+
+            int color = new Random().nextInt(60);
+
+            paintBlack.setColor(Color.rgb(color,color,color));
+
+            /*if(new Random().nextBoolean())
                 paintBlack.setColor(Color.rgb(195,0,0));
             else
-                paintBlack.setColor(Color.rgb(215,0,0));
+                paintBlack.setColor(Color.rgb(215,0,0));*/
 
             paintWhite.setColor(paintBlack.getColor());
 
@@ -47,8 +53,11 @@ public class Ball {
 
             height          =   screenWidth / 20;
             width           =   height;
-            x               =   new Random().nextInt(screenWidth /2) + screenWidth /4;
-            y               =   new Random().nextInt(screenHeight / 2) + (screenHeight / 4);
+            //x               =   new Random().nextInt(screenWidth /2) + screenWidth /4;
+            //y               =   new Random().nextInt(screenHeight / 2) + (screenHeight / 4);
+
+            x = screenWidth/2 + width;
+            y = screenHeight/2 + width;
 
             float b = new Random().nextInt(3)+3+new Random().nextFloat();
 
@@ -102,7 +111,7 @@ public class Ball {
     }
 
     public float getASpeed(long fps){
-        return (Math.abs(speedX / fps) + Math.abs(speedY / fps))/2;
+        return (Math.abs(speedX / fps) + Math.abs(speedY / fps))/50;
     }
 
     public void incrementCoordinates(long fps){
@@ -176,12 +185,12 @@ public class Ball {
                         y,
                         getBallEndX(),
                         getBallEndY(),
-                        paintBlack);
+                        paintWhite);
 
         canvas.drawRect(x + border,
                         y + border,
                         getBallEndX() - border,
                         getBallEndY() - border,
-                        paintWhite);
+                        paintBlack);
     }
 }

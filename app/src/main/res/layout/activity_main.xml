@@ -10,7 +10,7 @@
     tools:context=".MainActivity"
     android:orientation="vertical"
     android:gravity="center"
-    android:background="@color/red">
+    android:background="@android:color/black">
 
     <RelativeLayout
         android:layout_width="match_parent"
