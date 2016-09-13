@@ -52,6 +52,7 @@
             android:layout_weight="5"
             android:id="@+id/play"
             android:clickable="true"
+
             android:layout_margin="1dp"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -61,7 +62,7 @@
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:src="@drawable/play"/>
+                android:src="@drawable/play_final"/>
 
         </LinearLayout>
 

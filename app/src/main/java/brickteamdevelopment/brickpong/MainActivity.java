@@ -189,6 +189,9 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
         findViewById(R.id.lyt_pause).setVisibility(View.GONE);
 
         final LinearLayout btn_play     =   (LinearLayout)findViewById(R.id.play);
+        btn_play.animate().scaleX(1f).scaleY(1f).start();
+
+
         final LinearLayout share        =   (LinearLayout)findViewById(R.id.share);
         final LinearLayout trophies     =   (LinearLayout)findViewById(R.id.trophies);
 
@@ -223,8 +226,14 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
                         v.getRight(),
                         v.getBottom());
 
-                if(actionChecker(rect, event, v, btn_play))
-                    showGame();
+                if(actionChecker(rect, event, v, btn_play)){
+                    btn_play.animate().scaleX(0.2f).scaleY(0.2f).setDuration(400).withEndAction(new Runnable() {
+                        @Override
+                        public void run() {
+                            showGame();
+                        }
+                    }).start();
+                }
 
                 return true;
             }
@@ -512,18 +521,26 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
             @Override
             public void run() {
 
+
+                findViewById(R.id.score_layout).setVisibility(View.VISIBLE);
+                ((TextView)findViewById(R.id.game_over)).setVisibility(View.VISIBLE);
+
                 game.pause();
 
                 currentState = State.GAMEOVER;
 
-                score = (game.game.getPoints() >= 0) ? game.game.getPoints() : score;
-
-
+                score = (int)((game.game.getPoints() >= 0) ? game.game.getPoints() : score);
 
 
                 final LinearLayout play_final       =   (LinearLayout) findViewById(R.id.final_play);
                 final LinearLayout share_final      =   (LinearLayout) findViewById(R.id.final_share);
                 final LinearLayout trophies_final   =   (LinearLayout) findViewById(R.id.final_trophies);
+
+                share_final.setVisibility(View.VISIBLE);
+                trophies_final.setVisibility(View.VISIBLE);
+
+                play_final.animate().scaleX(1).scaleY(1).translationX(0).translationY(0).start();
+
 
                 TextView best_label                 =   (TextView)findViewById(R.id.best_label);
                 TextView score_txv                  =   ((TextView)findViewById(R.id.score));
@@ -582,17 +599,18 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
                                 v.getRight(),
                                 v.getBottom());
 
-                        if(actionChecker(rect, event, v, play_final))
+                        if(actionChecker(rect, event, v, play_final)){
                             showGame();
+                        }
 
                         return true;
                     }
                 });
 
 
-                gamesApiHandler.updateRecord(sharedPreferences.getRecord());
-                gamesApiHandler.updateRecord(score);          //Si aggiorna il record dell'utente in google play games
-                gamesApiHandler.checkForAchievements(score);  //Si controlla il raggiungimento di eventuali risultati
+                //gamesApiHandler.updateRecord(sharedPreferences.getRecord());
+                //gamesApiHandler.updateRecord(score);          //Si aggiorna il record dell'utente in google play games
+                //gamesApiHandler.checkForAchievements(score);  //Si controlla il raggiungimento di eventuali risultati
 
                 if(!sharedPreferences.checkForRecord(score)){   //Si aggiorna il record nelle sharedPreferences
 
@@ -600,8 +618,8 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
                     best_label.setTextColor(Color.WHITE);
                 }else {
 
-                    best_label.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.light_orange));
-                    best_label.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.red));
+                    best_label.setBackgroundColor(Color.WHITE);
+                    best_label.setTextColor(Color.BLACK);
                 }
 
                 score_txv.setText(String.valueOf(score));
@@ -617,7 +635,6 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
                         findViewById(R.id.final_menu).animate().alpha(1).setDuration(500).withEndAction(new Runnable() {
                             @Override
                             public void run() {
-
 
                             }
                         }).start();

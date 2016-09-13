@@ -44,13 +44,13 @@ public class PaddleTop extends Paddle {
                 0,
                 getPaddleEndX(),
                 height,
-                paintBlack);
+                paintWhite);
 
         canvas.drawRect(x + border,
                 0 + border,
                 getPaddleEndX() - border,
                 height - border,
-                paintWhite);
+                paintBlack);
 
         if (getPaddleEndX() > screenWidth) {
 
@@ -59,13 +59,13 @@ public class PaddleTop extends Paddle {
                     0,
                     getPaddleEndX() - screenWidth,
                     getPaddleEndY(),
-                    paintBlack);
+                    paintWhite);
 
             canvas.drawRect(0,
                     0 + border,
                     getPaddleEndX() - screenWidth - border,
                     getPaddleEndY() - border,
-                    paintWhite);
+                    paintBlack);
 
         }
     }

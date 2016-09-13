@@ -9,9 +9,10 @@ public class Game {
 
     private final Paint     paint;
 
-    private int             points = -1,
-                            screenWidth,
+    public int             screenWidth,
                             screenHeight;
+
+    public float points=-1;
 
     private GamesApiHandler gamesApiHandler;
 
@@ -27,14 +28,14 @@ public class Game {
     public int getScreenWidth() { return screenWidth; }
     public int getScreenHeight() { return screenHeight; }
 
-    public int getPoints() { return points; }
+    public float getPoints() { return points; }
     public void incrementPoints(){
 
-        if(points<0)
+        /*if(points<0)
             points = 0;
 
         points++;
-        gamesApiHandler.checkForAchievements(points);
+        gamesApiHandler.checkForAchievements(points);*/
     }
 
     public void draw(Canvas canvas){

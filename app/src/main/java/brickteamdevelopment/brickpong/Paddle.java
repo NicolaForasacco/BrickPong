@@ -26,7 +26,7 @@ public class Paddle {
 
         speed           =   screenWidth / 13 ;
 
-        border          =   width / 35;
+        border          =   width / 45;
 
         paintBlack.setColor(Color.BLACK);
         paintWhite.setColor(Color.WHITE);
