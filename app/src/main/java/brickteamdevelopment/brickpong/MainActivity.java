@@ -181,12 +181,14 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
 
         //Si fa partire un thread che continua a disegnare la barra alla base del menu
 
+
+
         game.showGame(getScreenDimension(),getBannerHeight(),null);
 
         findViewById(R.id.lyt_menu).setVisibility(View.VISIBLE);
-        findViewById(R.id.lyt_game).setVisibility(View.GONE);
-        findViewById(R.id.final_menu).setVisibility(View.GONE);
-        findViewById(R.id.lyt_pause).setVisibility(View.GONE);
+        //findViewById(R.id.lyt_game).setVisibility(View.GONE);
+        //findViewById(R.id.final_menu).setVisibility(View.GONE);
+        //findViewById(R.id.lyt_pause).setVisibility(View.GONE);
 
         final LinearLayout btn_play     =   (LinearLayout)findViewById(R.id.play);
         btn_play.animate().scaleX(1f).scaleY(1f).start();
@@ -262,11 +264,16 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
 
         currentState = State.GAME;
 
+        findViewById(R.id.app_name).setVisibility(View.INVISIBLE);
+        findViewById(R.id.btn_pause).setVisibility(View.VISIBLE);
+        findViewById(R.id.lyt_points).setVisibility(View.VISIBLE);
+
         findViewById(R.id.lyt_game).setVisibility(View.VISIBLE);
         findViewById(R.id.lyt_menu).setVisibility(View.GONE);
-        findViewById(R.id.final_menu).setVisibility(View.GONE);
-        findViewById(R.id.lyt_pause).setVisibility(View.GONE);
-        findViewById(R.id.tutorial).setVisibility(View.GONE);
+
+        //findViewById(R.id.final_menu).setVisibility(View.GONE);
+        //findViewById(R.id.lyt_pause).setVisibility(View.GONE);
+        //findViewById(R.id.tutorial).setVisibility(View.GONE);
 
         txvPoints   =   (TextView) findViewById(R.id.points);
         txvPoints.setTypeface(type);
@@ -426,14 +433,14 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
         currentState = State.PAUSE;
         game.pause();
 
-        findViewById(R.id.lyt_pause).setVisibility(View.VISIBLE);
-        findViewById(R.id.tutorial).setVisibility(View.GONE);
+        //findViewById(R.id.lyt_pause).setVisibility(View.VISIBLE);
+        //findViewById(R.id.tutorial).setVisibility(View.GONE);
 
-        final LinearLayout resume   = (LinearLayout) findViewById(R.id.resume);
-        final LinearLayout retry    = (LinearLayout) findViewById(R.id.retry);
-        final LinearLayout backhome = (LinearLayout) findViewById(R.id.back_home);
+        //final LinearLayout resume   = (LinearLayout) findViewById(R.id.resume);
+        //final LinearLayout retry    = (LinearLayout) findViewById(R.id.retry);
+        //final LinearLayout backhome = (LinearLayout) findViewById(R.id.back_home);
 
-        ((TextView)findViewById(R.id.pause)).setTypeface(type);
+        //((TextView)findViewById(R.id.pause)).setTypeface(type);
 
         final LinearLayout btnPause = (LinearLayout)findViewById(R.id.btn_pause);
 
@@ -458,7 +465,7 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
             }
         });
 
-        resume.setOnTouchListener(new View.OnTouchListener() {
+       /*resume.setOnTouchListener(new View.OnTouchListener() {
             private Rect rect;
 
             @Override
@@ -512,7 +519,7 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
 
                 return true;
             }
-        });
+        });*/
     }
 
     public void showGameOverMenu(){
@@ -520,7 +527,8 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-
+                game.pause();
+/*
 
                 findViewById(R.id.score_layout).setVisibility(View.VISIBLE);
                 ((TextView)findViewById(R.id.game_over)).setVisibility(View.VISIBLE);
@@ -532,9 +540,9 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
                 score = (int)((game.game.getPoints() >= 0) ? game.game.getPoints() : score);
 
 
-                final LinearLayout play_final       =   (LinearLayout) findViewById(R.id.final_play);
-                final LinearLayout share_final      =   (LinearLayout) findViewById(R.id.final_share);
-                final LinearLayout trophies_final   =   (LinearLayout) findViewById(R.id.final_trophies);
+                //final LinearLayout play_final       =   (LinearLayout) findViewById(R.id.final_play);
+                //final LinearLayout share_final      =   (LinearLayout) findViewById(R.id.final_share);
+                //final LinearLayout trophies_final   =   (LinearLayout) findViewById(R.id.final_trophies);
 
                 share_final.setVisibility(View.VISIBLE);
                 trophies_final.setVisibility(View.VISIBLE);
@@ -640,7 +648,7 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
                         }).start();
                     }
                 }).start();
-
+                */
             }
         });
     }
@@ -706,6 +714,8 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
         return false;
     }
 
+
+
     public int getBannerHeight(){
 
         findViewById(R.id.adView).measure(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
@@ -739,7 +749,11 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
             }
         }catch(Exception e){}
 
-        return new Point(realWidth,realHeight);
+        return new Point(realWidth,realHeight);//getResources().getDisplayMetrics().widthPixels ,getResources().getDisplayMetrics().heightPixels);
+    }
+
+    private int dpToPx(int dp){
+        return (int)(dp*getResources().getDisplayMetrics().density);
     }
 
     private void share(String mex){

@@ -4,17 +4,18 @@ import android.graphics.Canvas;
 
 public class PaddleRight extends Paddle{
 
-    public PaddleRight(int screenWidth,int screenHeight){
+    public PaddleRight(int screenWidth,int screenHeight,int a){
 
-        super(screenWidth,screenHeight);
+        super(screenWidth,screenHeight,a);
 
         width           =   screenHeight / 2.5f ;
 
         x = screenWidth - height;
         y = screenHeight - width;
 
-        speed           =   screenHeight / 13 ;
+        speed           =   screenHeight / 14 ;
     }
+
 
     public void incrementMovementSlow(long fps){
 
@@ -48,32 +49,20 @@ public class PaddleRight extends Paddle{
 
 
 
-        canvas.drawRect(x,
+        canvas.drawRect(x + a,
                 y,
-                getPaddleEndX(),
+                getPaddleEndX()+a,
                 getPaddleEndY(),
                 paintWhite);
-
-        canvas.drawRect(x + border,
-                y + border,
-                getPaddleEndX() - border,
-                getPaddleEndY() - border,
-                paintBlack);
 
         if(getPaddleEndY() > screenHeight){
 
             //se la barra "supera" il limite inferiore si disegna il restante sul limite superiore
-            canvas.drawRect(x,
+            canvas.drawRect(x + a,
                     0,
-                    getPaddleEndX(),
-                    getPaddleEndY()- screenHeight,
+                    getPaddleEndX()+a,
+                    getPaddleEndY()-screenHeight,
                     paintWhite);
-
-            canvas.drawRect(x+border,
-                    0 + border,
-                    getPaddleEndX() - border,
-                    getPaddleEndY() - screenHeight - border,
-                    paintBlack);
 
         }
     }

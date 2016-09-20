@@ -6,17 +6,19 @@ import android.graphics.Paint;
 
 public class PaddleTop extends Paddle {
 
-    public PaddleTop(int screenWidth,int screenHeight){
+    public PaddleTop(int screenWidth,int screenHeight,int a){
 
-        super(screenWidth,screenHeight);
+        super(screenWidth,screenHeight,a);
 
-        x           =   screenWidth - width;
-        y           =   0;
+        y = 0;
+
+        speed       *= -1;
+        maxSpeed    *= -1;
     }
 
     public void incrementMovementSlow(long fps){
 
-        if(movement < (speed / fps) * 6)
+        if(movement > (speed / fps) * 6)
             movement += speed / fps;
         else
             movement = (speed / fps) * 6;
@@ -24,15 +26,15 @@ public class PaddleTop extends Paddle {
 
     public void incrementMovement(long fps){
 
-        if (movement < (speed / fps) * maxSpeed)
+        if (movement > (speed / fps) * maxSpeed * -1)
             movement += speed / fps;
         else
-            movement = (speed / fps) * maxSpeed;
+            movement = (speed / fps) * maxSpeed * -1;
     }
 
     public void decrementMovement(long fps){
 
-        if (movement > 0)
+        if (movement < 0)
             movement -= speed / fps;
         else
             movement = 0;
@@ -46,11 +48,6 @@ public class PaddleTop extends Paddle {
                 height,
                 paintWhite);
 
-        canvas.drawRect(x + border,
-                0 + border,
-                getPaddleEndX() - border,
-                height - border,
-                paintBlack);
 
         if (getPaddleEndX() > screenWidth) {
 
@@ -61,11 +58,6 @@ public class PaddleTop extends Paddle {
                     getPaddleEndY(),
                     paintWhite);
 
-            canvas.drawRect(0,
-                    0 + border,
-                    getPaddleEndX() - screenWidth - border,
-                    getPaddleEndY() - border,
-                    paintBlack);
 
         }
     }

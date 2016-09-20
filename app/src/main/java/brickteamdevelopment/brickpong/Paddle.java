@@ -5,6 +5,7 @@ import android.graphics.Paint;
 
 public class Paddle {
 
+    public final int a;
     public float            border,
                             width,
                             height,
@@ -17,20 +18,23 @@ public class Paddle {
     protected Paint         paintBlack = new Paint(),
                             paintWhite = new Paint();
 
-    public Paddle(int screenWidth,int screenHeight){
+    public Paddle(int screenWidth,int screenHeight,int a){
 
-        height          =   screenHeight / 50 ;
+        this.a = a;
+
+        height          =   screenHeight / 70 ;
         width           =   screenWidth / 2.5f ;
 
         x               =   0;
 
-        speed           =   screenWidth / 13 ;
+        speed           =   screenWidth / 14 ;
 
-        border          =   width / 50;
+        border          =   0;
 
         paintBlack.setColor(Color.BLACK);
         paintWhite.setColor(Color.WHITE);
     }
+
 
     public void incrementMaxSpeed(){
         maxSpeed *= 1.02f;

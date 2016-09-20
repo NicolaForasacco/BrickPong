@@ -4,19 +4,17 @@ import android.graphics.Canvas;
 
 public class PaddleBottom extends Paddle{
 
-    public PaddleBottom(int screenWidth,int screenHeight){
+    public PaddleBottom(int screenWidth,int screenHeight, int a){
 
-        super(screenWidth,screenHeight);
+        super(screenWidth,screenHeight,a );
 
-        y = screenHeight - height;
-
-        speed       *= -1;
-        maxSpeed    *= -1;
+        x           =   screenWidth - width;
+        y           =   screenHeight - height;
     }
 
     public void incrementMovementSlow(long fps){
 
-        if(movement > (speed / fps) * 6)
+        if(movement < (speed / fps) * 6)
             movement += speed / fps;
         else
             movement = (speed / fps) * 6;
@@ -24,15 +22,15 @@ public class PaddleBottom extends Paddle{
 
     public void incrementMovement(long fps){
 
-        if (movement > (speed / fps) * maxSpeed * -1)
+        if (movement < (speed / fps) * maxSpeed)
             movement += speed / fps;
         else
-            movement = (speed / fps) * maxSpeed * -1;
+            movement = (speed / fps) * maxSpeed;
     }
 
     public void decrementMovement(long fps){
 
-        if (movement < 0)
+        if (movement > 0)
             movement -= speed / fps;
         else
             movement = 0;
@@ -46,12 +44,6 @@ public class PaddleBottom extends Paddle{
                 getPaddleEndY(),
                 paintWhite);
 
-        canvas.drawRect(x + border,
-                y + border,
-                getPaddleEndX() - border,
-                getPaddleEndY() - border,
-                paintBlack);
-
         if(getPaddleEndX() > screenWidth){
 
             //se la barra "supera" il limite destro si disegna il restante sul limite sinistro
@@ -60,12 +52,6 @@ public class PaddleBottom extends Paddle{
                     getPaddleEndX() - screenWidth,
                     getPaddleEndY(),
                     paintWhite);
-
-            canvas.drawRect(0,
-                    y + border,
-                    getPaddleEndX() - screenWidth - border,
-                    getPaddleEndY() - border,
-                    paintBlack);
         }
     }
 }

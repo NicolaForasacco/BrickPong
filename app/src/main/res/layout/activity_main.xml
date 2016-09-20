@@ -13,24 +13,179 @@
     android:background="@android:color/black">
 
     <RelativeLayout
+
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+
         android:layout_above="@+id/adView">
 
-        <SurfaceView
-            android:id="@+id/gameView"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:weightSum="4">
 
-        <include layout="@layout/menu_layout"></include>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1">
 
-        <include layout="@layout/game_layout"></include>
+                <TextView
+                    android:id="@+id/app_name"
+                    android:visibility="visible"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/app_name"
+                    android:textColor="@android:color/white"
+                    android:textSize="50dp"
+                    android:textStyle="bold"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true" />
 
-        <include layout="@layout/game_over"></include>
+                <LinearLayout
+                    android:id="@+id/btn_pause"
+                    android:visibility="invisible"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true">
 
-        <include layout="@layout/tutorial_menu"></include>
+                    <ImageView
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:src="@drawable/pause"/>
+
+                </LinearLayout>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_weight="2"
+                android:layout_width="match_parent"
+                android:layout_height="0dp">
+
+                <SurfaceView
+                    android:id="@+id/gameView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+
+                <LinearLayout
+                    android:id="@+id/lyt_points"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:visibility="invisible">
+
+                    <TextView
+                        android:id="@+id/points"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0"
+                        android:textSize="50dp"
+                        android:textStyle="bold"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
+                        android:textColor="@android:color/white" />
+
+                </LinearLayout>
+
+
+                <!--<include layout="@layout/menu_layout"></include>
+
+                <include layout="@layout/game_layout"></include>
+
+                <include layout="@layout/game_over"></include>
+
+                <include layout="@layout/tutorial_menu"></include>-->
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1">
+
+                <LinearLayout
+                    android:id="@+id/lyt_menu"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:weightSum="10">
+
+                    <LinearLayout
+                        android:id="@+id/share"
+                        android:clickable="true"
+                        android:layout_margin="1dp"
+                        android:layout_width="0dp"
+                        android:padding="14dp"
+                        android:layout_weight="2"
+                        android:layout_height="wrap_content"
+                        android:gravity="center">
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:src="@drawable/share"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_weight="5"
+                        android:id="@+id/play"
+                        android:clickable="true"
+
+                        android:layout_margin="1dp"
+                        android:layout_width="0dp"
+                        android:padding="5dp"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:src="@drawable/play_final"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/trophies"
+                        android:clickable="true"
+                        android:layout_margin="1dp"
+                        android:padding="14dp"
+                        android:layout_width="0dp"
+                        android:layout_weight="2"
+                        android:layout_height="wrap_content"
+                        android:gravity="center">
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:src="@drawable/leatherboard"/>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/lyt_game"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                </LinearLayout>
+
+
+            </RelativeLayout>
+
+        </LinearLayout>
 
     </RelativeLayout>
+
+
 
     <com.google.android.gms.ads.AdView
         android:id="@+id/adView"

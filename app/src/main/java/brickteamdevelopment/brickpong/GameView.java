@@ -30,6 +30,7 @@ class GameView implements Runnable {
     private PaddleLeft      paddleLeft;
     private PaddleRight     paddleRight;
     private Ball[]          backgroundBalls;
+    private int a;
 
 
     public GameView(MainActivity mainActivity, SurfaceView view) {
@@ -66,6 +67,14 @@ class GameView implements Runnable {
 
     public void showGame(Point dim, int bannerHeight, GamesApiHandler gamesApiHandler) {
 
+
+
+
+        int l = (dim.y -bannerHeight) / 4 * 2;
+
+        a = (dim.x-l)/2;
+
+
         if(gamesApiHandler != null)
             gameType = "game";
         else
@@ -76,29 +85,29 @@ class GameView implements Runnable {
         Paint paintWhite = new Paint();
         paintWhite.setColor(Color.WHITE);
 
-        paddleLeft      =   new PaddleLeft(dim.x, dim.y-bannerHeight);
+        paddleLeft      =   new PaddleLeft(l, l ,a);
 
-        paddleRight     =   new PaddleRight(dim.x, dim.y - bannerHeight);
+        paddleRight     =   new PaddleRight(l, l ,a);
 
-        paddleTop       =   new PaddleTop(dim.x, dim.y - bannerHeight);
+        paddleTop       =   new PaddleTop(l, l,a);
 
-        paddleBottom    =   new PaddleBottom(dim.x, dim.y - bannerHeight);
+        paddleBottom    =   new PaddleBottom(l, l,a);
 
-        game            =   new Game(dim.x,
-                                    dim.y - bannerHeight,
+        game            =   new Game(l,
+                                    l,a,
                                     "#000000",
                                     gamesApiHandler);
 
-        ball            =   new Ball(dim.x,
-                                    dim.y - bannerHeight,
+        ball            =   new Ball(l,
+                                    l,a,
                                     false);
 
         backgroundBalls = new Ball[14];
 
         for(int i = 0; i < backgroundBalls.length; i++){
 
-            backgroundBalls[i] = new Ball(dim.x,
-                    dim.y - bannerHeight,
+            backgroundBalls[i] = new Ball(l,
+                    l,a,
                     true);
         }
 
@@ -128,13 +137,13 @@ class GameView implements Runnable {
         if(paddleRight.getY() >= game.getScreenHeight())
             paddleRight.setY(0);
 
-        paddleTop.incrementX();
-        if (paddleTop.getX() >= game.getScreenWidth())
-            paddleTop.setX(0);
-
         paddleBottom.incrementX();
-        if (paddleBottom.getX() <= 0)
-            paddleBottom.setX(game.getScreenWidth());
+        if (paddleBottom.getX() >= game.getScreenWidth())
+            paddleBottom.setX(0);
+
+        paddleTop.incrementX();
+        if (paddleTop.getX() <= 0)
+            paddleTop.setX(game.getScreenWidth());
 
         paddleLeft.incrementMovementSlow(fps);
 
@@ -176,13 +185,14 @@ class GameView implements Runnable {
         if(paddleRight.getY() >= game.getScreenHeight())
             paddleRight.setY(0);
 
-        paddleTop.incrementX();
-        if (paddleTop.getX() >= game.getScreenWidth())
-            paddleTop.setX(0);
 
         paddleBottom.incrementX();
-        if (paddleBottom.getX() <= 0)
-            paddleBottom.setX(game.getScreenWidth());
+        if (paddleBottom.getX() >= game.getScreenWidth())
+            paddleBottom.setX(0);
+
+        paddleTop.incrementX();
+        if (paddleTop.getX() <= 0)
+            paddleTop.setX(game.getScreenWidth());
 
 
         if (isScreenTouched){
@@ -222,9 +232,13 @@ class GameView implements Runnable {
 
                 //la pallina ha toccato la barra sinistra
 
-                ball.incrementSpeed();
+
                 incrementPaddlesSpeed();
+
                 ball.bounceOnPaddle(paddleLeft);
+
+                ball.incrementSpeed();
+
                 game.incrementPoints();
 
                 quakeLeft();
@@ -243,9 +257,11 @@ class GameView implements Runnable {
 
                 //la pallina ha toccato la barra destra
 
-                ball.incrementSpeed();
+
                 incrementPaddlesSpeed();
                 ball.bounceOnPaddle(paddleRight);
+
+                ball.incrementSpeed();
                 game.incrementPoints();
 
                 quakeRight();
@@ -264,9 +280,10 @@ class GameView implements Runnable {
 
                 //la pallina ha toccato la barra superiore
 
-                ball.incrementSpeed();
+
                 incrementPaddlesSpeed();
                 ball.bounceOnPaddle(paddleTop);
+                ball.incrementSpeed();
                 game.incrementPoints();
 
                 quakeTop();
@@ -285,9 +302,10 @@ class GameView implements Runnable {
 
                 //la pallina ha toccato la barra inferiore
 
-                ball.incrementSpeed();
+
                 incrementPaddlesSpeed();
                 ball.bounceOnPaddle(paddleBottom);
+                ball.incrementSpeed();
                 game.incrementPoints();
 
                 quakeBottom();

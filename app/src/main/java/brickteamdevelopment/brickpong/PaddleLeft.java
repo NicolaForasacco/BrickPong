@@ -4,17 +4,18 @@ import android.graphics.Canvas;
 
 public class PaddleLeft extends Paddle{
 
-    public PaddleLeft(int screenWidth,int screenHeight){
+    public PaddleLeft(int screenWidth,int screenHeight,int a){
 
-        super(screenWidth,screenHeight);
+        super(screenWidth,screenHeight,a);
 
         width           =   screenHeight / 2.5f ;
-        speed           =   screenHeight / 13 ;
+        speed           =   screenHeight / 14 ;
         y = 0;
 
         speed       *= -1;
         maxSpeed    *= -1;
     }
+
 
     public void incrementMovementSlow(long fps){
 
@@ -46,32 +47,20 @@ public class PaddleLeft extends Paddle{
 
     public void draw(Canvas canvas, int screenHeight) {
 
-        canvas.drawRect(0,
+        canvas.drawRect(0 + a,
                 y,
-                getPaddleEndX(),
+                getPaddleEndX()+a,
                 getPaddleEndY(),
                 paintWhite);
-
-        canvas.drawRect(0 + border,
-                y + border,
-                getPaddleEndX() - border,
-                getPaddleEndY() - border,
-                paintBlack);
 
         if(getPaddleEndY() > screenHeight){
 
             //se la barra "supera" il limite superiore si disegna il restante sul limite inferiore
-            canvas.drawRect(0,
+            canvas.drawRect(0 + a,
                     0,
-                    getPaddleEndX(),
+                    getPaddleEndX()+a,
                     getPaddleEndY()- screenHeight,
                     paintWhite);
-
-            canvas.drawRect(0 + border,
-                    0 + border,
-                    getPaddleEndX() - border,
-                    getPaddleEndY() - screenHeight - border,
-                    paintBlack);
 
         }
     }
