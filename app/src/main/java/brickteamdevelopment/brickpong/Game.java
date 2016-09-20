@@ -16,7 +16,8 @@ public class Game {
 
     private GamesApiHandler gamesApiHandler;
 
-    public Game(int width, int height, String color, GamesApiHandler gamesApiHandler){
+    public Game(int width, int height,int a, String color, GamesApiHandler gamesApiHandler){
+
         this.points             =   -1;
         this.screenHeight       =   height;
         this.screenWidth        =   width;

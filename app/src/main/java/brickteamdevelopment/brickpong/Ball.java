@@ -8,6 +8,7 @@ import android.graphics.Point;
 import java.util.Random;
 public class Ball {
 
+    private final int a;
     private Point   screen;
 
     private Paint   paintWhite = new Paint(),
@@ -20,10 +21,12 @@ public class Ball {
                     speedY,
                     x,
                     y,
-                    paddleCoefficient = 1f;
+                    paddleCoefficient = 0.2f;
 
-    public Ball(int screenWidth,int screenHeight,boolean isBackgroundBall){
+    public Ball(int screenWidth,int screenHeight,int a,boolean isBackgroundBall){
 
+        this.a=a;
+        if(screenWidth>0){
         screen          = new Point(screenWidth, screenHeight);
 
         if(isBackgroundBall){
@@ -56,13 +59,13 @@ public class Ball {
             //x               =   new Random().nextInt(screenWidth /2) + screenWidth /4;
             //y               =   new Random().nextInt(screenHeight / 2) + (screenHeight / 4);
 
-            x = screenWidth/2 + width;
-            y = screenHeight/2 + width;
+            x = screenWidth/2 + width ;
+            y = screenHeight/2 + width ;
 
-            float b = new Random().nextInt(3)+3+new Random().nextFloat();
+            float b = new Random().nextInt(2) + 3 + new Random().nextFloat();
 
             speedX          =   screenWidth / b;
-            speedY          =   screenWidth / 6-b;
+            speedY          =   screenWidth / 5 - b;
 
             paintBlack.setColor(Color.BLACK);
             paintWhite.setColor(Color.WHITE);
@@ -81,6 +84,7 @@ public class Ball {
 
         if(new Random().nextBoolean())
             changeMovementY();
+        }
     }
 
     public float  getX(){ return x; }
@@ -122,8 +126,8 @@ public class Ball {
 
     public void incrementSpeed(){
 
-        speedX *= 1.02f;
-        speedY *= 1.02f;
+        speedX *= 1.05f;
+        speedY *= 1.05f;
     }
 
     public void bounceOnPaddle(PaddleLeft paddle){
@@ -181,15 +185,15 @@ public class Ball {
 
     public void draw(Canvas canvas){
 
-        canvas.drawRect(x,
+        canvas.drawRect(x+a,
                         y,
-                        getBallEndX(),
+                        getBallEndX()+a,
                         getBallEndY(),
                         paintWhite);
 
-        canvas.drawRect(x + border,
+        canvas.drawRect(x + border+a,
                         y + border,
-                        getBallEndX() - border,
+                        getBallEndX() - border+a,
                         getBallEndY() - border,
                         paintBlack);
     }
