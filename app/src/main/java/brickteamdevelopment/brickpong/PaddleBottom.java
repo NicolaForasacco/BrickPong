@@ -10,46 +10,70 @@ public class PaddleBottom extends Paddle{
 
         x           =   screenWidth - width;
         y           =   screenHeight - height;
+
+
     }
 
     public void incrementMovementSlow(long fps){
 
-        if(movement < (speed / fps) * 6)
-            movement += speed / fps;
-        else
-            movement = (speed / fps) * 6;
+        if (verso == 1)
+            movement = (speed / fps) * 6 ;
+
+        if (verso == -1)
+            movement = (speed / fps) * 6 * -1;
     }
 
     public void incrementMovement(long fps){
 
-        if (movement < (speed / fps) * maxSpeed)
-            movement += speed / fps;
-        else
+        if (verso == 1)
+            movement = (speed / fps) * maxSpeed * -1;
+
+        if (verso == -1)
             movement = (speed / fps) * maxSpeed;
     }
 
     public void decrementMovement(long fps){
 
-        if (movement > 0)
-            movement -= speed / fps;
-        else
-            movement = 0;
+        movement = 0;
+    }
+
+    @Override
+    public void incrementX(){
+        super.incrementX();
+
+        if(verso == 1)
+            if (getX() <= 0)
+                setX((int)(width * 2.5f));
+
+
+        if(verso == -1)
+            if(getX() >= (int)(width * 2.5f))
+                setX(0);
     }
 
     public void draw(Canvas canvas, int screenWidth) {
 
-        canvas.drawRect(x,
-                y,
-                getPaddleEndX(),
-                getPaddleEndY(),
-                paintWhite);
+
 
         if(getPaddleEndX() > screenWidth){
 
-            //se la barra "supera" il limite destro si disegna il restante sul limite sinistro
-            canvas.drawRect(0,
+            canvas.drawRect(x+a,
                     y,
-                    getPaddleEndX() - screenWidth,
+                    screenWidth+a,
+                    getPaddleEndY(),
+                    paintWhite);
+
+            //se la barra "supera" il limite destro si disegna il restante sul limite sinistro
+            canvas.drawRect(0+a,
+                    y,
+                    getPaddleEndX() - screenWidth+a,
+                    getPaddleEndY(),
+                    paintWhite);
+        }else{
+
+            canvas.drawRect(x+a,
+                    y,
+                    getPaddleEndX()+a,
                     getPaddleEndY(),
                     paintWhite);
         }

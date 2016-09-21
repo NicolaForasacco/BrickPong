@@ -39,6 +39,7 @@ import com.google.example.games.basegameutils.BaseGameUtils;
 
 import java.lang.reflect.Method;
 import java.util.Calendar;
+import java.util.Random;
 
 public class MainActivity extends FragmentActivity implements  GoogleApiClient.ConnectionCallbacks,
                                                                 GoogleApiClient.OnConnectionFailedListener {
@@ -185,6 +186,11 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
 
         game.showGame(getScreenDimension(),getBannerHeight(),null);
 
+        if(new Random().nextBoolean())
+            game.goRight();
+        else
+            game.goLeft();
+
         findViewById(R.id.lyt_menu).setVisibility(View.VISIBLE);
         //findViewById(R.id.lyt_game).setVisibility(View.GONE);
         //findViewById(R.id.final_menu).setVisibility(View.GONE);
@@ -229,6 +235,7 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
                         v.getBottom());
 
                 if(actionChecker(rect, event, v, btn_play)){
+
                     btn_play.animate().scaleX(0.2f).scaleY(0.2f).setDuration(400).withEndAction(new Runnable() {
                         @Override
                         public void run() {
@@ -270,6 +277,91 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
 
         findViewById(R.id.lyt_game).setVisibility(View.VISIBLE);
         findViewById(R.id.lyt_menu).setVisibility(View.GONE);
+
+        final LinearLayout leftArrow = (LinearLayout) findViewById(R.id.left_arrow);
+        final LinearLayout rightArrow = (LinearLayout)findViewById(R.id.right_arrow);
+
+        leftArrow.setOnTouchListener(new View.OnTouchListener() {
+
+            private Rect rect;
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+
+                rect = new Rect(v.getLeft(),
+                        v.getTop(),
+                        v.getRight(),
+                        v.getBottom());
+
+                if ( event.getAction() == MotionEvent.ACTION_DOWN ){
+
+                    leftArrow.animate()
+                            .scaleX(0.9f)
+                            .scaleY(0.9f)
+                            .setDuration(50).start();
+
+                   game.goLeft();
+
+                } else if(event.getAction() == MotionEvent.ACTION_UP){
+
+                    leftArrow.animate()
+                            .scaleX(1f)
+                            .scaleY(1f)
+                            .setDuration(50).start();
+
+                    game.stopPaddle();
+
+                    if (rect != null && !rect.contains(v.getLeft() + (int) event.getX(),
+                            v.getTop() + (int) event.getY()))
+                        return false;
+                    else
+                        return true;
+
+                }
+
+                return true;
+            }
+        });
+
+        rightArrow.setOnTouchListener(new View.OnTouchListener() {
+
+            private Rect rect;
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+
+                rect = new Rect(v.getLeft(),
+                        v.getTop(),
+                        v.getRight(),
+                        v.getBottom());
+
+                if ( event.getAction() == MotionEvent.ACTION_DOWN ){
+
+                    rightArrow.animate()
+                            .scaleX(0.9f)
+                            .scaleY(0.9f)
+                            .setDuration(50).start();
+
+                    game.goRight();
+
+                } else if(event.getAction() == MotionEvent.ACTION_UP){
+
+                    rightArrow.animate()
+                            .scaleX(1f)
+                            .scaleY(1f)
+                            .setDuration(50).start();
+
+                    game.stopPaddle();
+
+                    if (rect != null && !rect.contains(v.getLeft() + (int) event.getX(),
+                            v.getTop() + (int) event.getY()))
+                        return false;
+                    else
+                        return true;
+
+                }
+
+                return true;
+            }
+        });
 
         //findViewById(R.id.final_menu).setVisibility(View.GONE);
         //findViewById(R.id.lyt_pause).setVisibility(View.GONE);
@@ -456,70 +548,14 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
                         v.getBottom());
 
                 if(actionChecker(rect, event, v, btnPause)){
-                    (findViewById(R.id.lyt_pause)).setVisibility(View.INVISIBLE);
                     game.resume();
                     enablePauseMenu();
+
                 }
 
                 return true;
             }
         });
-
-       /*resume.setOnTouchListener(new View.OnTouchListener() {
-            private Rect rect;
-
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-
-                rect = new Rect(v.getLeft(),
-                        v.getTop(),
-                        v.getRight(),
-                        v.getBottom());
-
-                if (actionChecker(rect, event, v, resume)) {
-                    (findViewById(R.id.lyt_pause)).setVisibility(View.INVISIBLE);
-                    game.resume();
-                }
-
-                return true;
-            }
-        });
-
-        retry.setOnTouchListener(new View.OnTouchListener() {
-
-            private Rect rect;
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-
-                rect = new Rect(v.getLeft(),
-                        v.getTop(),
-                        v.getRight(),
-                        v.getBottom());
-
-                if (actionChecker(rect, event, v, retry))
-                    showGame();
-
-                return true;
-            }
-        });
-
-        backhome.setOnTouchListener(new View.OnTouchListener() {
-
-            private Rect rect;
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-
-                rect = new Rect(v.getLeft(),
-                        v.getTop(),
-                        v.getRight(),
-                        v.getBottom());
-
-                if (actionChecker(rect, event, v, backhome))
-                    showMenu();
-
-                return true;
-            }
-        });*/
     }
 
     public void showGameOverMenu(){

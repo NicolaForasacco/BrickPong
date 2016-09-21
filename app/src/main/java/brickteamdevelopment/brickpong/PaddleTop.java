@@ -18,47 +18,71 @@ public class PaddleTop extends Paddle {
 
     public void incrementMovementSlow(long fps){
 
-        if(movement > (speed / fps) * 6)
-            movement += speed / fps;
-        else
+        if (verso == -1)
+            movement = (speed / fps) * 6 * -1;
+
+
+        if (verso == 1)
             movement = (speed / fps) * 6;
+
     }
 
     public void incrementMovement(long fps){
 
-        if (movement > (speed / fps) * maxSpeed * -1)
-            movement += speed / fps;
-        else
+        if (verso == -1)
             movement = (speed / fps) * maxSpeed * -1;
+
+        if (verso == 1)
+            movement = (speed / fps) * maxSpeed;
+
     }
 
     public void decrementMovement(long fps){
 
-        if (movement < 0)
-            movement -= speed / fps;
-        else
-            movement = 0;
+        movement = 0;
+    }
+
+    @Override
+    public void incrementX(){
+        super.incrementX();
+
+        if(verso == -1)
+            if (getX() <= 0)
+                setX((int)(width * 2.5f));
+
+
+        if(verso == 1)
+            if(getX() >= (int)(width * 2.5f))
+                setX(0);
     }
 
     public void draw(Canvas canvas, int screenWidth) {
 
-        canvas.drawRect(x,
-                0,
-                getPaddleEndX(),
-                height,
-                paintWhite);
+
+            if (getPaddleEndX() > screenWidth) {
+
+                canvas.drawRect(x + a,
+                        0,
+                        screenWidth + a,
+                        height,
+                        paintWhite);
+
+                //se la barra "supera" il limite destro si disegna il restante sul limite sinistro
+                canvas.drawRect(0 + a,
+                        0,
+                        getPaddleEndX() - screenWidth + a,
+                        getPaddleEndY(),
+                        paintWhite);
 
 
-        if (getPaddleEndX() > screenWidth) {
+            } else {
 
-            //se la barra "supera" il limite destro si disegna il restante sul limite sinistro
-            canvas.drawRect(0,
-                    0,
-                    getPaddleEndX() - screenWidth,
-                    getPaddleEndY(),
-                    paintWhite);
+                canvas.drawRect(x + a,
+                        0,
+                        getPaddleEndX() + a,
+                        height,
+                        paintWhite);
+            }
 
-
-        }
     }
 }

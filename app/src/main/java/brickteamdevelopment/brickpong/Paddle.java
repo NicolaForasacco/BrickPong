@@ -18,6 +18,8 @@ public class Paddle {
     protected Paint         paintBlack = new Paint(),
                             paintWhite = new Paint();
 
+    public int verso = 0;
+
     public Paddle(int screenWidth,int screenHeight,int a){
 
         this.a = a;
@@ -33,6 +35,30 @@ public class Paddle {
 
         paintBlack.setColor(Color.BLACK);
         paintWhite.setColor(Color.WHITE);
+    }
+
+    public void goLeft(){
+
+        verso = -1;
+
+        speed       *= -1;
+        maxSpeed    *= -1;
+    }
+
+    public void goRight(){
+
+        verso = 1;
+
+        speed       *= -1;
+        maxSpeed    *= -1;
+    }
+
+    public void stop(){
+
+        verso = 0;
+
+        speed       *= -1;
+        maxSpeed    *= -1;
     }
 
 

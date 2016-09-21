@@ -16,29 +16,41 @@ public class PaddleRight extends Paddle{
         speed           =   screenHeight / 14 ;
     }
 
+    @Override
+    public void incrementY() {
+        super.incrementY();
+
+        if(verso == -1)
+            if (getY() <= 0)
+                setY((int)(width*2.5f));
+
+        if(verso == 1)
+            if(getY()>=(int)(width*2.5f))
+                setY(0);
+    }
+
 
     public void incrementMovementSlow(long fps){
 
-        if(movement < (speed / fps) * 6)
-            movement += speed / fps;
-        else
+        if (verso == 1)
+            movement = (speed / fps) *6*-1;
+
+        if (verso == -1)
             movement = (speed / fps) * 6;
     }
 
     public void incrementMovement(long fps){
 
-        if (movement < (speed / fps) * maxSpeed)
-            movement += speed / fps;
-        else
+        if (verso == 1)
             movement = (speed / fps) * maxSpeed;
+
+        if (verso == -1)
+            movement = (speed / fps) * maxSpeed * -1;
     }
 
     public void decrementMovement(long fps){
 
-        if (movement > 0)
-            movement -= speed / fps;
-        else
-            movement = 0;
+        movement = 0;
     }
 
     public float getPaddleEndX(){ return x + height; }
@@ -46,8 +58,6 @@ public class PaddleRight extends Paddle{
     public float getPaddleEndY(){ return y + width; }
 
     public void draw(Canvas canvas, int screenHeight) {
-
-
 
         canvas.drawRect(x + a,
                 y,
