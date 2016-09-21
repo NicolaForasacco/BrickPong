@@ -8,6 +8,8 @@ import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import java.util.Random;
+
 class GameView implements Runnable {
 
     private Thread          gameThread = null;
@@ -48,6 +50,7 @@ class GameView implements Runnable {
             long startFrameTime = System.currentTimeMillis();
 
             updateBackground();
+
             if (gameType.compareTo("menu") == 0) {
 
                 updateMenu();
@@ -67,9 +70,6 @@ class GameView implements Runnable {
 
     public void showGame(Point dim, int bannerHeight, GamesApiHandler gamesApiHandler) {
 
-
-
-
         int l = (dim.y -bannerHeight) / 4 * 2;
 
         a = (dim.x-l)/2;
@@ -79,6 +79,8 @@ class GameView implements Runnable {
             gameType = "game";
         else
             gameType = "menu";
+
+
 
         pause();
 
@@ -92,6 +94,7 @@ class GameView implements Runnable {
         paddleTop       =   new PaddleTop(l, l,a);
 
         paddleBottom    =   new PaddleBottom(l, l,a);
+
 
         game            =   new Game(l,
                                     l,a,
@@ -118,6 +121,30 @@ class GameView implements Runnable {
         gameThread.start();
     }
 
+    public void goLeft(){
+
+        paddleTop.goLeft();
+        paddleBottom.goLeft();
+        paddleRight.goLeft();
+        paddleLeft.goLeft();
+    }
+
+    public void goRight(){
+
+        paddleTop.goRight();
+        paddleBottom.goRight();
+        paddleRight.goRight();
+        paddleLeft.goRight();
+    }
+
+    public void stopPaddle(){
+
+        paddleTop.stop();
+        paddleBottom.stop();
+        paddleRight.stop();
+        paddleLeft.stop();
+    }
+
     /*private void soundPlayerInit(){
 
         limitBounceSound    =   new SoundPlayer();
@@ -130,28 +157,17 @@ class GameView implements Runnable {
     public void updateMenu(){
 
         paddleLeft.incrementY();
-        if(paddleLeft.getY() <= 0)
-            paddleLeft.setY(game.getScreenHeight());
-
         paddleRight.incrementY();
-        if(paddleRight.getY() >= game.getScreenHeight())
-            paddleRight.setY(0);
 
         paddleBottom.incrementX();
-        if (paddleBottom.getX() >= game.getScreenWidth())
-            paddleBottom.setX(0);
-
         paddleTop.incrementX();
-        if (paddleTop.getX() <= 0)
-            paddleTop.setX(game.getScreenWidth());
 
-        paddleLeft.incrementMovementSlow(fps);
-
-        paddleRight.incrementMovementSlow(fps);
-
-        paddleTop.incrementMovementSlow(fps);
-
-        paddleBottom.incrementMovementSlow(fps);
+        if (paddleLeft.verso!=0) {
+            paddleRight.incrementMovementSlow(fps);
+            paddleLeft.incrementMovementSlow(fps);
+            paddleBottom.incrementMovementSlow(fps);
+            paddleTop.incrementMovementSlow(fps);
+        }
     }
 
     public void drawMenu() {
@@ -178,24 +194,13 @@ class GameView implements Runnable {
     public void updateGame(){
 
         paddleLeft.incrementY();
-        if(paddleLeft.getY() <= 0)
-            paddleLeft.setY(game.getScreenHeight());
-
         paddleRight.incrementY();
-        if(paddleRight.getY() >= game.getScreenHeight())
-            paddleRight.setY(0);
-
 
         paddleBottom.incrementX();
-        if (paddleBottom.getX() >= game.getScreenWidth())
-            paddleBottom.setX(0);
-
         paddleTop.incrementX();
-        if (paddleTop.getX() <= 0)
-            paddleTop.setX(game.getScreenWidth());
 
+        if (paddleLeft.verso != 0){
 
-        if (isScreenTouched){
             paddleRight.incrementMovement(fps);
             paddleLeft.incrementMovement(fps);
             paddleBottom.incrementMovement(fps);
@@ -209,7 +214,6 @@ class GameView implements Runnable {
         }
 
         ball.incrementCoordinates(fps);
-
 
 
         game.points += ball.getASpeed(fps);

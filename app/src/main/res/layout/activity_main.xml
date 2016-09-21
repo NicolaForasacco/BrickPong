@@ -174,10 +174,50 @@
                     android:id="@+id/lyt_game"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:visibility="invisible"
+                    android:weightSum="5">
+
+                    <LinearLayout
+                        android:id="@+id/left_arrow"
+
+                        android:layout_width="0dp"
+                        android:layout_weight="2"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:clickable="true"
+                        android:layout_margin="1dp"
+                        android:padding="10dp"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:src="@drawable/arrow_left"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/right_arrow"
+
+                        android:layout_width="0dp"
+                        android:layout_weight="2"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:layout_margin="1dp"
+                        android:padding="10dp"
+                        android:clickable="true"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:src="@drawable/arrow_right"/>
+
+                    </LinearLayout>
 
                 </LinearLayout>
-
 
             </RelativeLayout>
 
