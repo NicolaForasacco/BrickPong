@@ -86,20 +86,6 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
 
         game        =   new GameView(this, gameView);
 
-        gameView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-
-                if (event.getAction() == MotionEvent.ACTION_DOWN)
-                    game.isScreenTouched = true;
-
-                else if (event.getAction() == MotionEvent.ACTION_UP)
-                    game.isScreenTouched = false;
-
-                return true;
-            }
-        });
-
         gamesApiHandler =   new GamesApiHandler(this, this);
 
         showAds();
@@ -203,7 +189,7 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
         final LinearLayout share        =   (LinearLayout)findViewById(R.id.share);
         final LinearLayout trophies     =   (LinearLayout)findViewById(R.id.trophies);
 
-        ((TextView)findViewById(R.id.app_name)).setTypeface(type);
+        ((TextView)findViewById(R.id.title)).setTypeface(type);
 
         share.setOnTouchListener(new View.OnTouchListener() {
 
@@ -271,9 +257,10 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
 
         currentState = State.GAME;
 
-        findViewById(R.id.app_name).setVisibility(View.INVISIBLE);
+        findViewById(R.id.title).setVisibility(View.INVISIBLE);
+        findViewById(R.id.score_layout).setVisibility(View.INVISIBLE);
         findViewById(R.id.btn_pause).setVisibility(View.VISIBLE);
-        findViewById(R.id.lyt_points).setVisibility(View.VISIBLE);
+        findViewById(R.id.title).setVisibility(View.VISIBLE);
 
         findViewById(R.id.lyt_game).setVisibility(View.VISIBLE);
         findViewById(R.id.lyt_menu).setVisibility(View.GONE);
@@ -295,8 +282,8 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
                 if ( event.getAction() == MotionEvent.ACTION_DOWN ){
 
                     leftArrow.animate()
-                            .scaleX(0.9f)
-                            .scaleY(0.9f)
+                            .scaleX(0.95f)
+                            .scaleY(0.95f)
                             .setDuration(50).start();
 
                    game.goLeft();
@@ -336,8 +323,8 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
                 if ( event.getAction() == MotionEvent.ACTION_DOWN ){
 
                     rightArrow.animate()
-                            .scaleX(0.9f)
-                            .scaleY(0.9f)
+                            .scaleX(0.95f)
+                            .scaleY(0.95f)
                             .setDuration(50).start();
 
                     game.goRight();
@@ -367,7 +354,7 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
         //findViewById(R.id.lyt_pause).setVisibility(View.GONE);
         //findViewById(R.id.tutorial).setVisibility(View.GONE);
 
-        txvPoints   =   (TextView) findViewById(R.id.points);
+        txvPoints   =   (TextView) findViewById(R.id.title);
         txvPoints.setTypeface(type);
         txvPoints.setText("0");
 
@@ -377,7 +364,7 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
                     gamesApiHandler);
 
 
-        if(sharedPreferences.isFirstTime()){
+        /*if(sharedPreferences.isFirstTime()){
 
             //Nel caso in cui sia la prima volta che l'utente gioca si mostra il tutorial dopo 300 millisecondi che il gioco è iniziato
             //Finche il tutorial non verrà chiuso non sarà possibile premere il tasto per mettere in pausa il gioco
@@ -387,7 +374,7 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
                 public void onFinish() { showTutorial(); }
             }.start();
 
-        }else
+        }else*/
             enablePauseMenu();
     }
 
@@ -564,26 +551,35 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
             @Override
             public void run() {
                 game.pause();
-/*
-
-                findViewById(R.id.score_layout).setVisibility(View.VISIBLE);
-                ((TextView)findViewById(R.id.game_over)).setVisibility(View.VISIBLE);
-
-                game.pause();
 
                 currentState = State.GAMEOVER;
 
                 score = (int)((game.game.getPoints() >= 0) ? game.game.getPoints() : score);
 
+                game.showGame(getScreenDimension(),getBannerHeight(),null);
 
-                //final LinearLayout play_final       =   (LinearLayout) findViewById(R.id.final_play);
-                //final LinearLayout share_final      =   (LinearLayout) findViewById(R.id.final_share);
-                //final LinearLayout trophies_final   =   (LinearLayout) findViewById(R.id.final_trophies);
+                if(new Random().nextBoolean())
+                    game.goRight();
+                else
+                    game.goLeft();
 
-                share_final.setVisibility(View.VISIBLE);
-                trophies_final.setVisibility(View.VISIBLE);
+                findViewById(R.id.lyt_menu).setVisibility(View.VISIBLE);
+                findViewById(R.id.btn_pause).setVisibility(View.INVISIBLE);
+                findViewById(R.id.title).setVisibility(View.INVISIBLE);
+                findViewById(R.id.lyt_game).setVisibility(View.INVISIBLE);
+                findViewById(R.id.title).setVisibility(View.VISIBLE);
 
-                play_final.animate().scaleX(1).scaleY(1).translationX(0).translationY(0).start();
+                ((TextView)(findViewById(R.id.title))).setText(R.string.game_over);
+
+                findViewById(R.id.score_layout).animate().scaleX(0.5f).scaleY(0.5f).alpha(0.5f).withEndAction(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        findViewById(R.id.score_layout).setVisibility(View.VISIBLE);
+                        findViewById(R.id.score_layout).animate().scaleX(1).scaleY(1).alpha(1).setDuration(250).start();
+                    }
+                }).start();
+
 
 
                 TextView best_label                 =   (TextView)findViewById(R.id.best_label);
@@ -591,66 +587,9 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
                 TextView best_txv                   =   ((TextView)findViewById(R.id.best));
 
                 ((TextView)findViewById(R.id.score_label)).setTypeface(type);
-                ((TextView)findViewById(R.id.game_over)).setTypeface(type);
                 best_label.setTypeface(type);
                 score_txv.setTypeface(type);
                 best_txv.setTypeface(type);
-
-                trophies_final.setOnTouchListener(new View.OnTouchListener() {
-
-                    private Rect rect;
-                    @Override
-                    public boolean onTouch(View v, MotionEvent event) {
-
-                        rect = new Rect(v.getLeft(),
-                                v.getTop(),
-                                v.getRight(),
-                                v.getBottom());
-
-                        if(actionChecker(rect, event, v, trophies_final))
-                            showLeaderboards();
-
-                        return true;
-                    }
-                });
-
-                share_final.setOnTouchListener(new View.OnTouchListener() {
-
-                    private Rect rect;
-                    @Override
-                    public boolean onTouch(View v, MotionEvent event) {
-
-                        rect = new Rect(v.getLeft(),
-                                        v.getTop(),
-                                        v.getRight(),
-                                        v.getBottom());
-
-                        if(actionChecker(rect, event, v, share_final))
-                            share("I scored " + String.valueOf(score) + " in BrickPong!\nCan you beat me?");
-
-                        return true;
-                    }
-                });
-
-                play_final.setOnTouchListener(new View.OnTouchListener() {
-
-                    private Rect rect;
-                    @Override
-                    public boolean onTouch(View v, MotionEvent event) {
-
-                        rect = new Rect(v.getLeft(),
-                                v.getTop(),
-                                v.getRight(),
-                                v.getBottom());
-
-                        if(actionChecker(rect, event, v, play_final)){
-                            showGame();
-                        }
-
-                        return true;
-                    }
-                });
-
 
                 //gamesApiHandler.updateRecord(sharedPreferences.getRecord());
                 //gamesApiHandler.updateRecord(score);          //Si aggiorna il record dell'utente in google play games
@@ -669,22 +608,76 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
                 score_txv.setText(String.valueOf(score));
                 best_txv.setText(String.valueOf(sharedPreferences.getRecord()));
 
-                findViewById(R.id.final_menu).animate().alpha(0).setDuration(500).withEndAction(new Runnable() {
+
+                final LinearLayout btn_play     =   (LinearLayout)findViewById(R.id.play);
+                btn_play.animate().scaleX(1f).scaleY(1f).start();
+
+
+                final LinearLayout share        =   (LinearLayout)findViewById(R.id.share);
+                final LinearLayout trophies     =   (LinearLayout)findViewById(R.id.trophies);
+
+                ((TextView)findViewById(R.id.title)).setTypeface(type);
+
+                share.setOnTouchListener(new View.OnTouchListener() {
+
+                    private Rect rect;
                     @Override
-                    public void run() {
+                    public boolean onTouch(View v, MotionEvent event) {
 
-                        findViewById(R.id.lyt_game).setVisibility(View.INVISIBLE);
-                        game.showGame(getScreenDimension(),getBannerHeight(),null);
-                        findViewById(R.id.final_menu).setVisibility(View.VISIBLE);
-                        findViewById(R.id.final_menu).animate().alpha(1).setDuration(500).withEndAction(new Runnable() {
-                            @Override
-                            public void run() {
+                        rect = new Rect(v.getLeft(),
+                                v.getTop(),
+                                v.getRight(),
+                                v.getBottom());
 
-                            }
-                        }).start();
+                        if(actionChecker(rect, event, v, share))
+                            share("My record in BrickPong is " + String.valueOf(sharedPreferences.getRecord()) + "\nCan you beat me?");
+
+                        return true;
                     }
-                }).start();
-                */
+                });
+
+                btn_play.setOnTouchListener(new View.OnTouchListener() {
+
+                    private Rect rect;
+                    @Override
+                    public boolean onTouch(View v, MotionEvent event) {
+
+                        rect = new Rect(v.getLeft(),
+                                v.getTop(),
+                                v.getRight(),
+                                v.getBottom());
+
+                        if(actionChecker(rect, event, v, btn_play)){
+
+                            btn_play.animate().scaleX(0.2f).scaleY(0.2f).setDuration(400).withEndAction(new Runnable() {
+                                @Override
+                                public void run() {
+                                    showGame();
+                                }
+                            }).start();
+                        }
+
+                        return true;
+                    }
+                });
+
+                trophies.setOnTouchListener(new View.OnTouchListener() {
+
+                    private Rect rect;
+                    @Override
+                    public boolean onTouch(View v, MotionEvent event) {
+
+                        rect = new Rect(v.getLeft(),
+                                v.getTop(),
+                                v.getRight(),
+                                v.getBottom());
+
+                        if(actionChecker(rect, event, v, trophies))
+                            showLeaderboards();
+
+                        return true;
+                    }
+                });
             }
         });
     }
@@ -786,10 +779,6 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
         }catch(Exception e){}
 
         return new Point(realWidth,realHeight);//getResources().getDisplayMetrics().widthPixels ,getResources().getDisplayMetrics().heightPixels);
-    }
-
-    private int dpToPx(int dp){
-        return (int)(dp*getResources().getDisplayMetrics().density);
     }
 
     private void share(String mex){

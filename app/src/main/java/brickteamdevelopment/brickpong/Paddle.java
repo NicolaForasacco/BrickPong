@@ -18,18 +18,24 @@ public class Paddle {
     protected Paint         paintBlack = new Paint(),
                             paintWhite = new Paint();
 
+    protected float ab = 5f;
+
+    protected int abc = 14;
+
     public int verso = 0;
+
+    private float speedPercentage = 1.05f;
 
     public Paddle(int screenWidth,int screenHeight,int a){
 
         this.a = a;
 
         height          =   screenHeight / 70 ;
-        width           =   screenWidth / 2.5f ;
+        width           =   screenWidth / ab ;
 
         x               =   0;
 
-        speed           =   screenWidth / 14 ;
+        speed           =   screenWidth / abc ;
 
         border          =   0;
 
@@ -63,7 +69,7 @@ public class Paddle {
 
 
     public void incrementMaxSpeed(){
-        maxSpeed *= 1.02f;
+        maxSpeed *= speedPercentage;
     }
 
     public void incrementX(){ x += movement; }

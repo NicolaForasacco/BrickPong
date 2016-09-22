@@ -43,11 +43,11 @@ public class PaddleBottom extends Paddle{
 
         if(verso == 1)
             if (getX() <= 0)
-                setX((int)(width * 2.5f));
+                setX((int)(width * ab));
 
 
         if(verso == -1)
-            if(getX() >= (int)(width * 2.5f))
+            if(getX() >= (int)(width * ab))
                 setX(0);
     }
 

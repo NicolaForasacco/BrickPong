@@ -21,7 +21,9 @@ public class Ball {
                     speedY,
                     x,
                     y,
-                    paddleCoefficient = 0.2f;
+                    paddleCoefficient = 1f;
+
+    private float speedPercentage = 1.05f;
 
     public Ball(int screenWidth,int screenHeight,int a,boolean isBackgroundBall){
 
@@ -33,6 +35,7 @@ public class Ball {
 
             height          =   screenWidth / (new Random().nextInt(20) + 5);
             width           =   height;
+
             x               =   new Random().nextInt(screenWidth)  + 1;
             y               =   new Random().nextInt(screenHeight) + 1;
 
@@ -44,20 +47,12 @@ public class Ball {
             int color = new Random().nextInt(60);
 
             paintBlack.setColor(Color.rgb(color,color,color));
-
-            /*if(new Random().nextBoolean())
-                paintBlack.setColor(Color.rgb(195,0,0));
-            else
-                paintBlack.setColor(Color.rgb(215,0,0));*/
-
             paintWhite.setColor(paintBlack.getColor());
 
         }else {
 
             height          =   screenWidth / 20;
             width           =   height;
-            //x               =   new Random().nextInt(screenWidth /2) + screenWidth /4;
-            //y               =   new Random().nextInt(screenHeight / 2) + (screenHeight / 4);
 
             x = screenWidth/2 + width ;
             y = screenHeight/2 + width ;
@@ -67,7 +62,7 @@ public class Ball {
             speedX          =   screenWidth / b;
             speedY          =   screenWidth / 5 - b;
 
-            paintBlack.setColor(Color.BLACK);
+            paintBlack.setColor(Color.WHITE);
             paintWhite.setColor(Color.WHITE);
 
             if(y >= screenHeight / 2)
@@ -115,7 +110,7 @@ public class Ball {
     }
 
     public float getASpeed(long fps){
-        return (Math.abs(speedX / fps) + Math.abs(speedY / fps))/50;
+        return (Math.abs(speedX / fps) + Math.abs(speedY / fps))/70;
     }
 
     public void incrementCoordinates(long fps){
@@ -126,8 +121,8 @@ public class Ball {
 
     public void incrementSpeed(){
 
-        speedX *= 1.05f;
-        speedY *= 1.05f;
+        speedX *= speedPercentage;
+        speedY *= speedPercentage;
     }
 
     public void bounceOnPaddle(PaddleLeft paddle){

@@ -11,6 +11,7 @@ public class PaddleTop extends Paddle {
         super(screenWidth,screenHeight,a);
 
         y = 0;
+        x = 0;
 
         speed       *= -1;
         maxSpeed    *= -1;
@@ -48,11 +49,11 @@ public class PaddleTop extends Paddle {
 
         if(verso == -1)
             if (getX() <= 0)
-                setX((int)(width * 2.5f));
+                setX((int)(width * ab));
 
 
         if(verso == 1)
-            if(getX() >= (int)(width * 2.5f))
+            if(getX() >= (int)(width * ab))
                 setX(0);
     }
 
