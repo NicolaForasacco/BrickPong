@@ -80,8 +80,6 @@ class GameView implements Runnable {
         else
             gameType = "menu";
 
-
-
         pause();
 
         Paint paintWhite = new Paint();
@@ -245,7 +243,7 @@ class GameView implements Runnable {
 
                 game.incrementPoints();
 
-                quakeLeft();
+                //quakeLeft();
                 printPoints();
 
             } else
@@ -268,7 +266,7 @@ class GameView implements Runnable {
                 ball.incrementSpeed();
                 game.incrementPoints();
 
-                quakeRight();
+                //quakeRight();
                 printPoints();
 
             } else
@@ -290,7 +288,7 @@ class GameView implements Runnable {
                 ball.incrementSpeed();
                 game.incrementPoints();
 
-                quakeTop();
+                //quakeTop();
                 printPoints();
 
             } else
@@ -312,7 +310,7 @@ class GameView implements Runnable {
                 ball.incrementSpeed();
                 game.incrementPoints();
 
-                quakeBottom();
+                //quakeBottom();
                 printPoints();
 
             } else
