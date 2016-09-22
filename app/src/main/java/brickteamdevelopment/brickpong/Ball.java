@@ -21,14 +21,15 @@ public class Ball {
                     speedY,
                     x,
                     y,
-                    paddleCoefficient = 1f;
+                    paddleCoefficient = 0.2f;
 
-    private float speedPercentage = 1.05f;
+    private float speedPercentage = 1.08f;
 
     public Ball(int screenWidth,int screenHeight,int a,boolean isBackgroundBall){
 
-        this.a=a;
-        if(screenWidth>0){
+        this.a = a;
+        if(screenWidth > 0){
+
         screen          = new Point(screenWidth, screenHeight);
 
         if(isBackgroundBall){
@@ -62,7 +63,7 @@ public class Ball {
             speedX          =   screenWidth / b;
             speedY          =   screenWidth / 5 - b;
 
-            paintBlack.setColor(Color.WHITE);
+            paintBlack.setColor(Color.BLACK);
             paintWhite.setColor(Color.WHITE);
 
             if(y >= screenHeight / 2)

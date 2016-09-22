@@ -80,6 +80,8 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
 
         type    =   Typeface.createFromAsset(getAssets(), "fonts/Chava-Regular.otf") ;
 
+        ((TextView)findViewById(R.id.brick86)).setTypeface(type);
+
         sharedPreferences   =   new SharedPreferencesManager(getApplicationContext());
 
         gameView    =   (SurfaceView) findViewById(R.id.gameView);
@@ -167,9 +169,6 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
         currentState = State.MENU;
 
         //Si fa partire un thread che continua a disegnare la barra alla base del menu
-
-
-
         game.showGame(getScreenDimension(),getBannerHeight(),null);
 
         if(new Random().nextBoolean())
@@ -178,12 +177,36 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
             game.goLeft();
 
         findViewById(R.id.lyt_menu).setVisibility(View.VISIBLE);
-        //findViewById(R.id.lyt_game).setVisibility(View.GONE);
-        //findViewById(R.id.final_menu).setVisibility(View.GONE);
-        //findViewById(R.id.lyt_pause).setVisibility(View.GONE);
+
+        TextView best_label                 =   (TextView)findViewById(R.id.best_label_menu);
+        TextView best_txv                   =   ((TextView)findViewById(R.id.best_menu));
+        final TextView rateUs                     =   ((TextView)findViewById(R.id.rate_us));
+
+        ((TextView)findViewById(R.id.score_label)).setTypeface(type);
+        best_label.setTypeface(type);
+        best_txv.setTypeface(type);
+        rateUs.setTypeface(type);
+
+        rateUs.setOnTouchListener(new View.OnTouchListener() {
+            private Rect rect;
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+
+                rect = new Rect(v.getLeft(),
+                        v.getTop(),
+                        v.getRight(),
+                        v.getBottom());
+
+                if(actionChecker(rect, event, v, rateUs))
+                    showGooglePlayGamePage();
+
+                return true;
+            }
+        });
+
+        best_txv.setText(String.valueOf(sharedPreferences.getRecord()));
 
         final LinearLayout btn_play     =   (LinearLayout)findViewById(R.id.play);
-        btn_play.animate().scaleX(1f).scaleY(1f).start();
 
 
         final LinearLayout share        =   (LinearLayout)findViewById(R.id.share);
@@ -220,14 +243,15 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
                         v.getRight(),
                         v.getBottom());
 
-                if(actionChecker(rect, event, v, btn_play)){
+                if(actionChecker(rect, event, v, btn_play)) {
 
-                    btn_play.animate().scaleX(0.2f).scaleY(0.2f).setDuration(400).withEndAction(new Runnable() {
+                    findViewById(R.id.best_lyt).animate().scaleX(0.4f).scaleY(0.4f).alpha(0.8f).withEndAction(new Runnable() {
                         @Override
                         public void run() {
+
                             showGame();
                         }
-                    }).start();
+                    }).setDuration(300).start();
                 }
 
                 return true;
@@ -258,9 +282,15 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
         currentState = State.GAME;
 
         findViewById(R.id.title).setVisibility(View.INVISIBLE);
+        findViewById(R.id.rate_us).setVisibility(View.INVISIBLE);
         findViewById(R.id.score_layout).setVisibility(View.INVISIBLE);
         findViewById(R.id.btn_pause).setVisibility(View.VISIBLE);
         findViewById(R.id.title).setVisibility(View.VISIBLE);
+
+        ((TextView)findViewById(R.id.title)).setText("");
+
+        findViewById(R.id.best_lyt).setVisibility(View.INVISIBLE);
+        findViewById(R.id.points).setVisibility(View.VISIBLE);
 
         findViewById(R.id.lyt_game).setVisibility(View.VISIBLE);
         findViewById(R.id.lyt_menu).setVisibility(View.GONE);
@@ -354,7 +384,7 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
         //findViewById(R.id.lyt_pause).setVisibility(View.GONE);
         //findViewById(R.id.tutorial).setVisibility(View.GONE);
 
-        txvPoints   =   (TextView) findViewById(R.id.title);
+        txvPoints   =   (TextView) findViewById(R.id.points);
         txvPoints.setTypeface(type);
         txvPoints.setText("0");
 
@@ -364,7 +394,7 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
                     gamesApiHandler);
 
 
-        /*if(sharedPreferences.isFirstTime()){
+        if(sharedPreferences.isFirstTime()){
 
             //Nel caso in cui sia la prima volta che l'utente gioca si mostra il tutorial dopo 300 millisecondi che il gioco è iniziato
             //Finche il tutorial non verrà chiuso non sarà possibile premere il tasto per mettere in pausa il gioco
@@ -374,7 +404,7 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
                 public void onFinish() { showTutorial(); }
             }.start();
 
-        }else*/
+        }else
             enablePauseMenu();
     }
 
@@ -383,10 +413,13 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
         game.pause();
 
         final LinearLayout tutorialMenu             =   (LinearLayout)findViewById(R.id.tutorial);
-        final ViewPager mPager                      =   (ViewPager) findViewById(R.id.pager);
-        final TutorialPagerAdapter mPagerAdapter    =   new TutorialPagerAdapter(getSupportFragmentManager());
 
-        mPager.setAdapter(mPagerAdapter);
+        final TextView tutorial_title=(TextView)findViewById(R.id.tutorial_title);
+
+        tutorial_title.setTypeface(type);
+        ((TextView)findViewById(R.id.ok)).setTypeface(type);
+        tutorial_title.setText(R.string.tutorial_title_1);
+
 
         tutorialMenu.animate()
                 .scaleY(0.8f)
@@ -406,8 +439,10 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
                 }).start();
 
 
-        findViewById(R.id.close).setOnTouchListener(new View.OnTouchListener() {
 
+        findViewById(R.id.ok).setOnTouchListener(new View.OnTouchListener() {
+
+            int i=0;
             private Rect rect;
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -417,34 +452,22 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
                         v.getRight(),
                         v.getBottom());
 
-                if (actionChecker(rect, event, v, findViewById(R.id.close))) {
+                if (actionChecker(rect, event, v, findViewById(R.id.ok))) {
 
-                    findViewById(R.id.tutorial).setVisibility(View.GONE);
-
-                    enablePauseMenu();
-
-                    game.resume();
-                }
-
-                return true;
-            }
-        });
-
-        findViewById(R.id.next).setOnTouchListener(new View.OnTouchListener() {
-
-            private Rect rect;
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-
-                rect = new Rect(v.getLeft(),
-                        v.getTop(),
-                        v.getRight(),
-                        v.getBottom());
-
-                if (actionChecker(rect, event, v, findViewById(R.id.next))) {
-
-                    if (mPager.getCurrentItem() < mPagerAdapter.getCount() - 1)
-                        mPager.setCurrentItem(mPager.getCurrentItem() + 1, true);
+                    if (i<3){
+                        switch (i){
+                            case 0:
+                                tutorial_title.setText(R.string.tutorial_title_1);
+                                break;
+                            case 1:
+                                tutorial_title.setText(R.string.tutorial_title_2);
+                                break;
+                            case 2:
+                                tutorial_title.setText(R.string.tutorial_title_3);
+                                break;
+                        }
+                        i++;
+                    }
                     else {
 
                         findViewById(R.id.tutorial).setVisibility(View.GONE);
@@ -454,25 +477,6 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
                         game.resume();
                     }
                 }
-
-                return true;
-            }
-        });
-
-        findViewById(R.id.prev).setOnTouchListener(new View.OnTouchListener() {
-
-            private Rect rect;
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-
-                rect = new Rect(v.getLeft(),
-                        v.getTop(),
-                        v.getRight(),
-                        v.getBottom());
-
-                if (actionChecker(rect, event, v, findViewById(R.id.prev)))
-                    if (mPager.getCurrentItem() != 0)
-                        mPager.setCurrentItem(mPager.getCurrentItem() - 1,true);
 
                 return true;
             }
@@ -550,9 +554,17 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+
                 game.pause();
 
                 currentState = State.GAMEOVER;
+
+                findViewById(R.id.points).setVisibility(View.INVISIBLE);
+                findViewById(R.id.lyt_game).setVisibility(View.GONE);
+                findViewById(R.id.lyt_menu).setVisibility(View.VISIBLE);
+                findViewById(R.id.btn_pause).setVisibility(View.INVISIBLE);
+                findViewById(R.id.title).setVisibility(View.INVISIBLE);
+                findViewById(R.id.title).setVisibility(View.VISIBLE);
 
                 score = (int)((game.game.getPoints() >= 0) ? game.game.getPoints() : score);
 
@@ -563,11 +575,7 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
                 else
                     game.goLeft();
 
-                findViewById(R.id.lyt_menu).setVisibility(View.VISIBLE);
-                findViewById(R.id.btn_pause).setVisibility(View.INVISIBLE);
-                findViewById(R.id.title).setVisibility(View.INVISIBLE);
-                findViewById(R.id.lyt_game).setVisibility(View.INVISIBLE);
-                findViewById(R.id.title).setVisibility(View.VISIBLE);
+
 
                 ((TextView)(findViewById(R.id.title))).setText(R.string.game_over);
 
@@ -610,7 +618,6 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
 
 
                 final LinearLayout btn_play     =   (LinearLayout)findViewById(R.id.play);
-                btn_play.animate().scaleX(1f).scaleY(1f).start();
 
 
                 final LinearLayout share        =   (LinearLayout)findViewById(R.id.share);
@@ -648,13 +655,13 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
                                 v.getBottom());
 
                         if(actionChecker(rect, event, v, btn_play)){
-
-                            btn_play.animate().scaleX(0.2f).scaleY(0.2f).setDuration(400).withEndAction(new Runnable() {
+                            findViewById(R.id.score_layout).animate().scaleX(0.4f).scaleY(0.4f).alpha(0.8f).withEndAction(new Runnable() {
                                 @Override
                                 public void run() {
+
                                     showGame();
                                 }
-                            }).start();
+                            }).setDuration(300).start();
                         }
 
                         return true;
@@ -850,22 +857,4 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
     }
 
     //endregion
-
-    //Adapter utilizzato per il tutorial
-    public class TutorialPagerAdapter extends FragmentStatePagerAdapter {
-
-        public TutorialPagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            return TutorialFragment.create(position);
-        }
-
-        @Override
-        public int getCount() {
-            return 2;
-        }
-    }
 }

@@ -24,7 +24,7 @@ public class Paddle {
 
     public int verso = 0;
 
-    private float speedPercentage = 1.05f;
+    private float speedPercentage = 1.08f;
 
     public Paddle(int screenWidth,int screenHeight,int a){
 

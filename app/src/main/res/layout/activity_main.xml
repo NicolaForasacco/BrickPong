@@ -19,6 +19,18 @@
 
         android:layout_above="@+id/adView">
 
+        <TextView
+            android:id="@+id/brick86"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/presents_string"
+            android:textSize="10dp"
+            android:layout_marginTop="1dp"
+            android:gravity="center"
+            android:textColor="@android:color/white"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentTop="true"/>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -73,6 +85,36 @@
                     android:id="@+id/gameView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"/>
+
+                <LinearLayout
+                    android:id="@+id/best_lyt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:paddingLeft="10dp"
+
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true">
+
+                    <TextView
+                        android:id="@+id/best_label_menu"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="BEST"
+                        android:textSize="30dp"
+                        android:textColor="@android:color/white"/>
+
+                    <TextView
+                        android:id="@+id/best_menu"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="81"
+                        android:textSize="45dp"
+                        android:textColor="@android:color/white"/>
+
+                </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/score_layout"
@@ -137,6 +179,32 @@
 
                 </LinearLayout>
 
+                <TextView
+                    android:id="@+id/points"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="50dp"
+                    android:text="50"
+                    android:textStyle="bold"
+                    android:visibility="invisible"
+                    android:textColor="@android:color/white"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"/>
+
+                <TextView
+                    android:id="@+id/rate_us"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="30dp"
+                    android:text="RATE US"
+                    android:textColor="@android:color/white"
+
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="10dp"/>
+
+                <include layout="@layout/tutorial_menu" ></include>
+
                 <!--<include layout="@layout/menu_layout"></include>
 
                 <include layout="@layout/game_layout"></include>
@@ -193,7 +261,7 @@
                         <ImageView
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:src="@drawable/play_final"/>
+                            android:src="@drawable/play"/>
 
                     </LinearLayout>
 
