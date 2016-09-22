@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">BRICKPONG</string>
 
-    <string name="presents_string">created by\n\u0040BRICK86\n\nF.N.</string>
+    <string name="presents_string">created by \u0040BRICK86\nF.N.</string>
     <string name="error">Error</string>
 
     <string name="play">PLAY</string>
@@ -25,7 +25,8 @@
     <string name="achievement_120">CgkI9rKS8vUREAIQBw</string>
 
     <string name="main_banner_id">ca-app-pub-4001297408363108/5270109072</string>
-    <string name="tutorial_title_1">Tap to move all the paddles</string>
-    <string name="tutorial_title_2">Stop the ball with all the paddles</string>
+    <string name="tutorial_title_1">Tap the arrows to move the paddles</string>
+    <string name="tutorial_title_2">Stop the ball with the paddles to keep making points</string>
+    <string name="tutorial_title_3">The faster the ball goes, the higher the points are </string>
 
 </resources>

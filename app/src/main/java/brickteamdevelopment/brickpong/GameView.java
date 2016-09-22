@@ -29,9 +29,13 @@ class GameView implements Runnable {
 
     private PaddleTop       paddleTop;
     private PaddleBottom    paddleBottom;
-    private PaddleLeft      paddleLeft;
+    public PaddleLeft      paddleLeft;
     private PaddleRight     paddleRight;
     private Ball[]          backgroundBalls;
+
+    private int quakeMovement = 15;
+    private int quakeDuration = 90;
+
     private int a;
 
 
@@ -137,10 +141,13 @@ class GameView implements Runnable {
 
     public void stopPaddle(){
 
-        paddleTop.stop();
-        paddleBottom.stop();
-        paddleRight.stop();
-        paddleLeft.stop();
+        if(gameType.compareTo("menu")!=0) {
+
+            paddleTop.stop();
+            paddleBottom.stop();
+            paddleRight.stop();
+            paddleLeft.stop();
+        }
     }
 
     /*private void soundPlayerInit(){
@@ -243,7 +250,7 @@ class GameView implements Runnable {
 
                 game.incrementPoints();
 
-                //quakeLeft();
+                quakeLeft();
                 printPoints();
 
             } else
@@ -266,7 +273,7 @@ class GameView implements Runnable {
                 ball.incrementSpeed();
                 game.incrementPoints();
 
-                //quakeRight();
+                quakeRight();
                 printPoints();
 
             } else
@@ -288,7 +295,7 @@ class GameView implements Runnable {
                 ball.incrementSpeed();
                 game.incrementPoints();
 
-                //quakeTop();
+                quakeTop();
                 printPoints();
 
             } else
@@ -310,7 +317,7 @@ class GameView implements Runnable {
                 ball.incrementSpeed();
                 game.incrementPoints();
 
-                //quakeBottom();
+                quakeBottom();
                 printPoints();
 
             } else
@@ -390,16 +397,16 @@ class GameView implements Runnable {
 
                 MainActivity.gameView
                         .animate()
-                        .translationX(8)
-                        .setDuration(80)
+                        .translationX(quakeMovement)
+                        .setDuration(quakeDuration)
                         .withEndAction(new Runnable() {
                             @Override
                             public void run() {
 
                                 MainActivity.gameView
                                         .animate()
-                                        .translationX(-4)
-                                        .setDuration(80)
+                                        .translationX(-quakeMovement/2)
+                                        .setDuration(quakeDuration)
                                         .withEndAction(new Runnable() {
                                             @Override
                                             public void run() {
@@ -407,7 +414,7 @@ class GameView implements Runnable {
                                                 MainActivity.gameView
                                                         .animate()
                                                         .translationX(0)
-                                                        .setDuration(40)
+                                                        .setDuration(quakeDuration/2)
                                                         .start();
                                             }
                                         }).start();
@@ -425,16 +432,16 @@ class GameView implements Runnable {
 
                 MainActivity.gameView
                         .animate()
-                        .translationX(-8)
-                        .setDuration(80)
+                        .translationX(-quakeMovement)
+                        .setDuration(quakeDuration)
                         .withEndAction(new Runnable() {
                             @Override
                             public void run() {
 
                                 MainActivity.gameView
                                         .animate()
-                                        .translationX(+4)
-                                        .setDuration(80)
+                                        .translationX(+quakeMovement/2)
+                                        .setDuration(quakeDuration)
                                         .withEndAction(new Runnable() {
                                             @Override
                                             public void run() {
@@ -442,7 +449,7 @@ class GameView implements Runnable {
                                                 MainActivity.gameView
                                                         .animate()
                                                         .translationX(0)
-                                                        .setDuration(40)
+                                                        .setDuration(quakeDuration/2)
                                                         .start();
                                             }
                                         }).start();
@@ -460,16 +467,16 @@ class GameView implements Runnable {
 
                 MainActivity.gameView
                         .animate()
-                        .translationY(-8)
-                        .setDuration(80)
+                        .translationY(-quakeMovement)
+                        .setDuration(quakeDuration)
                         .withEndAction(new Runnable() {
                             @Override
                             public void run() {
 
                                 MainActivity.gameView
                                         .animate()
-                                        .translationY(+4)
-                                        .setDuration(80)
+                                        .translationY(+quakeMovement/2)
+                                        .setDuration(quakeDuration)
                                         .withEndAction(new Runnable() {
                                             @Override
                                             public void run() {
@@ -477,7 +484,7 @@ class GameView implements Runnable {
                                                 MainActivity.gameView
                                                         .animate()
                                                         .translationY(0)
-                                                        .setDuration(40)
+                                                        .setDuration(quakeDuration/2)
                                                         .start();
                                             }
                                         }).start();
@@ -495,16 +502,16 @@ class GameView implements Runnable {
 
                 MainActivity.gameView
                         .animate()
-                        .translationY(8)
-                        .setDuration(80)
+                        .translationY(quakeMovement)
+                        .setDuration(quakeDuration)
                         .withEndAction(new Runnable() {
                             @Override
                             public void run() {
 
                                 MainActivity.gameView
                                         .animate()
-                                        .translationY(-4)
-                                        .setDuration(80)
+                                        .translationY(-quakeMovement/2)
+                                        .setDuration(quakeDuration)
                                         .withEndAction(new Runnable() {
                                             @Override
                                             public void run() {
@@ -512,7 +519,7 @@ class GameView implements Runnable {
                                                 MainActivity.gameView
                                                         .animate()
                                                         .translationY(0)
-                                                        .setDuration(40)
+                                                        .setDuration(quakeDuration/2)
                                                         .start();
                                             }
                                         }).start();

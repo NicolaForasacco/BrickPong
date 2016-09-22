@@ -23,7 +23,6 @@ public class SplashScreen extends Activity{
 
         presents.setTypeface(type);
 
-        findViewById(R.id.imgLogo).animate().alpha(1).setDuration(1500).start();
         findViewById(R.id.txv_presents).animate().alpha(1).setDuration(1500).withEndAction(new Runnable() {
             @Override
             public void run() {
