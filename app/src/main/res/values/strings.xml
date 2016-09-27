@@ -4,11 +4,15 @@
     <string name="presents_string">created by \u0040BRICK86\nF.N.</string>
     <string name="error">Error</string>
 
-    <string name="play">PLAY</string>
-    <string name="share">SHARE</string>
-    <string name="pause">PAUSE</string>
+    <string name="score">SCORE</string>
+    <string name="best">BEST</string>
+    <string name="rate_us">RATE US</string>
     <string name="game_over">GAME OVER</string>
-    <string name="notification_content">Play BrickPong or share it!</string>
+
+    <string name="tutorial_title_1">Tap the arrows to move the paddles</string>
+    <string name="tutorial_title_2">Stop the ball with the paddles to keep making points</string>
+    <string name="tutorial_title_3">The faster the ball goes, the higher the points are</string>
+
     <string name="try_brick_pong">Try BrickPong https://play.google.com/store/apps/details?id=brickteamdevelopment.brickpong</string>
     <string name="share_using">"Share using "</string>
 
@@ -23,10 +27,6 @@
     <string name="achievement_80">CgkI9rKS8vUREAIQBQ</string>
     <string name="achievement_100">CgkI9rKS8vUREAIQBg</string>
     <string name="achievement_120">CgkI9rKS8vUREAIQBw</string>
-
     <string name="main_banner_id">ca-app-pub-4001297408363108/5270109072</string>
-    <string name="tutorial_title_1">Tap the arrows to move the paddles</string>
-    <string name="tutorial_title_2">Stop the ball with the paddles to keep making points</string>
-    <string name="tutorial_title_3">The faster the ball goes, the higher the points are </string>
 
 </resources>

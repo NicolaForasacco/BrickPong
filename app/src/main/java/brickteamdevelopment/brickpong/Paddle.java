@@ -5,9 +5,8 @@ import android.graphics.Paint;
 
 public class Paddle {
 
-    public final int a;
-    public float            border,
-                            width,
+    public final int border;
+    public float            width,
                             height,
                             speed,
                             movement = 0,
@@ -26,9 +25,9 @@ public class Paddle {
 
     private float speedPercentage = 1.08f;
 
-    public Paddle(int screenWidth,int screenHeight,int a){
+    public Paddle(int screenWidth,int screenHeight,int border){
 
-        this.a = a;
+        this.border = border;
 
         height          =   screenHeight / 70 ;
         width           =   screenWidth / ab ;
@@ -37,7 +36,6 @@ public class Paddle {
 
         speed           =   screenWidth / abc ;
 
-        border          =   0;
 
         paintBlack.setColor(Color.BLACK);
         paintWhite.setColor(Color.WHITE);
@@ -85,9 +83,5 @@ public class Paddle {
     public float getX(){ return x; }
 
     public float getY(){ return y; }
-
-    public float getPaddleEndX(){ return x + width; }
-
-    public float getPaddleEndY(){ return y + height; }
 
 }
