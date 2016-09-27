@@ -71,8 +71,6 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
 
         type    =   Typeface.createFromAsset(getAssets(), "fonts/Chava-Regular.otf") ;
 
-        ((TextView)findViewById(R.id.brick86)).setTypeface(type);
-
         sharedPreferences   =   new SharedPreferencesManager(getApplicationContext());
         gameView            =   (SurfaceView) findViewById(R.id.gameView);
 
@@ -542,7 +540,6 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
 
                 gamesApiHandler.updateRecord(sharedPreferences.getRecord());
                 gamesApiHandler.updateRecord(score);          //Si aggiorna il record dell'utente in google play games
-                //gamesApiHandler.checkForAchievements(score);  //Si controlla il raggiungimento di eventuali risultati
 
                 if(!sharedPreferences.checkForRecord(score)){   //Si aggiorna il record nelle sharedPreferences
 
