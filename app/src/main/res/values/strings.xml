@@ -11,7 +11,7 @@
 
     <string name="tutorial_title_1">Tap the arrows to move the paddles</string>
     <string name="tutorial_title_2">Stop the ball with the paddles to keep making points</string>
-    <string name="tutorial_title_3">The faster the ball goes, the higher the points are</string>
+    <string name="tutorial_title_3">The faster the ball goes, the higher the points</string>
 
     <string name="try_brick_pong">Try BrickPong https://play.google.com/store/apps/details?id=brickteamdevelopment.brickpong</string>
     <string name="share_using">"Share using "</string>
@@ -21,12 +21,6 @@
     <string name="package_name">brickteamdevelopment.brickpong</string>
     <string name="leaderboard_score">CgkI9rKS8vUREAIQCQ</string>
 
-    <string name="achievement_first_try">CgkI9rKS8vUREAIQAg</string>
-    <string name="achievement_40">CgkI9rKS8vUREAIQAw</string>
-    <string name="achievement_60">CgkI9rKS8vUREAIQBA</string>
-    <string name="achievement_80">CgkI9rKS8vUREAIQBQ</string>
-    <string name="achievement_100">CgkI9rKS8vUREAIQBg</string>
-    <string name="achievement_120">CgkI9rKS8vUREAIQBw</string>
     <string name="main_banner_id">ca-app-pub-4001297408363108/5270109072</string>
 
 </resources>
