@@ -46,7 +46,7 @@ public class GamesApiHandler implements
             return false ;
     }
 
-    public void checkForAchievements( int points ){
+    /*public void checkForAchievements( int points ){
 
         if(mGoogleApiClient.isConnected()) {
             switch(points) {
@@ -70,7 +70,7 @@ public class GamesApiHandler implements
                     break;
             }
         }
-    }
+    }*/
 
     @Override
     public void onConnected(Bundle bundle) {}

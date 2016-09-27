@@ -1,9 +1,5 @@
 package brickteamdevelopment.brickpong;
 
-import android.app.AlarmManager;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Point;
@@ -12,12 +8,7 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.CountDownTimer;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.Display;
@@ -38,21 +29,21 @@ import com.google.android.gms.games.Games;
 import com.google.example.games.basegameutils.BaseGameUtils;
 
 import java.lang.reflect.Method;
-import java.util.Calendar;
 import java.util.Random;
 
 public class MainActivity extends FragmentActivity implements  GoogleApiClient.ConnectionCallbacks,
                                                                 GoogleApiClient.OnConnectionFailedListener {
 
-    public static SurfaceView             gameView;   //View dove viene disegnato il gioco
-    private GameView                game;       //Oggetto che gestisce il thread del gioco e tutti i relativi oggetti
-    public static TextView          txvPoints;  //Testo che mostra il punteggio durante il gioco
+    public static SurfaceView       gameView;
+    private GameView                game;
+    public static TextView          txvPoints;
 
-    private Typeface                type;       //Oggetto utilizzato per modificare il font del testo
+    private Typeface                type;
 
     private AdView                  mAdView;
     public SharedPreferencesManager sharedPreferences;
     private GamesApiHandler         gamesApiHandler;
+
     public int score;
 
     private enum State {
@@ -83,14 +74,15 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
         ((TextView)findViewById(R.id.brick86)).setTypeface(type);
 
         sharedPreferences   =   new SharedPreferencesManager(getApplicationContext());
+        gameView            =   (SurfaceView) findViewById(R.id.gameView);
 
-        gameView    =   (SurfaceView) findViewById(R.id.gameView);
+        game                =   new GameView(this,
+                                                gameView);
 
-        game        =   new GameView(this, gameView);
+        gamesApiHandler     =   new GamesApiHandler(this,
+                                                    this);
 
-        gamesApiHandler =   new GamesApiHandler(this, this);
-
-        showAds();
+        //showAds();
         showMenu();
     }
 
@@ -168,8 +160,9 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
 
         currentState = State.MENU;
 
-        //Si fa partire un thread che continua a disegnare la barra alla base del menu
-        game.showGame(getScreenDimension(),getBannerHeight(),null);
+        game.showGame(getScreenDimension(),
+                        getBannerHeight(),
+                        null);
 
         if(new Random().nextBoolean())
             game.goRight();
@@ -178,14 +171,21 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
 
         findViewById(R.id.lyt_menu).setVisibility(View.VISIBLE);
 
-        TextView best_label                 =   (TextView)findViewById(R.id.best_label_menu);
-        TextView best_txv                   =   ((TextView)findViewById(R.id.best_menu));
-        final TextView rateUs                     =   ((TextView)findViewById(R.id.rate_us));
+        TextView best_label     =   (TextView)findViewById(R.id.best_label_menu);
+        TextView best_txv       =   (TextView)findViewById(R.id.best_menu);
+        final TextView rateUs   =   (TextView)findViewById(R.id.rate_us);
 
-        ((TextView)findViewById(R.id.score_label)).setTypeface(type);
         best_label.setTypeface(type);
         best_txv.setTypeface(type);
         rateUs.setTypeface(type);
+        ((TextView)findViewById(R.id.title)).setTypeface(type);
+
+        best_txv.setText(String.valueOf(sharedPreferences.getRecord()));
+
+        final LinearLayout btn_play     =   (LinearLayout)findViewById(R.id.play);
+        final LinearLayout share        =   (LinearLayout)findViewById(R.id.share);
+        final LinearLayout trophies     =   (LinearLayout)findViewById(R.id.trophies);
+
 
         rateUs.setOnTouchListener(new View.OnTouchListener() {
             private Rect rect;
@@ -193,9 +193,9 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
             public boolean onTouch(View v, MotionEvent event) {
 
                 rect = new Rect(v.getLeft(),
-                        v.getTop(),
-                        v.getRight(),
-                        v.getBottom());
+                                v.getTop(),
+                                v.getRight(),
+                                v.getBottom());
 
                 if(actionChecker(rect, event, v, rateUs))
                     showGooglePlayGamePage();
@@ -204,16 +204,6 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
             }
         });
 
-        best_txv.setText(String.valueOf(sharedPreferences.getRecord()));
-
-        final LinearLayout btn_play     =   (LinearLayout)findViewById(R.id.play);
-
-
-        final LinearLayout share        =   (LinearLayout)findViewById(R.id.share);
-        final LinearLayout trophies     =   (LinearLayout)findViewById(R.id.trophies);
-
-        ((TextView)findViewById(R.id.title)).setTypeface(type);
-
         share.setOnTouchListener(new View.OnTouchListener() {
 
             private Rect rect;
@@ -221,9 +211,9 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
             public boolean onTouch(View v, MotionEvent event) {
 
                 rect = new Rect(v.getLeft(),
-                        v.getTop(),
-                        v.getRight(),
-                        v.getBottom());
+                                v.getTop(),
+                                v.getRight(),
+                                v.getBottom());
 
                 if(actionChecker(rect, event, v, share))
                     share("My record in BrickPong is " + String.valueOf(sharedPreferences.getRecord()) + "\nCan you beat me?");
@@ -239,9 +229,9 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
             public boolean onTouch(View v, MotionEvent event) {
 
                 rect = new Rect(v.getLeft(),
-                        v.getTop(),
-                        v.getRight(),
-                        v.getBottom());
+                                v.getTop(),
+                                v.getRight(),
+                                v.getBottom());
 
                 if(actionChecker(rect, event, v, btn_play)) {
 
@@ -265,9 +255,9 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
             public boolean onTouch(View v, MotionEvent event) {
 
                 rect = new Rect(v.getLeft(),
-                        v.getTop(),
-                        v.getRight(),
-                        v.getBottom());
+                                v.getTop(),
+                                v.getRight(),
+                                v.getBottom());
 
                 if(actionChecker(rect, event, v, trophies))
                     showLeaderboards();
@@ -281,35 +271,34 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
 
         currentState = State.GAME;
 
-        findViewById(R.id.title).setVisibility(View.INVISIBLE);
         findViewById(R.id.rate_us).setVisibility(View.INVISIBLE);
         findViewById(R.id.score_layout).setVisibility(View.INVISIBLE);
+        findViewById(R.id.best_lyt).setVisibility(View.INVISIBLE);
+        findViewById(R.id.lyt_menu).setVisibility(View.GONE);
+
         findViewById(R.id.btn_pause).setVisibility(View.VISIBLE);
-        findViewById(R.id.title).setVisibility(View.VISIBLE);
+        findViewById(R.id.points).setVisibility(View.VISIBLE);
+        findViewById(R.id.lyt_game).setVisibility(View.VISIBLE);
 
         ((TextView)findViewById(R.id.title)).setText("");
 
-        findViewById(R.id.best_lyt).setVisibility(View.INVISIBLE);
-        findViewById(R.id.points).setVisibility(View.VISIBLE);
-
-        findViewById(R.id.lyt_game).setVisibility(View.VISIBLE);
-        findViewById(R.id.lyt_menu).setVisibility(View.GONE);
+        txvPoints   =   (TextView) findViewById(R.id.points);
+        txvPoints.setTypeface(type);
+        txvPoints.setText("0");
 
         final LinearLayout leftArrow = (LinearLayout) findViewById(R.id.left_arrow);
         final LinearLayout rightArrow = (LinearLayout)findViewById(R.id.right_arrow);
 
+        game.showGame(getScreenDimension(),
+                getBannerHeight(),
+                gamesApiHandler);
+
         leftArrow.setOnTouchListener(new View.OnTouchListener() {
 
-            private Rect rect;
             @Override
             public boolean onTouch(View v, MotionEvent event) {
 
-                rect = new Rect(v.getLeft(),
-                        v.getTop(),
-                        v.getRight(),
-                        v.getBottom());
-
-                if ( event.getAction() == MotionEvent.ACTION_DOWN ){
+                if (event.getAction() == MotionEvent.ACTION_DOWN){
 
                     leftArrow.animate()
                             .scaleX(0.95f)
@@ -326,13 +315,6 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
                             .setDuration(50).start();
 
                     game.stopPaddle();
-
-                    if (rect != null && !rect.contains(v.getLeft() + (int) event.getX(),
-                            v.getTop() + (int) event.getY()))
-                        return false;
-                    else
-                        return true;
-
                 }
 
                 return true;
@@ -341,16 +323,11 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
 
         rightArrow.setOnTouchListener(new View.OnTouchListener() {
 
-            private Rect rect;
             @Override
             public boolean onTouch(View v, MotionEvent event) {
 
-                rect = new Rect(v.getLeft(),
-                        v.getTop(),
-                        v.getRight(),
-                        v.getBottom());
 
-                if ( event.getAction() == MotionEvent.ACTION_DOWN ){
+                if (event.getAction() == MotionEvent.ACTION_DOWN){
 
                     rightArrow.animate()
                             .scaleX(0.95f)
@@ -367,31 +344,10 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
                             .setDuration(50).start();
 
                     game.stopPaddle();
-
-                    if (rect != null && !rect.contains(v.getLeft() + (int) event.getX(),
-                            v.getTop() + (int) event.getY()))
-                        return false;
-                    else
-                        return true;
-
                 }
-
                 return true;
             }
         });
-
-        //findViewById(R.id.final_menu).setVisibility(View.GONE);
-        //findViewById(R.id.lyt_pause).setVisibility(View.GONE);
-        //findViewById(R.id.tutorial).setVisibility(View.GONE);
-
-        txvPoints   =   (TextView) findViewById(R.id.points);
-        txvPoints.setTypeface(type);
-        txvPoints.setText("0");
-
-        //Si fa partire un thread che si occupa di disegnare tutti gli elementi del gioco
-        game.showGame(getScreenDimension(),
-                    getBannerHeight(),
-                    gamesApiHandler);
 
 
         if(sharedPreferences.isFirstTime()){
@@ -412,12 +368,12 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
 
         game.pause();
 
-        final LinearLayout tutorialMenu             =   (LinearLayout)findViewById(R.id.tutorial);
-
-        final TextView tutorial_title=(TextView)findViewById(R.id.tutorial_title);
+        final LinearLayout tutorialMenu = (LinearLayout)findViewById(R.id.tutorial);
+        final TextView tutorial_title   = (TextView)findViewById(R.id.tutorial_title);
 
         tutorial_title.setTypeface(type);
         ((TextView)findViewById(R.id.ok)).setTypeface(type);
+
         tutorial_title.setText(R.string.tutorial_title_1);
 
 
@@ -438,12 +394,11 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
                     }
                 }).start();
 
-
-
         findViewById(R.id.ok).setOnTouchListener(new View.OnTouchListener() {
 
-            int i=0;
+            int i = 0;
             private Rect rect;
+
             @Override
             public boolean onTouch(View v, MotionEvent event) {
 
@@ -454,7 +409,7 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
 
                 if (actionChecker(rect, event, v, findViewById(R.id.ok))) {
 
-                    if (i<3){
+                    if (i < 3){
                         switch (i){
                             case 0:
                                 tutorial_title.setText(R.string.tutorial_title_1);
@@ -471,13 +426,10 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
                     else {
 
                         findViewById(R.id.tutorial).setVisibility(View.GONE);
-
                         enablePauseMenu();
-
                         game.resume();
                     }
                 }
-
                 return true;
             }
         });
@@ -516,15 +468,6 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
         currentState = State.PAUSE;
         game.pause();
 
-        //findViewById(R.id.lyt_pause).setVisibility(View.VISIBLE);
-        //findViewById(R.id.tutorial).setVisibility(View.GONE);
-
-        //final LinearLayout resume   = (LinearLayout) findViewById(R.id.resume);
-        //final LinearLayout retry    = (LinearLayout) findViewById(R.id.retry);
-        //final LinearLayout backhome = (LinearLayout) findViewById(R.id.back_home);
-
-        //((TextView)findViewById(R.id.pause)).setTypeface(type);
-
         final LinearLayout btnPause = (LinearLayout)findViewById(R.id.btn_pause);
 
         btnPause.setOnTouchListener(new View.OnTouchListener() {
@@ -541,7 +484,6 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
                 if(actionChecker(rect, event, v, btnPause)){
                     game.resume();
                     enablePauseMenu();
-
                 }
 
                 return true;
@@ -560,11 +502,12 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
                 currentState = State.GAMEOVER;
 
                 findViewById(R.id.points).setVisibility(View.INVISIBLE);
-                findViewById(R.id.lyt_game).setVisibility(View.GONE);
-                findViewById(R.id.lyt_menu).setVisibility(View.VISIBLE);
                 findViewById(R.id.btn_pause).setVisibility(View.INVISIBLE);
-                findViewById(R.id.title).setVisibility(View.INVISIBLE);
+                findViewById(R.id.lyt_game).setVisibility(View.GONE);
+
                 findViewById(R.id.title).setVisibility(View.VISIBLE);
+                findViewById(R.id.lyt_menu).setVisibility(View.VISIBLE);
+                ((TextView)(findViewById(R.id.title))).setText(R.string.game_over);
 
                 score = (int)((game.game.getPoints() >= 0) ? game.game.getPoints() : score);
 
@@ -576,9 +519,6 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
                     game.goLeft();
 
 
-
-                ((TextView)(findViewById(R.id.title))).setText(R.string.game_over);
-
                 findViewById(R.id.score_layout).animate().scaleX(0.5f).scaleY(0.5f).alpha(0.5f).withEndAction(new Runnable() {
                     @Override
                     public void run() {
@@ -589,18 +529,19 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
                 }).start();
 
 
-
                 TextView best_label                 =   (TextView)findViewById(R.id.best_label);
                 TextView score_txv                  =   ((TextView)findViewById(R.id.score));
                 TextView best_txv                   =   ((TextView)findViewById(R.id.best));
 
-                ((TextView)findViewById(R.id.score_label)).setTypeface(type);
                 best_label.setTypeface(type);
                 score_txv.setTypeface(type);
                 best_txv.setTypeface(type);
+                ((TextView)findViewById(R.id.score_label)).setTypeface(type);
+                ((TextView)findViewById(R.id.score_label)).setTypeface(type);
 
-                //gamesApiHandler.updateRecord(sharedPreferences.getRecord());
-                //gamesApiHandler.updateRecord(score);          //Si aggiorna il record dell'utente in google play games
+
+                gamesApiHandler.updateRecord(sharedPreferences.getRecord());
+                gamesApiHandler.updateRecord(score);          //Si aggiorna il record dell'utente in google play games
                 //gamesApiHandler.checkForAchievements(score);  //Si controlla il raggiungimento di eventuali risultati
 
                 if(!sharedPreferences.checkForRecord(score)){   //Si aggiorna il record nelle sharedPreferences
@@ -618,8 +559,6 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
 
 
                 final LinearLayout btn_play     =   (LinearLayout)findViewById(R.id.play);
-
-
                 final LinearLayout share        =   (LinearLayout)findViewById(R.id.share);
                 final LinearLayout trophies     =   (LinearLayout)findViewById(R.id.trophies);
 
@@ -632,9 +571,9 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
                     public boolean onTouch(View v, MotionEvent event) {
 
                         rect = new Rect(v.getLeft(),
-                                v.getTop(),
-                                v.getRight(),
-                                v.getBottom());
+                                        v.getTop(),
+                                        v.getRight(),
+                                        v.getBottom());
 
                         if(actionChecker(rect, event, v, share))
                             share("My record in BrickPong is " + String.valueOf(sharedPreferences.getRecord()) + "\nCan you beat me?");
@@ -650,9 +589,9 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
                     public boolean onTouch(View v, MotionEvent event) {
 
                         rect = new Rect(v.getLeft(),
-                                v.getTop(),
-                                v.getRight(),
-                                v.getBottom());
+                                        v.getTop(),
+                                        v.getRight(),
+                                        v.getBottom());
 
                         if(actionChecker(rect, event, v, btn_play)){
                             findViewById(R.id.score_layout).animate().scaleX(0.4f).scaleY(0.4f).alpha(0.8f).withEndAction(new Runnable() {
@@ -675,9 +614,9 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
                     public boolean onTouch(View v, MotionEvent event) {
 
                         rect = new Rect(v.getLeft(),
-                                v.getTop(),
-                                v.getRight(),
-                                v.getBottom());
+                                        v.getTop(),
+                                        v.getRight(),
+                                        v.getBottom());
 
                         if(actionChecker(rect, event, v, trophies))
                             showLeaderboards();
@@ -699,15 +638,14 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
     private void showAds(){
 
         mAdView             =   (AdView) findViewById(R.id.adView);
+        mAdView.setVisibility(View.VISIBLE);
+
         AdRequest adRequest =   new AdRequest.Builder()
                 .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
                .build();
         mAdView.loadAd(adRequest);
     }
 
-    /*
-    *  Metodo che mostra le classifiche su play games
-    */
     public void showLeaderboards(){
 
         if(gamesApiHandler.checkConnection()){
@@ -751,7 +689,6 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
     }
 
 
-
     public int getBannerHeight(){
 
         findViewById(R.id.adView).measure(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
@@ -785,7 +722,7 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
             }
         }catch(Exception e){}
 
-        return new Point(realWidth,realHeight);//getResources().getDisplayMetrics().widthPixels ,getResources().getDisplayMetrics().heightPixels);
+        return new Point(realWidth,realHeight);
     }
 
     private void share(String mex){

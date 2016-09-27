@@ -38,7 +38,7 @@ public class PaddleTop extends Paddle {
 
     }
 
-    public void decrementMovement(long fps){
+    public void decrementMovement(){
 
         movement = 0;
     }
@@ -57,30 +57,34 @@ public class PaddleTop extends Paddle {
                 setX(0);
     }
 
+    public float getPaddleEndX(){ return x + width; }
+
+    public float getPaddleEndY(){ return y + height; }
+
     public void draw(Canvas canvas, int screenWidth) {
 
 
             if (getPaddleEndX() > screenWidth) {
 
-                canvas.drawRect(x + a,
+                canvas.drawRect(x + border,
                         0,
-                        screenWidth + a,
+                        screenWidth + border,
                         height,
                         paintWhite);
 
                 //se la barra "supera" il limite destro si disegna il restante sul limite sinistro
-                canvas.drawRect(0 + a,
+                canvas.drawRect(0 + border,
                         0,
-                        getPaddleEndX() - screenWidth + a,
+                        getPaddleEndX() - screenWidth + border,
                         getPaddleEndY(),
                         paintWhite);
 
 
             } else {
 
-                canvas.drawRect(x + a,
+                canvas.drawRect(x + border,
                         0,
-                        getPaddleEndX() + a,
+                        getPaddleEndX() + border,
                         height,
                         paintWhite);
             }
