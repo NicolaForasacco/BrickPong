@@ -9,9 +9,6 @@
     <string name="rate_us">RATE US</string>
     <string name="game_over">GAME OVER</string>
 
-    <string name="tutorial_title_1">Tap the arrows to move the paddles</string>
-    <string name="tutorial_title_2">Stop the ball with the paddles to keep making points</string>
-    <string name="tutorial_title_3">The faster the ball goes, the higher the points</string>
 
     <string name="try_brick_pong">Try BrickPong https://play.google.com/store/apps/details?id=brickteamdevelopment.brickpong</string>
     <string name="share_using">"Share using "</string>

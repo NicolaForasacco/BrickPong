@@ -1,5 +1,6 @@
 package brickteamdevelopment.brickpong;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Point;
@@ -7,7 +8,6 @@ import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
-import android.os.CountDownTimer;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -16,6 +16,7 @@ import android.view.MotionEvent;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -31,7 +32,7 @@ import com.google.example.games.basegameutils.BaseGameUtils;
 import java.lang.reflect.Method;
 import java.util.Random;
 
-public class MainActivity extends FragmentActivity implements  GoogleApiClient.ConnectionCallbacks,
+public class MainActivity extends Activity implements  GoogleApiClient.ConnectionCallbacks,
                                                                 GoogleApiClient.OnConnectionFailedListener {
 
     public static SurfaceView       gameView;
@@ -45,6 +46,14 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
     private GamesApiHandler         gamesApiHandler;
 
     public int score;
+    private ImageView btn_play;
+    private ImageView share;
+    private ImageView trophies;
+
+    private TextView rateUs;
+    private LinearLayout leftArrow;
+    private LinearLayout rightArrow;
+    private TextView title;
 
     private enum State {
         MENU,
@@ -80,6 +89,32 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
         gamesApiHandler     =   new GamesApiHandler(this,
                                                     this);
 
+        btn_play    =   (ImageView)findViewById(R.id.play);
+        share       =   (ImageView)findViewById(R.id.share);
+        trophies    =   (ImageView)findViewById(R.id.trophies);
+        rateUs      =   (TextView)findViewById(R.id.rate_us);
+        leftArrow   =   (LinearLayout) findViewById(R.id.left_arrow);
+        rightArrow  =   (LinearLayout)findViewById(R.id.right_arrow);
+        title       =   (TextView)findViewById(R.id.title);
+
+        rateUs.setOnTouchListener(new View.OnTouchListener() {
+            private Rect rect;
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+
+                rect = new Rect(v.getLeft(),
+                        v.getTop(),
+                        v.getRight(),
+                        v.getBottom());
+
+                if(actionChecker(rect, event, v, rateUs))
+                    showGooglePlayGamePage();
+
+                return true;
+            }
+        });
+
+
         //showAds();
         showMenu();
     }
@@ -101,13 +136,13 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
 
         switch (currentState){
             case PAUSE:
-                showPauseMenu();
+                game.resume();
                 break;
             case GAMEOVER:
                 showGameOverMenu();
                 break;
             case GAME:
-                showPauseMenu();
+                game.resume();
                 break;
             case MENU:
                 showMenu();
@@ -171,7 +206,7 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
 
         TextView best_label     =   (TextView)findViewById(R.id.best_label_menu);
         TextView best_txv       =   (TextView)findViewById(R.id.best_menu);
-        final TextView rateUs   =   (TextView)findViewById(R.id.rate_us);
+
 
         best_label.setTypeface(type);
         best_txv.setTypeface(type);
@@ -180,27 +215,6 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
 
         best_txv.setText(String.valueOf(sharedPreferences.getRecord()));
 
-        final LinearLayout btn_play     =   (LinearLayout)findViewById(R.id.play);
-        final LinearLayout share        =   (LinearLayout)findViewById(R.id.share);
-        final LinearLayout trophies     =   (LinearLayout)findViewById(R.id.trophies);
-
-
-        rateUs.setOnTouchListener(new View.OnTouchListener() {
-            private Rect rect;
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-
-                rect = new Rect(v.getLeft(),
-                                v.getTop(),
-                                v.getRight(),
-                                v.getBottom());
-
-                if(actionChecker(rect, event, v, rateUs))
-                    showGooglePlayGamePage();
-
-                return true;
-            }
-        });
 
         share.setOnTouchListener(new View.OnTouchListener() {
 
@@ -269,23 +283,19 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
 
         currentState = State.GAME;
 
-        findViewById(R.id.rate_us).setVisibility(View.INVISIBLE);
+        rateUs.setVisibility(View.INVISIBLE);
         findViewById(R.id.score_layout).setVisibility(View.INVISIBLE);
         findViewById(R.id.best_lyt).setVisibility(View.INVISIBLE);
         findViewById(R.id.lyt_menu).setVisibility(View.GONE);
 
-        findViewById(R.id.btn_pause).setVisibility(View.VISIBLE);
         findViewById(R.id.points).setVisibility(View.VISIBLE);
         findViewById(R.id.lyt_game).setVisibility(View.VISIBLE);
 
-        ((TextView)findViewById(R.id.title)).setText("");
+        title.setText("");
 
         txvPoints   =   (TextView) findViewById(R.id.points);
         txvPoints.setTypeface(type);
         txvPoints.setText("0");
-
-        final LinearLayout leftArrow = (LinearLayout) findViewById(R.id.left_arrow);
-        final LinearLayout rightArrow = (LinearLayout)findViewById(R.id.right_arrow);
 
         game.showGame(getScreenDimension(),
                 getBannerHeight(),
@@ -346,147 +356,6 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
                 return true;
             }
         });
-
-
-        if(sharedPreferences.isFirstTime()){
-
-            //Nel caso in cui sia la prima volta che l'utente gioca si mostra il tutorial dopo 300 millisecondi che il gioco è iniziato
-            //Finche il tutorial non verrà chiuso non sarà possibile premere il tasto per mettere in pausa il gioco
-            new CountDownTimer(300, 300) {
-
-                public void onTick(long millisUntilFinished) {}
-                public void onFinish() { showTutorial(); }
-            }.start();
-
-        }else
-            enablePauseMenu();
-    }
-
-    public void showTutorial(){
-
-        game.pause();
-
-        final LinearLayout tutorialMenu = (LinearLayout)findViewById(R.id.tutorial);
-        final TextView tutorial_title   = (TextView)findViewById(R.id.tutorial_title);
-
-        tutorial_title.setTypeface(type);
-        ((TextView)findViewById(R.id.ok)).setTypeface(type);
-
-        tutorial_title.setText(R.string.tutorial_title_1);
-
-
-        tutorialMenu.animate()
-                .scaleY(0.8f)
-                .scaleX(0.8f)
-                .alpha(0)
-                .withEndAction(new Runnable() {
-                    @Override
-                    public void run() {
-
-                        tutorialMenu.setVisibility(View.VISIBLE);
-                        tutorialMenu.animate()
-                                .scaleY(1)
-                                .scaleX(1)
-                                .alpha(1)
-                                .setDuration(200).start();
-                    }
-                }).start();
-
-        findViewById(R.id.ok).setOnTouchListener(new View.OnTouchListener() {
-
-            int i = 0;
-            private Rect rect;
-
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-
-                rect = new Rect(v.getLeft(),
-                        v.getTop(),
-                        v.getRight(),
-                        v.getBottom());
-
-                if (actionChecker(rect, event, v, findViewById(R.id.ok))) {
-
-                    if (i < 3){
-                        switch (i){
-                            case 0:
-                                tutorial_title.setText(R.string.tutorial_title_1);
-                                break;
-                            case 1:
-                                tutorial_title.setText(R.string.tutorial_title_2);
-                                break;
-                            case 2:
-                                tutorial_title.setText(R.string.tutorial_title_3);
-                                break;
-                        }
-                        i++;
-                    }
-                    else {
-
-                        findViewById(R.id.tutorial).setVisibility(View.GONE);
-                        enablePauseMenu();
-                        game.resume();
-                    }
-                }
-                return true;
-            }
-        });
-    }
-
-    /*
-    *  Metodo che una volta chiamato permetterà all'utente di mettere in pausa il gioco
-    *  ovvero abiliterà il relativo pulsante
-    */
-    public void enablePauseMenu(){
-
-        final LinearLayout btnPause = (LinearLayout)findViewById(R.id.btn_pause);
-
-        btnPause.setOnTouchListener(new View.OnTouchListener() {
-
-            private Rect rect;
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-
-                rect = new Rect(v.getLeft(),
-                                v.getTop(),
-                                v.getRight(),
-                                v.getBottom());
-
-                if(actionChecker(rect, event, v, btnPause))
-                    showPauseMenu();
-
-                return true;
-            }
-        });
-    }
-
-
-    public void showPauseMenu() {
-
-        currentState = State.PAUSE;
-        game.pause();
-
-        final LinearLayout btnPause = (LinearLayout)findViewById(R.id.btn_pause);
-
-        btnPause.setOnTouchListener(new View.OnTouchListener() {
-
-            private Rect rect;
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-
-                rect = new Rect(v.getLeft(),
-                        v.getTop(),
-                        v.getRight(),
-                        v.getBottom());
-
-                if(actionChecker(rect, event, v, btnPause)){
-                    game.resume();
-                    enablePauseMenu();
-                }
-
-                return true;
-            }
-        });
     }
 
     public void showGameOverMenu(){
@@ -500,12 +369,15 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
                 currentState = State.GAMEOVER;
 
                 findViewById(R.id.points).setVisibility(View.INVISIBLE);
-                findViewById(R.id.btn_pause).setVisibility(View.INVISIBLE);
                 findViewById(R.id.lyt_game).setVisibility(View.GONE);
 
-                findViewById(R.id.title).setVisibility(View.VISIBLE);
                 findViewById(R.id.lyt_menu).setVisibility(View.VISIBLE);
-                ((TextView)(findViewById(R.id.title))).setText(R.string.game_over);
+
+                rateUs.setVisibility(View.VISIBLE);
+                title.setVisibility(View.VISIBLE);
+
+                title.setTextColor(Color.RED);
+                title.setText(R.string.game_over);
 
                 score = (int)((game.game.getPoints() >= 0) ? game.game.getPoints() : score);
 
@@ -535,7 +407,6 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
                 score_txv.setTypeface(type);
                 best_txv.setTypeface(type);
                 ((TextView)findViewById(R.id.score_label)).setTypeface(type);
-                ((TextView)findViewById(R.id.score_label)).setTypeface(type);
 
 
                 gamesApiHandler.updateRecord(sharedPreferences.getRecord());
@@ -547,19 +418,14 @@ public class MainActivity extends FragmentActivity implements  GoogleApiClient.C
                     best_label.setTextColor(Color.WHITE);
                 }else {
 
-                    best_label.setBackgroundColor(Color.WHITE);
+                    best_label.setBackgroundColor(Color.GREEN);
                     best_label.setTextColor(Color.BLACK);
                 }
 
                 score_txv.setText(String.valueOf(score));
                 best_txv.setText(String.valueOf(sharedPreferences.getRecord()));
 
-
-                final LinearLayout btn_play     =   (LinearLayout)findViewById(R.id.play);
-                final LinearLayout share        =   (LinearLayout)findViewById(R.id.share);
-                final LinearLayout trophies     =   (LinearLayout)findViewById(R.id.trophies);
-
-                ((TextView)findViewById(R.id.title)).setTypeface(type);
+                title.setTypeface(type);
 
                 share.setOnTouchListener(new View.OnTouchListener() {
 

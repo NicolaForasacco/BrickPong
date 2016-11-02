@@ -40,10 +40,10 @@ public class Ball {
                 x               =   new Random().nextInt(screenWidth)  + 1;
                 y               =   new Random().nextInt(screenHeight) + 1;
 
-                speedX          =   screenWidth / 5.5f;
+                speedX          =   screenWidth / 2.5f;
                 speedY          =   speedX;
 
-                int color = new Random().nextInt(60);
+                int color = new Random().nextInt(35);
 
                 paintBlack.setColor(Color.rgb(color,color,color));
                 paintWhite.setColor(paintBlack.getColor());
