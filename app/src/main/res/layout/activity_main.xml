@@ -12,10 +12,22 @@
     android:gravity = "center"
     android:background = "@android:color/black">
 
+    <com.google.android.gms.ads.AdView
+        android:id = "@+id/adView"
+        android:layout_centerHorizontal = "true"
+        android:layout_alignParentTop = "true"
+        android:layout_width = "wrap_content"
+        android:layout_height = "wrap_content"
+        ads:adSize = "BANNER"
+        android:visibility="invisible"
+
+        ads:adUnitId = "@string/main_banner_id">
+    </com.google.android.gms.ads.AdView>
+
     <RelativeLayout
         android:layout_width = "match_parent"
         android:layout_height = "match_parent"
-        android:layout_above = "@+id/adView" >
+        android:layout_below="@+id/adView" >
 
         <LinearLayout
             android:layout_width = "match_parent"
@@ -23,46 +35,6 @@
             android:orientation = "vertical"
             android:gravity = "center"
             android:weightSum = "4">
-
-            <RelativeLayout
-                android:layout_width = "match_parent"
-                android:layout_height = "0dp"
-                android:layout_weight = "1">
-
-                <TextView
-                    android:id = "@+id/title"
-                    android:layout_width = "wrap_content"
-                    android:layout_height = "wrap_content"
-
-                    android:layout_marginBottom = "12dp"
-                    android:layout_alignParentBottom = "true"
-                    android:layout_centerHorizontal = "true"
-
-                    android:text = "@string/app_name"
-                    android:textColor = "@android:color/white"
-                    android:textSize = "50dp"
-                    android:textStyle = "bold" />
-
-                <LinearLayout
-                    android:id = "@+id/btn_pause"
-                    android:visibility = "invisible"
-                    android:layout_width = "wrap_content"
-                    android:layout_height = "wrap_content"
-
-                    android:layout_marginBottom = "12dp"
-                    android:layout_marginRight = "12dp"
-                    android:layout_alignParentBottom = "true"
-                    android:layout_alignParentRight = "true"
-                    android:layout_alignParentEnd = "true">
-
-                    <ImageView
-                        android:layout_width = "50dp"
-                        android:layout_height = "50dp"
-                        android:src = "@drawable/pause"/>
-
-                </LinearLayout>
-
-            </RelativeLayout>
 
             <RelativeLayout
                 android:layout_weight = "2"
@@ -73,6 +45,22 @@
                     android:id = "@+id/gameView"
                     android:layout_width = "match_parent"
                     android:layout_height = "match_parent"/>
+
+                <TextView
+                    android:id = "@+id/title"
+                    android:layout_width = "wrap_content"
+                    android:layout_height = "wrap_content"
+
+                    android:layout_marginTop= "5dp"
+
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal = "true"
+
+                    android:gravity="center"
+                    android:text = "@string/app_name"
+                    android:textColor = "@android:color/white"
+                    android:textSize = "35dp"
+                    android:textStyle = "bold" />
 
                 <LinearLayout
                     android:id = "@+id/best_lyt"
@@ -200,77 +188,79 @@
 
                     android:textSize = "30dp"
                     android:text = "@string/rate_us"
-                    android:textColor = "@android:color/white" />
-
-                <include layout = "@layout/tutorial_menu" ></include>
+                    android:textColor = "#00baee" />
 
             </RelativeLayout>
 
             <RelativeLayout
                 android:layout_width = "match_parent"
                 android:layout_height = "0dp"
-                android:layout_weight = "1"
-                android:padding = "15dp">
+                android:layout_weight = "0.8"
+                android:padding = "5dp">
 
                 <LinearLayout
                     android:id = "@+id/lyt_menu"
                     android:layout_width = "match_parent"
                     android:layout_height = "match_parent"
                     android:orientation = "horizontal"
-                    android:gravity = "center"
+                    android:gravity="center"
                     android:weightSum = "10">
 
                     <LinearLayout
-                        android:id = "@+id/share"
+
                         android:layout_width = "0dp"
                         android:layout_height = "wrap_content"
 
                         android:clickable = "true"
-                        android:layout_margin = "1dp"
-                        android:padding = "14dp"
-                        android:layout_weight = "2"
-                        android:gravity = "center">
+
+                        android:paddingRight= "10dp"
+                        android:paddingLeft="10dp"
+                        android:gravity="center"
+                        android:layout_weight = "2">
 
                         <ImageView
-                            android:layout_width = "match_parent"
-                            android:layout_height = "match_parent"
+                            android:id = "@+id/share"
+                            android:layout_width = "wrap_content"
+                            android:layout_height = "wrap_content"
                             android:src = "@drawable/share"/>
 
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_weight = "5"
-                        android:id = "@+id/play"
+
                         android:layout_width = "0dp"
                         android:layout_height = "match_parent"
 
                         android:clickable = "true"
-                        android:layout_margin = "1dp"
-                        android:padding = "5dp"
-                        android:gravity = "center"
+                        android:paddingRight= "5dp"
+                        android:paddingLeft="5dp"
+                        android:gravity="center"
                         android:orientation = "horizontal">
 
                         <ImageView
-                            android:layout_width = "match_parent"
-                            android:layout_height = "match_parent"
+                            android:id = "@+id/play"
+                            android:layout_width = "wrap_content"
+                            android:layout_height = "wrap_content"
                             android:src = "@drawable/play"/>
 
                     </LinearLayout>
 
                     <LinearLayout
-                        android:id = "@+id/trophies"
+
                         android:layout_width = "0dp"
                         android:layout_height = "wrap_content"
 
                         android:clickable = "true"
-                        android:layout_margin = "1dp"
-                        android:padding = "14dp"
+                        android:paddingRight= "10dp"
+                        android:paddingLeft="10dp"
                         android:layout_weight = "2"
-                        android:gravity = "center">
+                        android:gravity="center">
 
                         <ImageView
-                            android:layout_width = "match_parent"
-                            android:layout_height = "match_parent"
+                            android:id = "@+id/trophies"
+                            android:layout_width = "wrap_content"
+                            android:layout_height = "wrap_content"
                             android:src = "@drawable/leatherboard"/>
 
                     </LinearLayout>
@@ -293,15 +283,13 @@
                         android:layout_height = "match_parent"
 
                         android:layout_weight = "2"
-                        android:gravity = "center"
-                        android:clickable = "true"
-                        android:layout_margin = "1dp"
-                        android:padding = "10dp"
-                        android:orientation = "horizontal">
+                        android:gravity = "right"
+                        android:clickable = "true">
 
                         <ImageView
-                            android:layout_width = "match_parent"
+                            android:layout_width = "wrap_content"
                             android:layout_height = "match_parent"
+                            android:layout_gravity="right"
                             android:src = "@drawable/arrow_left"/>
 
                     </LinearLayout>
@@ -312,15 +300,14 @@
                         android:layout_height = "match_parent"
 
                         android:layout_weight = "2"
-                        android:gravity = "center"
-                        android:layout_margin = "1dp"
-                        android:padding = "10dp"
-                        android:clickable = "true"
-                        android:orientation = "horizontal">
+                        android:gravity = "left"
+                        android:clickable = "true">
 
                         <ImageView
-                            android:layout_width = "match_parent"
+                            android:layout_width = "wrap_content"
                             android:layout_height = "match_parent"
+                            android:layout_gravity="left"
+
                             android:src = "@drawable/arrow_right"/>
 
                     </LinearLayout>
@@ -332,17 +319,5 @@
         </LinearLayout>
 
     </RelativeLayout>
-
-    <com.google.android.gms.ads.AdView
-        android:id = "@+id/adView"
-        android:layout_centerHorizontal = "true"
-        android:layout_alignParentBottom = "true"
-        android:layout_width = "wrap_content"
-        android:layout_height = "wrap_content"
-        ads:adSize = "BANNER"
-        android:visibility="invisible"
-
-        ads:adUnitId = "@string/main_banner_id">
-    </com.google.android.gms.ads.AdView>
 
 </RelativeLayout>
