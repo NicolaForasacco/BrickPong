@@ -83,7 +83,7 @@ class GameView implements Runnable {
 
         ball            =   new Ball(gameSide, gameSide, border, false);
 
-        backgroundBalls = new Ball[14];
+        backgroundBalls = new Ball[9];
 
         for(int i = 0; i < backgroundBalls.length; i++)
             backgroundBalls[i] = new Ball(gameSide, gameSide, border, true);
