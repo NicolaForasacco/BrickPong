@@ -44,6 +44,7 @@ public class PaddleLeft extends Paddle{
 
     public void incrementMovement(long fps){
 
+        fps = 60;
         if (verso == -1)
             movement = (speed / fps) * maxSpeed;
 

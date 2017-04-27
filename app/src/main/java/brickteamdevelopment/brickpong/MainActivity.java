@@ -115,7 +115,7 @@ public class MainActivity extends Activity implements  GoogleApiClient.Connectio
         });
 
 
-        //showAds();
+        showAds();
         showMenu();
     }
 
