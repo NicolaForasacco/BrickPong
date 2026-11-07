@@ -20,11 +20,11 @@ public class PaddleRight extends Paddle{
     public void incrementY() {
         super.incrementY();
 
-        if(verso == -1)
+        if(direction == -1)
             if (getY() <= 0)
                 setY((int)(width * ab));
 
-        if(verso == 1)
+        if(direction == 1)
             if(getY() >= (int)(width * ab))
                 setY(0);
     }
@@ -32,19 +32,19 @@ public class PaddleRight extends Paddle{
 
     public void incrementMovementSlow(long fps){
 
-        if (verso == 1)
+        if (direction == 1)
             movement = (speed / fps) * 6 * -1;
 
-        if (verso == -1)
+        if (direction == -1)
             movement = (speed / fps) * 6;
     }
 
     public void incrementMovement(long fps){
 
-        if (verso == 1)
+        if (direction == 1)
             movement = (speed / fps) * maxSpeed;
 
-        if (verso == -1)
+        if (direction == -1)
             movement = (speed / fps) * maxSpeed * -1;
     }
 
@@ -67,7 +67,7 @@ public class PaddleRight extends Paddle{
 
         if(getPaddleEndY() > screenHeight){
 
-            //se la barra "supera" il limite inferiore si disegna il restante sul limite superiore
+            // if the paddle exceeds the bottom boundary, draw the remainder on the top boundary
             canvas.drawRect(x + border,
                     0,
                     getPaddleEndX() + border,

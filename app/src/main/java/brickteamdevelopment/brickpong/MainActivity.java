@@ -324,7 +324,7 @@ public class MainActivity extends Activity  {
 
 
 
-                if(!sharedPreferences.checkForRecord(score)){   //Si aggiorna il record nelle sharedPreferences
+                if(!sharedPreferences.checkForRecord(score)){   // Update the high score in sharedPreferences
 
                     best_label.setBackgroundColor(Color.TRANSPARENT);
                     best_label.setTextColor(Color.WHITE);
@@ -391,7 +391,7 @@ public class MainActivity extends Activity  {
     }
 
     /*
-     * Metodo che si occupa di gestire le animazioni dei bottoni
+     * Method that manages button animations
      */
     public boolean actionChecker(Rect rect, MotionEvent event, View v, View layout){
 

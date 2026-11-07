@@ -140,7 +140,7 @@ class GameView implements Runnable {
         paddleBottom.incrementX();
         paddleTop.incrementX();
 
-        if (paddleLeft.verso != 0) {
+        if (paddleLeft.direction != 0) {
             paddleRight.incrementMovementSlow(fps);
             paddleLeft.incrementMovementSlow(fps);
             paddleBottom.incrementMovementSlow(fps);
@@ -177,7 +177,7 @@ class GameView implements Runnable {
         paddleBottom.incrementX();
         paddleTop.incrementX();
 
-        if (paddleLeft.verso != 0){
+        if (paddleLeft.direction != 0){
 
             paddleRight.incrementMovement(fps);
             paddleLeft.incrementMovement(fps);
@@ -211,7 +211,7 @@ class GameView implements Runnable {
                     || (ball.getY() >= 0
                     && ball.getY() <= paddleLeft.getPaddleEndY() - game.getScreenHeight())) {
 
-                //la pallina ha toccato la barra sinistra
+                // the ball touched the left paddle
 
                 incrementPaddlesSpeed();
                 ball.bounceOnPaddle(paddleLeft);
@@ -228,7 +228,7 @@ class GameView implements Runnable {
                     || (ball.getY() >= 0
                     && ball.getY() <= paddleRight.getPaddleEndY() - game.getScreenHeight())) {
 
-                //la pallina ha toccato la barra destra
+                // the ball touched the right paddle
 
                 incrementPaddlesSpeed();
                 ball.bounceOnPaddle(paddleRight);
@@ -245,7 +245,7 @@ class GameView implements Runnable {
                     || (ball.getX() >= 0
                     && ball.getX() <= paddleTop.getPaddleEndX() - game.getScreenWidth())) {
 
-                //la pallina ha toccato la barra superiore
+                // the ball touched the top paddle
 
                 incrementPaddlesSpeed();
                 ball.bounceOnPaddle(paddleTop);
@@ -262,7 +262,7 @@ class GameView implements Runnable {
                     || (ball.getX() >= 0
                     && ball.getX() <= paddleBottom.getPaddleEndX() - game.getScreenWidth())) {
 
-                //la pallina ha toccato la barra inferiore
+                // the ball touched the bottom paddle
 
                 incrementPaddlesSpeed();
                 ball.bounceOnPaddle(paddleBottom);

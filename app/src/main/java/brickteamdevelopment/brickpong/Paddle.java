@@ -21,7 +21,7 @@ public class Paddle {
 
     protected int abc = 14;
 
-    public int verso = 0;
+    public int direction = 0;
 
     private float speedPercentage = 1.08f;
 
@@ -43,7 +43,7 @@ public class Paddle {
 
     public void goLeft(){
 
-        verso = -1;
+        direction = -1;
 
         speed       *= -1;
         maxSpeed    *= -1;
@@ -51,7 +51,7 @@ public class Paddle {
 
     public void goRight(){
 
-        verso = 1;
+        direction = 1;
 
         speed       *= -1;
         maxSpeed    *= -1;
@@ -59,7 +59,7 @@ public class Paddle {
 
     public void stop(){
 
-        verso = 0;
+        direction = 0;
 
         speed       *= -1;
         maxSpeed    *= -1;
