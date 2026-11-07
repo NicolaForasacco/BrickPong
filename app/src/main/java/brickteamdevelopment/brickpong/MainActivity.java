@@ -1,12 +1,10 @@
 package brickteamdevelopment.brickpong;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.Typeface;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -17,7 +15,6 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,10 +33,8 @@ public class MainActivity extends Activity  {
 
     public int score;
     private ImageView btn_play;
-    private ImageView share;
     private ImageView trophies;
 
-    private TextView rateUs;
     private LinearLayout leftArrow;
     private LinearLayout rightArrow;
     private TextView title;
@@ -69,29 +64,11 @@ public class MainActivity extends Activity  {
                                                 gameView);
 
         btn_play    =   (ImageView)findViewById(R.id.play);
-        share       =   (ImageView)findViewById(R.id.share);
         trophies    =   (ImageView)findViewById(R.id.trophies);
-        rateUs      =   (TextView)findViewById(R.id.rate_us);
         leftArrow   =   (LinearLayout) findViewById(R.id.left_arrow);
         rightArrow  =   (LinearLayout)findViewById(R.id.right_arrow);
         title       =   (TextView)findViewById(R.id.title);
 
-        rateUs.setOnTouchListener(new View.OnTouchListener() {
-            private Rect rect;
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-
-                rect = new Rect(v.getLeft(),
-                        v.getTop(),
-                        v.getRight(),
-                        v.getBottom());
-
-                if(actionChecker(rect, event, v, rateUs))
-                    showGooglePlayGamePage();
-
-                return true;
-            }
-        });
         showMenu();
     }
 
@@ -171,29 +148,9 @@ public class MainActivity extends Activity  {
 
         best_label.setTypeface(type);
         best_txv.setTypeface(type);
-        rateUs.setTypeface(type);
         ((TextView)findViewById(R.id.title)).setTypeface(type);
 
         best_txv.setText(String.valueOf(sharedPreferences.getRecord()));
-
-
-        share.setOnTouchListener(new View.OnTouchListener() {
-
-            private Rect rect;
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-
-                rect = new Rect(v.getLeft(),
-                                v.getTop(),
-                                v.getRight(),
-                                v.getBottom());
-
-                if(actionChecker(rect, event, v, share))
-                    share("My record in BrickPong is " + String.valueOf(sharedPreferences.getRecord()) + "\nCan you beat me?");
-
-                return true;
-            }
-        });
 
         btn_play.setOnTouchListener(new View.OnTouchListener() {
 
@@ -244,7 +201,6 @@ public class MainActivity extends Activity  {
 
         currentState = State.GAME;
 
-        rateUs.setVisibility(View.INVISIBLE);
         findViewById(R.id.score_layout).setVisibility(View.INVISIBLE);
         findViewById(R.id.best_lyt).setVisibility(View.INVISIBLE);
         findViewById(R.id.lyt_menu).setVisibility(View.GONE);
@@ -332,7 +288,6 @@ public class MainActivity extends Activity  {
 
                 findViewById(R.id.lyt_menu).setVisibility(View.VISIBLE);
 
-                rateUs.setVisibility(View.VISIBLE);
                 title.setVisibility(View.VISIBLE);
 
                 title.setTextColor(Color.RED);
@@ -384,24 +339,6 @@ public class MainActivity extends Activity  {
 
                 title.setTypeface(type);
 
-                share.setOnTouchListener(new View.OnTouchListener() {
-
-                    private Rect rect;
-                    @Override
-                    public boolean onTouch(View v, MotionEvent event) {
-
-                        rect = new Rect(v.getLeft(),
-                                        v.getTop(),
-                                        v.getRight(),
-                                        v.getBottom());
-
-                        if(actionChecker(rect, event, v, share))
-                            share("My record in BrickPong is " + String.valueOf(sharedPreferences.getRecord()) + "\nCan you beat me?");
-
-                        return true;
-                    }
-                });
-
                 btn_play.setOnTouchListener(new View.OnTouchListener() {
 
                     private Rect rect;
@@ -448,12 +385,6 @@ public class MainActivity extends Activity  {
         });
     }
 
-
-    private void showGooglePlayGamePage(){
-        Intent i = new Intent(Intent.ACTION_VIEW);
-        i.setData(Uri.parse("market://details?id=" + getPackageName()));
-        startActivity(i);
-    }
 
     public void showLeaderboards(){
         Toast.makeText(this, getString(R.string.best) + ": " + sharedPreferences.getRecord(), Toast.LENGTH_SHORT).show();
@@ -522,16 +453,6 @@ public class MainActivity extends Activity  {
         }catch(Exception e){}
 
         return new Point(realWidth,realHeight);
-    }
-
-    private void share(String mex){
-
-        Intent sendIntent = new Intent();
-        sendIntent.setAction(Intent.ACTION_SEND);
-        sendIntent.putExtra(Intent.EXTRA_TEXT, mex + "\n" + getString(R.string.try_brick_pong));
-
-        sendIntent.setType("text/plain");
-        startActivity(Intent.createChooser(sendIntent, "Share using "));
     }
 
     private void hideSystemUI() {
