@@ -1,7 +1,7 @@
 # BrickPong
 
 <p align="center">
-  <img src="app/src/main/ic_launcher-web.png" alt="BrickPong Logo" width="140" />
+  <img src="app/src/main/res/drawable/brickpong_icon.png" alt="BrickPong Logo" width="140" />
 </p>
 
 <p align="center">
