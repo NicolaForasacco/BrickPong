@@ -1,11 +1,11 @@
 apply plugin: 'com.android.application'
 
 android {
-    namespace 'brickteamdevelopment.brickpong'
+    namespace 'com.brick.brickpong'
     compileSdk 35
 
     defaultConfig {
-        applicationId "brickteamdevelopment.brickpong"
+        applicationId "com.brick.brickpong"
         minSdk 21
         targetSdk 34
         versionCode 7

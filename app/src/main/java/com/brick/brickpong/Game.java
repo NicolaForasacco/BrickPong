@@ -1,4 +1,4 @@
-package brickteamdevelopment.brickpong;
+package com.brick.brickpong;
 
 import android.graphics.Canvas;
 import android.graphics.Color;

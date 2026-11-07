@@ -1,4 +1,4 @@
-package brickteamdevelopment.brickpong;
+package com.brick.brickpong;
 
 import android.app.Activity;
 import android.content.Intent;

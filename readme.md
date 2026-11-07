@@ -94,7 +94,7 @@ BrickPong/
 |   |   |-- assets/
 |   |   |   `-- fonts/
 |   |   |       `-- Chava-Regular.otf # Custom retro arcade font
-|   |   |-- java/brickteamdevelopment/brickpong/
+|   |   |-- java/com/brick/brickpong/
 |   |   |   |-- Ball.java                    # Ball physics, bounce reflections, speed ramping
 |   |   |   |-- Game.java                    # Arena dimensions, scoring state, canvas clear
 |   |   |   |-- GameView.java                # Dedicated game loop thread, Canvas render pipeline, collision logic
@@ -144,7 +144,7 @@ BrickPong/
 
 ## Credits and Author
 
-- **Game Design, Programming, and Art:** [Nicola Forasacco](https://github.com/NicolaForasacco) (@brick86 / Brick Team Development)
+- **Game Design, Programming, and Art:** [Nicola Forasacco](https://github.com/NicolaForasacco) (@brick)
 - **Original Development Period:** 2016
 - **Project Name:** BrickPong
 

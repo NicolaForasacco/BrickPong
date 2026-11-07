@@ -1,32 +1,30 @@
-package brickteamdevelopment.brickpong;
+package com.brick.brickpong;
 
 import android.graphics.Canvas;
 
-public class PaddleLeft extends Paddle{
+public class PaddleRight extends Paddle{
 
-    public PaddleLeft(int screenWidth,int screenHeight,int a){
+    public PaddleRight(int screenWidth,int screenHeight,int a){
 
         super(screenWidth,screenHeight,a);
 
         width           =   screenHeight / ab ;
+
+        x = screenWidth - height;
+        y = 0;
+
         speed           =   screenHeight / abc ;
-
-        y = screenHeight - width;
-
-        speed       *= -1;
-        maxSpeed    *= -1;
     }
 
     @Override
     public void incrementY() {
         super.incrementY();
 
-        if(direction == 1)
+        if(direction == -1)
             if (getY() <= 0)
                 setY((int)(width * ab));
 
-
-        if(direction == -1)
+        if(direction == 1)
             if(getY() >= (int)(width * ab))
                 setY(0);
     }
@@ -34,21 +32,19 @@ public class PaddleLeft extends Paddle{
 
     public void incrementMovementSlow(long fps){
 
-        if (direction == -1)
-            movement = (speed / fps) * 6;
-
         if (direction == 1)
             movement = (speed / fps) * 6 * -1;
 
+        if (direction == -1)
+            movement = (speed / fps) * 6;
     }
 
     public void incrementMovement(long fps){
 
-        fps = 60;
-        if (direction == -1)
+        if (direction == 1)
             movement = (speed / fps) * maxSpeed;
 
-        if (direction == 1)
+        if (direction == -1)
             movement = (speed / fps) * maxSpeed * -1;
     }
 
@@ -63,7 +59,7 @@ public class PaddleLeft extends Paddle{
 
     public void draw(Canvas canvas, int screenHeight) {
 
-        canvas.drawRect(0 + border,
+        canvas.drawRect(x + border,
                 y,
                 getPaddleEndX() + border,
                 getPaddleEndY(),
@@ -71,8 +67,8 @@ public class PaddleLeft extends Paddle{
 
         if(getPaddleEndY() > screenHeight){
 
-            // if the paddle exceeds the top boundary, draw the remainder on the bottom boundary
-            canvas.drawRect(0 + border,
+            // if the paddle exceeds the bottom boundary, draw the remainder on the top boundary
+            canvas.drawRect(x + border,
                     0,
                     getPaddleEndX() + border,
                     getPaddleEndY() - screenHeight,

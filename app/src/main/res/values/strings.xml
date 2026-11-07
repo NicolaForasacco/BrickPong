@@ -1,12 +1,10 @@
 <resources>
     <string name="app_name">BRICKPONG</string>
 
-    <string name="presents_string">created by \u0040BRICK86\nF.N.</string>
+    <string name="presents_string">created by \u0040BRICK\nF.N.</string>
     <string name="error">Error</string>
 
     <string name="score">SCORE</string>
     <string name="best">BEST</string>
     <string name="game_over">GAME OVER</string>
-
-    <string name="package_name">brickteamdevelopment.brickpong</string>
 </resources>
