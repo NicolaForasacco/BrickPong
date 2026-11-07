@@ -62,9 +62,9 @@ class GameView implements Runnable {
         }
     }
 
-    public void showGame(Point screen, int bannerHeight, GamesApiHandler gamesApiHandler) {
+    public void showGame(Point screen, int bannerHeight, boolean isGame) {
 
-        if(gamesApiHandler != null)
+        if(isGame)
             gameType = "game";
         else
             gameType = "menu";
@@ -79,7 +79,7 @@ class GameView implements Runnable {
         paddleTop       =   new PaddleTop(gameSide, gameSide, border);
         paddleBottom    =   new PaddleBottom(gameSide, gameSide, border);
 
-        game            =   new Game(gameSide, gameSide,gamesApiHandler);
+        game            =   new Game(gameSide, gameSide);
 
         ball            =   new Ball(gameSide, gameSide, border, false);
 

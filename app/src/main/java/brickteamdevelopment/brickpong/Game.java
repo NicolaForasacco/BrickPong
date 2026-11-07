@@ -12,14 +12,11 @@ public class Game {
 
     private float points = -1;
 
-    private GamesApiHandler gamesApiHandler;
-
-    public Game(int width, int height,GamesApiHandler gamesApiHandler){
+    public Game(int width, int height){
 
         this.points             =   -1;
         this.screenHeight       =   height;
         this.screenWidth        =   width;
-        this.gamesApiHandler    =   gamesApiHandler;
     }
 
     public int getScreenWidth() { return screenWidth; }

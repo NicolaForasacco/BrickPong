@@ -8,7 +8,6 @@ import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
-import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.Display;
@@ -22,28 +21,18 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.games.Games;
-import com.google.example.games.basegameutils.BaseGameUtils;
 
 import java.lang.reflect.Method;
 import java.util.Random;
 
-public class MainActivity extends Activity implements  GoogleApiClient.ConnectionCallbacks,
-                                                                GoogleApiClient.OnConnectionFailedListener {
+public class MainActivity extends Activity  {
 
     public static SurfaceView       gameView;
     private GameView                game;
     public static TextView          txvPoints;
 
     private Typeface                type;
-
-    private AdView                  mAdView;
     public SharedPreferencesManager sharedPreferences;
-    private GamesApiHandler         gamesApiHandler;
 
     public int score;
     private ImageView btn_play;
@@ -64,13 +53,6 @@ public class MainActivity extends Activity implements  GoogleApiClient.Connectio
 
     private State                   currentState;
 
-    //region Variabili  di Play Games
-    private static int              RC_SIGN_IN = 9001;
-    private boolean                 mResolvingConnectionFailure = false,
-                                    mAutoStartSignInflow        = true,
-                                    mSignInClicked              = false;
-    //endregion
-
     //region Activity lifecycle
 
     @Override
@@ -85,9 +67,6 @@ public class MainActivity extends Activity implements  GoogleApiClient.Connectio
 
         game                =   new GameView(this,
                                                 gameView);
-
-        gamesApiHandler     =   new GamesApiHandler(this,
-                                                    this);
 
         btn_play    =   (ImageView)findViewById(R.id.play);
         share       =   (ImageView)findViewById(R.id.share);
@@ -113,17 +92,11 @@ public class MainActivity extends Activity implements  GoogleApiClient.Connectio
                 return true;
             }
         });
-
-
-        showAds();
         showMenu();
     }
 
     @Override
     public void onDestroy() {
-
-        if (mAdView != null)
-            mAdView.destroy();
 
         super.onDestroy();
     }
@@ -131,8 +104,6 @@ public class MainActivity extends Activity implements  GoogleApiClient.Connectio
     @Override
     protected void onResume() {
         super.onResume();
-
-        gamesApiHandler.connect();
 
         switch (currentState){
             case PAUSE:
@@ -148,23 +119,15 @@ public class MainActivity extends Activity implements  GoogleApiClient.Connectio
                 showMenu();
                 break;
         }
-
-       if (mAdView != null)
-           mAdView.resume();
     }
 
     @Override
     protected void onStop() {
-
-        gamesApiHandler.disconnect();
         super.onStop();
     }
 
     @Override
     protected void onPause() {
-
-        if (mAdView != null)
-            mAdView.pause();
 
         game.pause();
 
@@ -193,9 +156,7 @@ public class MainActivity extends Activity implements  GoogleApiClient.Connectio
 
         currentState = State.MENU;
 
-        game.showGame(getScreenDimension(),
-                        getBannerHeight(),
-                        null);
+        game.showGame(getScreenDimension(), getBannerHeight(), false);
 
         if(new Random().nextBoolean())
             game.goRight();
@@ -297,9 +258,7 @@ public class MainActivity extends Activity implements  GoogleApiClient.Connectio
         txvPoints.setTypeface(type);
         txvPoints.setText("0");
 
-        game.showGame(getScreenDimension(),
-                getBannerHeight(),
-                gamesApiHandler);
+        game.showGame(getScreenDimension(), getBannerHeight(), true);
 
         leftArrow.setOnTouchListener(new View.OnTouchListener() {
 
@@ -381,7 +340,7 @@ public class MainActivity extends Activity implements  GoogleApiClient.Connectio
 
                 score = (int)((game.game.getPoints() >= 0) ? game.game.getPoints() : score);
 
-                game.showGame(getScreenDimension(),getBannerHeight(),null);
+                game.showGame(getScreenDimension(), getBannerHeight(), false);
 
                 if(new Random().nextBoolean())
                     game.goRight();
@@ -409,8 +368,6 @@ public class MainActivity extends Activity implements  GoogleApiClient.Connectio
                 ((TextView)findViewById(R.id.score_label)).setTypeface(type);
 
 
-                gamesApiHandler.updateRecord(sharedPreferences.getRecord());
-                gamesApiHandler.updateRecord(score);          //Si aggiorna il record dell'utente in google play games
 
                 if(!sharedPreferences.checkForRecord(score)){   //Si aggiorna il record nelle sharedPreferences
 
@@ -498,26 +455,8 @@ public class MainActivity extends Activity implements  GoogleApiClient.Connectio
         startActivity(i);
     }
 
-    private void showAds(){
-
-        mAdView             =   (AdView) findViewById(R.id.adView);
-        mAdView.setVisibility(View.VISIBLE);
-
-        AdRequest adRequest =   new AdRequest.Builder()
-                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-               .build();
-        mAdView.loadAd(adRequest);
-    }
-
     public void showLeaderboards(){
-
-        if(gamesApiHandler.checkConnection()){
-            startActivityForResult( Games.Leaderboards.getLeaderboardIntent(gamesApiHandler.getApiClient(),
-                    getResources().getString(R.string.leaderboard_score)), 0) ;
-        }else{
-            gamesApiHandler.connect();
-            Toast.makeText(getApplicationContext(),"Google Play Games not connected", Toast.LENGTH_SHORT).show();
-        }
+        Toast.makeText(this, getString(R.string.best) + ": " + sharedPreferences.getRecord(), Toast.LENGTH_SHORT).show();
     }
 
     /*
@@ -552,11 +491,8 @@ public class MainActivity extends Activity implements  GoogleApiClient.Connectio
     }
 
 
-    public int getBannerHeight(){
-
-        findViewById(R.id.adView).measure(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-
-        return findViewById(R.id.adView).getMeasuredHeight();
+        public int getBannerHeight(){
+        return 0;
     }
 
     public Point getScreenDimension(){
@@ -613,48 +549,4 @@ public class MainActivity extends Activity implements  GoogleApiClient.Connectio
                     | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
         }
     }
-
-
-    //region Metodi del servizio Play Games
-
-    @Override
-    public void onConnected(Bundle bundle) {}
-
-    @Override
-    public void onConnectionSuspended(int i) {
-
-        gamesApiHandler.connect();
-    }
-
-    @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-
-        if (mResolvingConnectionFailure) {
-            // already resolving
-            return;
-        }
-
-        // if the sign-in button was clicked or if auto sign-in is enabled,
-        // launch the sign-in flow
-        if (mSignInClicked || mAutoStartSignInflow) {
-
-            mAutoStartSignInflow        =   false;
-            mSignInClicked              =   false;
-            mResolvingConnectionFailure =   true;
-
-            // Attempt to resolve the connection failure using BaseGameUtils.
-            // The R.string.signin_other_error value should reference a generic
-            // error string in your strings.xml file, such as "There was
-            // an issue with sign-in, please try again later."
-            if (!BaseGameUtils.resolveConnectionFailure(this,
-                                                        gamesApiHandler.getApiClient(),
-                                                        connectionResult,
-                                                        RC_SIGN_IN, "")) {
-                mResolvingConnectionFailure = false;
-            }
-        }
-        // Put code here to display the sign-in button
-    }
-
-    //endregion
 }
